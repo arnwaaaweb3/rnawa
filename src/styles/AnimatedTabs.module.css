@@ -1,0 +1,334 @@
+/* src/styles/AnimatedTabs.module.css - KOREKSI OLEH MORTA */
+
+/* === 0. DEFINISI WARNA LOKAL UNTUK KEMUDAHAN MAINTENANCE === */
+/* Ambil warna dari homepage untuk konsistensi */
+.container {
+  /* Variabel Dasar Dark Mode */
+  --tab-bg: rgba(17, 17, 17, 0.6);
+  --tab-border: rgba(255, 255, 255, 0.1);
+  --tab-accent: rgba(255, 255, 255, 0.15); /* Background Pill */
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.6);
+
+  /* Variabel Warna Jaringan (Default Blue/Green) */
+  --social-blue: #2196F3; 
+  --social-shadow: rgba(33, 150, 243, 0.2); 
+
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* === 1. LIGHT MODE THEME OVERRIDE (DARI DATA-THEME) === */
+.contentContainer[data-theme="light"],
+.tabList[data-theme="light"] {
+  --tab-bg: rgba(245, 245, 245, 0.95);
+  --tab-border: rgba(0, 0, 0, 0.1);
+  --tab-accent: rgba(0, 0, 0, 0.08);
+  --text-primary: #1a1a1a;
+  --text-secondary: #444;
+  --social-blue: #0056b3; 
+  --social-shadow: rgba(0, 86, 179, 0.15); 
+}
+
+
+/* === 2. BAGIAN TOMBOL TAB (TOP NAV) === */
+.tabList {
+  display: flex;
+  position: relative;
+  flex-wrap: nowrap;
+  justify-content: flex-start; /* Ganti dari center agar tab dimulai dari kiri */
+  gap: 8px;
+
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 16px;
+
+  background: var(--tab-bg);
+  border: 1px solid var(--tab-border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  /* ✅ AFTER: Membuatnya bisa di-scroll horizontal */
+  overflow-x: scroll; 
+  /* Sembunyikan scrollbar bawaan di browser */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  scroll-behavior: smooth; /* Smooth scroll saat klik tombol */
+  
+  /* Sembunyikan scrollbar di Webkit (Chrome, Safari) */
+  & ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tabButton {
+  position: relative;
+  padding: 0.5rem 0.975rem;
+  font-size: 1rem;
+  font-family: 'Lexend', sans-serif;
+  font-weight: 500;
+  border-radius: 8px;
+  
+  color: var(--text-secondary);
+  background: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  
+  transition: all 0.3s ease;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tabButton:hover {
+  color: var(--text-primary);
+}
+
+.tabButton[data-active="true"] {
+  color: var(--text-primary);
+}
+
+/* Background Pill */
+.activeBackground {
+  position: absolute;
+  inset: 0;
+  background: var(--tab-accent);
+  border-radius: 8px;
+  z-index: -1;
+}
+
+/* === 3. BAGIAN KONTEN UTAMA (CONTENT CONTAINER) === */
+.contentContainer {
+  padding: 1.5rem;
+  
+  background: var(--tab-bg);
+  border: 1px solid var(--tab-border);
+  color: var(--text-primary);
+  
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+ 
+  width: 100%;
+  height: 280px;
+  min-height: 280px;
+  max-height: 280px;
+  overflow: hidden;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease;
+}
+
+.contentWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* --- STRUKTUR 2 KOLOM (DUMMY CARD) --- */
+.dummyCard {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch; 
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  gap: 1.5rem;
+}
+
+/* CONTAINER KIRI (Placeholder/Image) */
+.previewBox {
+  flex: 1;
+  width: 50%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  
+  background: var(--tab-accent); 
+  border: 2px dashed var(--tab-border);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* CONTAINER KANAN (Teks & Icon) */
+.textGroup {
+  flex: 1;
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  padding-right: 15px;
+  justify-content: center;
+}
+
+ /* Styling Elemen Kanan */
+.iconLarge {
+  font-size: 3rem;
+  margin-bottom: 0.25rem;
+  position: relative;
+  color: var(--social-blue);
+  filter: drop-shadow(0 0 15px var(--social-shadow));
+}
+
+.dummyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  font-family: 'Lexend', sans-serif;
+  color: var(--social-blue);
+}
+
+.dummyDesc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Tambahan untuk Navigasi Slider (Panah) */
+.navOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.navButton {
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navButton:hover {
+  background: rgba(255, 255, 255, 0.9);
+  color: #000;
+  transform: scale(1.1);
+}
+
+/* --- FITUR BARU: LIGHT/DARK MODE TOGGLE --- */
+.themeToggleBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 20;
+ 
+  background: var(--tab-accent);
+  border: 1px solid var(--tab-border);
+  color: var(--text-primary);
+ 
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.themeToggleBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(15deg) scale(1.1);
+}
+
+/* === 4. RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 1024px) {
+    /* Untuk layar tablet/desktop yang lebih sempit */
+    .container {
+        gap: 1rem;
+    }
+    
+    .tabList {
+        justify-content: flex-start; /* Biar lebih rapi di kiri */
+        padding: 0.5rem;
+    }
+}
+
+/* === 4. RESPONSIVE ADJUSTMENTS === */
+@media (max-width: 768px) {
+  .contentContainer {
+    height: 480px;
+    min-height: 480px;
+    max-height: 480px; 
+    padding: 1rem;
+    overflow-y: auto;
+  }
+
+  .dummyCard {
+    flex-direction: column-reverse;
+    gap: 1rem;
+    height: 100%;
+  }
+
+  .previewBox {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 150px;
+  }
+ 
+  .tabList {
+    justify-content: space-around; /* Agar tombol menyebar rapi */
+    gap: 0.25rem;
+  }
+  
+  .tabButton {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .textGroup {
+    height: auto;
+    align-items: center;
+    text-align: center;
+    padding-right: 0;
+    padding-top: 10px;
+  }
+ 
+  .iconLarge {
+    font-size: 2.5rem;
+  }
+ 
+  .dummyTitle {
+    font-size: 1.2rem; 
+  }
+ 
+  .dummyDesc {
+    font-size: 0.85rem; 
+  }
+  
+  /* Pindahkan tombol toggle ke kanan-atas preview box di mobile */
+  .themeToggleBtn {
+      top: 0.5rem;
+      right: 0.5rem;
+  }
+}

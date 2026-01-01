@@ -1,0 +1,81 @@
+/* src/components/ui/Button.module.css */
+
+/* === BASE STYLE === */
+.base {
+  /* Adaptasi dari Tailwind Base */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  /* 🚨 BEFORE: border-radius: 0.375rem; */
+  
+  font-size: 0.875rem; /* text-sm (Akan ditimpa oleh .default) */
+  font-weight: 500; /* font-medium */
+  transition: all 0.2s ease; /* transition-colors */
+  cursor: pointer;
+  
+  /* Focus Ring Aesthetic */
+  outline: none;
+  box-shadow: 0 0 0 0.15rem transparent; 
+  
+  /* ✅ AFTER: New Global Aesthetics (Glass/CTA Look) */
+  color: white; 
+  border-radius: 1rem; /* Corner Radius Besar, sesuai CTA */
+  backdrop-filter: blur(6px); /* Efek Glassmorphism/Blur */
+  border: 1px solid rgba(255,255,255,0.25); /* Border tipis transparan */
+}
+
+.base:focus-visible {
+  box-shadow: 0 0 0 0.15rem rgba(33, 150, 243, 0.5); 
+}
+
+/* === SIZE VARIANTS === */
+.default {
+  /* ✅ AFTER: Mengadopsi ukuran dan padding responsif dari CTA */
+  height: auto; /* Biarkan padding menentukan tinggi */
+  padding: clamp(8px, 2.5vw, 10px) clamp(14px, 4vw, 22px);
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+}
+.sm {
+  height: 2.25rem; 
+  border-radius: 0.375rem; /* sm tetap kecil */
+  padding: 0 0.75rem; 
+}
+.icon {
+  /* ✅ AFTER: Icon ikut radius besar */
+  height: 2.5rem; 
+  width: 2.5rem; 
+  padding: 0;
+  border-radius: 1rem;
+}
+
+
+/* === VARIANT STYLES (Diperbarui untuk Glass Vibe) === */
+.default {
+  /* Ini adalah Glass/CTA Primary */
+  background-color: rgba(255,255,255,0.1); 
+  /* Border sudah di set di .base */
+}
+.default:hover {
+  background-color: rgba(255,255,255,0.18); /* Lebih tebal/solid saat hover */
+}
+
+.outline {
+  /* Outline Glass: Transparan tapi border lebih menonjol */
+  border: 1px solid rgba(255, 255, 255, 0.5); 
+  background: transparent;
+  color: white;
+}
+.outline:hover {
+  background: rgba(255, 255, 255, 0.15); 
+}
+
+.ghost {
+  /* Ghost: Tanpa border, paling transparan */
+  border: none;
+  background: transparent;
+  color: white;
+}
+.ghost:hover {
+  background: rgba(255, 255, 255, 0.1); 
+}

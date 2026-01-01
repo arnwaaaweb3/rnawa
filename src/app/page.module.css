@@ -1,0 +1,184 @@
+/* Variables & Global Reset for the Page Context */
+.page {
+  --background: #fafafa;
+  --foreground: #fff;
+  --text-primary: #000;
+  --text-secondary: #666;
+  --button-primary-hover: #383838;
+  --button-secondary-hover: #f2f2f2;
+  --button-secondary-border: #ebebeb;
+
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-geist-sans);
+  background-color: var(--background);
+}
+
+/* Dark Mode Overrides */
+@media (prefers-color-scheme: dark) {
+  .page {
+    --background: #000;
+    --foreground: #000;
+    --text-primary: #ededed;
+    --text-secondary: #999;
+    --button-primary-hover: #ccc;
+    --button-secondary-hover: #1a1a1a;
+    --button-secondary-border: #1a1a1a;
+  }
+}
+
+.mainWrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 900px; /* Slightly wider for the "Big Picture" */
+  flex-direction: column;
+  align-items: flex-start; /* Hard Left */
+  justify-content: center;
+  padding: 40px clamp(24px, 5vw, 60px);
+  margin: 0 auto;
+}
+
+.introArea {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Never center this */
+  gap: clamp(1rem, 3vw, 2rem);
+  width: 100%;
+}
+
+/* Proximity Text Styling */
+.proximityWrapper {
+  font-family: var(--font-lexend);
+  color: white;
+  font-weight: 600;
+  display: inline-block;
+  text-align: left;
+  position: relative;
+  line-height: 1;
+  font-size: clamp(1.8rem, 4vw, 4rem);
+}
+
+/* Rotating Text Section */
+.rotatingTextWrapper {
+  font-size: clamp(1.2rem, 3.5vw, 2.5rem);
+  font-weight: 300;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: -5px;
+  color: white;
+  font-family: var(--font-lexend), sans-serif;
+}
+
+/* The highlight style I added to clean up your JSX */
+.rotatingHighlight {
+  font-family: var(--font-lexend), sans-serif;
+  font-weight: 600;
+  color: #090040;
+  background-color: #ff85e5;
+  padding: 0.1em 0.5em;
+  border-radius: 0.2em;
+  display: inline-flex;
+}
+
+/* Navigation Grid */
+.buttonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: clamp(15px, 4vw, 30px);
+  width: 100%;
+  max-width: 1080px;
+  justify-content: flex-start;
+}
+
+/* Button & Hover Logic */
+.navButton {
+  background-image: var(--bg-normal);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid #5227ff;
+  cursor: pointer;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 20px;
+}
+
+.navButton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--bg-hover);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  border-radius: 20px;
+  transition: opacity 0.3s ease-in-out;
+  z-index: -1;
+}
+
+.navButton:hover::after {
+  opacity: 1;
+  border-radius: 20px;
+}
+
+/* Legacy CTA styles if you still need them for other pages */
+.ctas {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 440px;
+  gap: 16px;
+  font-size: 14px;
+}
+
+.ctas a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 128px;
+  border: 1px solid transparent;
+  transition: 0.2s;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+a.primary {
+  background: var(--text-primary);
+  color: var(--background);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+  .mainWrapper {
+    padding: 40px 20px;
+  }
+
+  .introArea {
+    align-items: center;
+    text-align: center;
+  }
+
+  .proximityWrapper {
+    text-align: center;
+  }
+
+  .rotatingTextWrapper {
+    justify-content: center;
+  }
+
+  .buttonGrid {
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: center;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

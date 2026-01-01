@@ -1,0 +1,88 @@
+
+/* =============================================
+  KEYFRAMES FOR EVERY ANIMATION
+ ==============================================*/
+@keyframes slideInRight {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* =============================================
+  HEADER CONTAINER WITH LIGHT / DARK MODE 
+ ==============================================*/
+.headerContainer {
+  width: 100%;
+  height: 80px;
+  background: rgb(255, 255, 255);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 2px solid #0f0f0f;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.164);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.darkMode {
+  background: rgba(255, 255, 255, 0.014);
+  border: 2px solid rgb(255, 255, 255);
+}
+
+/* =============================================
+  HEADER CONTAINER WITH LIGHT / DARK MODE 
+ ==============================================*/
+.headerTitle {
+  text-align: start;
+  font-family: 'Lexend', sans-serif;
+  color: rgba(0, 0, 0, 0.76);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  animation: slideInRight 0.8s ease-out;
+  z-index: 2;
+}
+
+.darkMode .headerTitle {
+  color: rgb(255, 255, 255);
+}
+
+/* =============================================
+  BUTTON FOR LIGHT / DARK MODE 
+ ==============================================*/
+.darkModeToggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: auto;
+  color: rgba(0, 0, 0, 0.76);
+}
+
+.darkMode .darkModeToggle {
+  color: rgb(255, 255, 255);
+}
+
+/* =============================================
+  ANIMATION APPEARANCE
+  ============================================*/
+
+.visualEffect {
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 300px;
+  height: 300px;
+  filter: blur(60px);
+  opacity: 0.4;
+  border-radius: 50%;
+  z-index: -1; /* Di bawah teks */
+  pointer-events: none;
+}

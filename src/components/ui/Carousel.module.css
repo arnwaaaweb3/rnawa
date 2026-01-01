@@ -1,0 +1,92 @@
+/* src/components/ui/Carousel.module.css */
+
+.carousel {
+  position: relative;
+}
+
+.overflowHidden {
+  overflow: hidden;
+}
+
+/* === CAROUSEL CONTENT & ITEM BASE === */
+.carouselContent {
+  display: flex;
+}
+
+.horizontal {
+  margin-left: -1rem; /* -ml-4 (Negatif padding dari item) */
+}
+
+.vertical {
+  margin-top: -1rem; /* -mt-4 */
+  flex-direction: column;
+}
+
+.carouselItem {
+  min-width: 0; 
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: 100%;
+}
+
+.itemHorizontal {
+  padding-left: 1rem; /* pl-4 */
+}
+
+.itemVertical {
+  padding-top: 1rem; /* pt-4 */
+}
+
+
+/* === CAROUSEL BUTTONS (PREV/NEXT) === */
+.carouselPrevious, .carouselNext {
+  position: absolute;
+  z-index: 10;
+}
+
+/* Base Position */
+.prevHorizontal {
+  left: -3rem; /* -left-12 */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nextHorizontal {
+  right: -3rem; /* -right-12 */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.prevVertical {
+  top: -3rem; /* -top-12 */
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+}
+
+.nextVertical {
+  bottom: -3rem; /* -bottom-12 */
+  left: 50%;
+  transform: translateX(-50%) rotate(90deg);
+}
+
+/* Screen Reader Only */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (max-width: 768px) {
+    .prevHorizontal {
+        left: 0.5rem; 
+    }
+    .nextHorizontal {
+        right: 0.5rem; 
+    }
+}

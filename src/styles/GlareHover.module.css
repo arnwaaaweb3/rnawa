@@ -1,0 +1,40 @@
+.glare-hover {
+  width: var(--gh-width, auto);
+  height: var(--gh-height, auto);
+  background: var(--gh-bg);
+  border-radius: var(--gh-br);
+  border: 1px solid var(--gh-border);
+  overflow: hidden;
+  position: relative;
+  /* Gunakan inline-grid agar tidak full width secara default */
+  display: inline-grid; 
+  place-items: center;
+  padding: 0; 
+}
+
+.glare-hover > * {
+  width: 100%;
+  height: 100%;
+}
+
+.glare-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2; 
+  background: linear-gradient(
+    var(--gh-angle),
+    hsla(0, 0%, 0%, 0) 60%,
+    var(--gh-rgba) 70%,
+    hsla(0, 0%, 0%, 0),
+    hsla(0, 0%, 0%, 0) 100%
+  );
+  transition: var(--gh-duration) ease;
+  background-size: var(--gh-size) var(--gh-size);
+  background-repeat: no-repeat;
+  background-position: -100% -100%;
+}
+
+.glare-hover:hover::before {
+  background-position: 100% 100%;
+}

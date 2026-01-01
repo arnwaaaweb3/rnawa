@@ -1,0 +1,91 @@
+/* src/app/connect/page.module.css */
+
+.pageContainer {
+  /* Menggunakan padding agar konten tidak terlalu menempel ke MainLayout */
+  padding: 40px; 
+  min-height: 100vh;
+  width: 100%;
+}
+
+.pageContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.heading {
+  font-size: clamp(2.5rem, 4.5vw, 3.5rem);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.description {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: #e6edf3; 
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+.contentRow {
+  display: grid;
+  grid-template-columns: 2fr; /* Tabs lebih besar dari Card */
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.tabsContainer {
+  /* Styling dasar untuk container AnimatedTabs */
+  min-height: 400px; 
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.cardContainer {
+  /* Styling untuk SignatureNawaCard */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 400px; 
+}
+
+.backButtonWrapper {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: clamp(20px, 5vw, 40px);
+  z-index: 11;
+}
+
+.backButton {
+  padding: clamp(8px, 2.5vw, 10px) clamp(14px, 4vw, 22px);
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  border-radius: 1rem;
+  background: rgba(255,255,255,0.08);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.backButton:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateX(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .contentRow {
+        grid-template-columns: 1fr; /* Stack di layar kecil */
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pageContainer {
+        padding: 20px;
+    }
+}
