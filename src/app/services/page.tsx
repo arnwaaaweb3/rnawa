@@ -1,11 +1,13 @@
 'use client';
 
+// Definisikan import yang dibutuhkan
 import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
 import Image from "next/image";
 import DarkVeil from "../../components/DarkVeil";
 
+// Definisikan data layanan
 const SERVICES = [
   { id: 0, title: "Visual Designer", img: "/services1.webp", cta: "Take a look! →", color: "rgba(255,133,229,0.3)" },
   { id: 1, title: "Website Designer", img: "/services2.webp", cta: "See more details", color: "rgba(82,39,255,0.3)" },

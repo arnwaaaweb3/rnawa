@@ -19,6 +19,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [isOpen, setIsOpen] = useState(true);
   const currentSidebarWidth = useSidebarWidth();
   const pathname = usePathname();
+  const [isMobile, setIsMobile] = useState(false);
 
   // Ref untuk animasi GSAP
   const panelMain = useRef<HTMLDivElement>(null);
@@ -26,17 +27,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const panelBg2 = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const footerRef = useRef<HTMLDivElement>(null);
-
-  // Otomatis tutup sidebar di layar kecil (Floating Window/Mobile)
-  useEffect(() => {
-    const mql = window.matchMedia('(min-width: 1024px)');
-    const onChange = (e: MediaQueryListEvent | MediaQueryList) => setIsOpen(e.matches);
-
-    onChange(mql); // Initial check
-    mql.addEventListener('change', onChange);
-    return () => mql.removeEventListener('change', onChange);
-  }, []);
-
   const immersiveRoutes = ['/portfolio'];
   const shouldShowVeil = !immersiveRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
@@ -49,6 +39,18 @@ export default function MainLayout({ children }: MainLayoutProps) {
     { text: "Documentation", url: "/docs" },
     { text: "Connect", url: "/connect" },
   ];
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)'); // Mobile/Tablet threshold
+    const onChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsMobile(e.matches);
+      setIsOpen(!e.matches); // Your existing sidebar logic
+    };
+
+    onChange(mql);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
 
   // ✅ SISTEM ANIMASI GSAP (CSS VARIABLE DRIVEN)
   useLayoutEffect(() => {
@@ -112,12 +114,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {/* ✅ Route-aware Veil */}
       {shouldShowVeil && (
         <div className={styles.backgroundVeil}>
-          <DarkVeil
-            hueShift={300}
-            noiseIntensity={0.03}
-            scanlineIntensity={0.1}
-            warpAmount={0.05}
-          />
+          {isMobile ? (
+            <div className={styles.mobileBackground} />
+          ) : (
+            <DarkVeil
+              hueShift={300}
+              noiseIntensity={0.03}
+              scanlineIntensity={0.1}
+              warpAmount={0.05}
+            />
+          )}
         </div>
       )}
 

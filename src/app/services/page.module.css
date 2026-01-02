@@ -73,10 +73,12 @@
   cursor: pointer;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  border-radius: 1rem;
 }
 
 .primaryCta:hover {
   transform: translateY(-5px);
+  border-radius: 1rem;
   border-color: #fff;
 }
 
@@ -149,6 +151,22 @@
   background: rgba(255,255,255,0.18);
   transform: translateX(-2px);
 }
+
+/* =================================== GLOBAL STYLES */
+
+:global([data-sidebar="open"]) .sideNav {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(20px); /* slide them out to the right */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:global([data-sidebar="open"]) .dotLabel {
+  opacity: 0 !important;
+}
+
+/* ===================================== RESPONSIVE*/
 
 @media (max-width: 768px) {
   .content {

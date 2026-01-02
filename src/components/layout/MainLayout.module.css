@@ -53,7 +53,7 @@
   border-right: 0.0625rem solid #30363d;
   display: flex;
   flex-direction: column;
-  max-width: 85vw; 
+  max-width: 85vw;
 }
 
 /* MAGNET TOGGLE */
@@ -186,6 +186,28 @@
   flex-direction: column;
   gap: 0.4375rem;
 }
+
+/* =================================== MOBILE BACKGROUND */
+
+.mobileBackground {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, #1a0b3b 0%, #000000 100%);
+  opacity: 0.8;
+  /* Add a subtle static grain if you really miss the noise */
+  background-image: url("data:image/svg+xml,..."); 
+}
+
+.mobileBackground::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  filter: contrast(150%) brightness(100%);
+}
+
+/* =================================== MEDIA QUERIES */
 
 /* RESPONSIVE: Fixes for Restore Down/Mobile */
 @media (max-width: 1024px) {
