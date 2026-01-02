@@ -33,18 +33,21 @@
   display: flex;
   min-height: 100vh;
   width: 100%;
-  max-width: 900px; /* Slightly wider for the "Big Picture" */
+  max-width: 900px;
   flex-direction: column;
-  align-items: flex-start; /* Hard Left */
+  align-items: flex-start;
   justify-content: center;
   padding: 40px clamp(24px, 5vw, 60px);
   margin: 0 auto;
+  /* 🔥 FIX: Ensure proper stacking */
+  position: relative;
+  z-index: 1;
 }
 
 .introArea {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Never center this */
+  align-items: flex-start;
   gap: clamp(1rem, 3vw, 2rem);
   width: 100%;
 }
@@ -73,7 +76,6 @@
   font-family: var(--font-lexend), sans-serif;
 }
 
-/* The highlight style I added to clean up your JSX */
 .rotatingHighlight {
   font-family: var(--font-lexend), sans-serif;
   font-weight: 600;
@@ -96,6 +98,8 @@
 
 /* Button & Hover Logic */
 .navButton {
+  /* 🔥 FIX: Add position relative to contain the ::after */
+  position: relative;
   width: 100%;
   height: 100%;
   border: none;
@@ -106,10 +110,11 @@
   transition: background-image 0.3s ease, transform 0.3s ease;
   border-radius: 20px;
   aspect-ratio: 1/1;
+  /* 🔥 FIX: Prevent overflow of pseudo-element */
+  overflow: hidden;
 }
 
 .navButton:hover {
-  /* Switch to the hover variable when the mouse is over */
   background-image: var(--bg-image-hover);
 }
 
@@ -123,7 +128,8 @@
   opacity: 0;
   border-radius: 20px;
   transition: opacity 0.3s ease-in-out;
-  z-index: -1;
+  /* 🔥 FIX: Remove negative z-index, use 0 or 1 */
+  z-index: 0;
 }
 
 .navButton:hover::after {
@@ -131,7 +137,7 @@
   border-radius: 20px;
 }
 
-/* Legacy CTA styles if you still need them for other pages */
+/* Legacy CTA styles */
 .ctas {
   display: flex;
   flex-direction: row;
