@@ -67,7 +67,7 @@ export default function HomePage() {
               glareAngle={-30}
               glareSize={200}
               transitionDuration={300}
-              width="100%" 
+              width="100%"
               height="100%"
               borderRadius="20px"
             >
@@ -75,10 +75,10 @@ export default function HomePage() {
                 className={styles.navButton}
                 onClick={() => router.push(button.url)}
                 style={{
-                  '--bg-normal': `url(${button.normal})`,
-                  '--bg-hover': `url(${button.hover})`,
-                } as React.CSSProperties}
-                whileHover={{ scale: 1.05, boxShadow: "0 0 15px rgba(255, 133, 229, 0.4)" }}
+                  '--bg-image-normal': `url(${button.normal})`,
+                  '--bg-image-hover': `url(${button.hover})`,
+                } as React.CSSProperties & { [key: string]: string }} // ✅ This is the correct way
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               />
             </GlareHover>

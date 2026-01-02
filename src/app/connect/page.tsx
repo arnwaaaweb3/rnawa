@@ -5,9 +5,6 @@ import React from 'react';
 import styles from './page.module.css';
 import AnimatedTabs from '../../components/AnimatedTabs';
 
-// Konstanta HUE dari kode lama kamu, bisa dipakai di CSS Variable jika dibutuhkan.
-const CONNECT_HUE = 60; 
-
 const ConnectPage: React.FC = () => {
   const HEADING_TEXT = "Let's Connect!";
   

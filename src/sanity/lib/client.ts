@@ -1,28 +1,26 @@
-// src/sanity/lib/client.ts
-import { createClient, groq, type SanityClient } from 'next-sanity' // ✅ Tambahkan groq & SanityClient
-
+import { createClient, groq, type SanityClient } from 'next-sanity'
 import { apiVersion, dataset, projectId } from '../env'
 
-// ✅ Interface untuk data yang akan di-fetch
-export interface DocsCategory {
-    _id: string;
-    title: string;
-    slug: string;
-    description: string;
-    imageUrl: string; 
-    categoryTitle: string; 
-    categorySlug: string; 
-    color: string; 
-}
-
-export const client = createClient({
+export const client: SanityClient = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true, 
+  useCdn: true, // ✅ cukup untuk data publik, aman di frontend
 })
 
-// ✅ Fungsi Fetcher dengan Type yang benar
+// Interface tipe data
+export interface DocsCategory {
+    _id: string
+    title: string
+    slug: string
+    description: string
+    imageUrl: string
+    categoryTitle: string
+    categorySlug: string
+    color: string
+}
+
+// Fetcher function
 export async function getDocsCategories(client: SanityClient): Promise<DocsCategory[]> {
     const query = groq`
         *[_type == "documentation"] {
@@ -35,6 +33,6 @@ export async function getDocsCategories(client: SanityClient): Promise<DocsCateg
             "categorySlug": category->slug.current,
             "color": category->color
         }
-    `;
-    return client.fetch(query);
+    `
+    return client.fetch(query)
 }
