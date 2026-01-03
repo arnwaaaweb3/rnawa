@@ -3,10 +3,12 @@
 import React, { useState } from 'react';
 import { Header } from '../../components/layout/Header';
 import styles from './page.module.css';
+import { useRouter } from 'next/navigation';
 
 export default function PortfolioPage() {
   // State utama kita pindahkan ke sini
   const [darkMode, setDarkMode] = useState(false);
+  const router = useRouter();
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
@@ -23,8 +25,8 @@ export default function PortfolioPage() {
       </div>
       <div className={styles.backButtonWrapper}>
         <button
-          className={`${styles.backButton} ${darkMode ? styles.darkModeButton : ''}`}
-          onClick={() => window.history.back()}
+          className={styles.backButton}
+          onClick={() => router.push("/")} // Use router instead of window.history
         >
           ← Back
         </button>

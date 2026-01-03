@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import styles from './page.module.css';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import {
     Carousel,
     CarouselContent,
@@ -38,13 +39,13 @@ const DocsCategoryCard: React.FC<DocsCategoryCardProps> = ({ title, imageUrl, hr
     return (
         <motion.div
             className={styles.cardWrapper}
-            whileHover={{}} 
+            whileHover={{}}
             whileTap={{}}
             // Pass color sebagai CSS variable untuk styling border gradient dinamis
-            style={{ 
-                '--card-color': color, 
-                '--card-color-rgb': rgbColor 
-            } as React.CSSProperties} 
+            style={{
+                '--card-color': color,
+                '--card-color-rgb': rgbColor
+            } as React.CSSProperties}
         >
             <Link href={href} className={styles.cardLink} aria-label={`Explore ${title}`}>
                 <div className={styles.imageContainer}>
@@ -89,6 +90,7 @@ const categories = [
 
 const DocsPage: React.FC = () => {
     const HEADING_TEXT = "Documentation";
+    const router = useRouter();
 
     return (
         <div className={styles.pageContainer}>
@@ -97,39 +99,37 @@ const DocsPage: React.FC = () => {
                     {HEADING_TEXT}
                 </h1>
                 <p className={styles.description}>
-                    Read all my experiences, my views, and what I'm learning on!
+                    Read all my experiences, my views, and what I&apos;m learning on!
                 </p>
-                
-                <Carousel 
-                    opts={{ 
+
+                <Carousel
+                    opts={{
                         align: "start",
                         loop: false,
-                        slidesToScroll: 1, 
+                        slidesToScroll: 1,
                     }}
                     className={styles.carouselContainer}
                 >
-                    <CarouselContent className={styles.carouselTrack}> 
+                    <CarouselContent className={styles.carouselTrack}>
                         {categories.map((cat) => (
-                            <CarouselItem 
-                                key={cat.title} 
-                                className={styles.carouselCardItem} 
+                            <CarouselItem
+                                key={cat.title}
+                                className={styles.carouselCardItem}
                             >
                                 <DocsCategoryCard {...cat} />
                             </CarouselItem>
                         ))}
                     </CarouselContent>
-                    
+
                     <CarouselPrevious className={styles.carouselButtonPrev} />
                     <CarouselNext className={styles.carouselButtonNext} />
                 </Carousel>
             </div>
-            
+
             <div className={styles.backButtonWrapper}>
                 <button
                     className={styles.backButton}
-                    onClick={() => {
-                      window.history.back();
-                    }}
+                    onClick={() => router.push("/")} // Use router instead of window.history
                 >
                     ← Back
                 </button>

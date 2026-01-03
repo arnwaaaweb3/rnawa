@@ -1,13 +1,13 @@
 'use client';
 
-// Definisikan import yang dibutuhkan
 import React, { useState, useEffect, useCallback } from "react";
+// Import useRouter from next/navigation
+import { useRouter } from "next/navigation"; 
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
 import Image from "next/image";
 import DarkVeil from "../../components/DarkVeil";
 
-// Definisikan data layanan
 const SERVICES = [
   { id: 0, title: "Visual Designer", img: "/services1.webp", cta: "Take a look! →", color: "rgba(255,133,229,0.3)" },
   { id: 1, title: "Website Designer", img: "/services2.webp", cta: "See more details", color: "rgba(82,39,255,0.3)" },
@@ -18,6 +18,7 @@ const SERVICES = [
 
 export default function ServicesPage() {
   const [index, setIndex] = useState(0);
+  const router = useRouter(); // Initialize the router
 
   const paginate = useCallback((delta: number) => {
     setIndex(prev => (prev + delta + SERVICES.length) % SERVICES.length);
@@ -78,7 +79,6 @@ export default function ServicesPage() {
           className={styles.infoBox}
         >
           <span className={styles.indexLabel}>
-            {/* JSX Comment: This is the proper way to comment inside a return */}
             {String(index + 1).padStart(2, '0')} - SERVICES
           </span>
           <h1 className={styles.title}>{SERVICES[index].title}</h1>
@@ -103,12 +103,11 @@ export default function ServicesPage() {
           ))}
         </nav>
       </div>
+
       <div className={styles.backButtonWrapper}>
         <button
           className={styles.backButton}
-          onClick={() => {
-            window.history.back();
-          }}
+          onClick={() => router.push("/")} // Use router instead of window.history
         >
           ← Back
         </button>
