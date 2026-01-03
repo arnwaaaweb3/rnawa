@@ -119,6 +119,7 @@
   letter-spacing: 0.2em;
   white-space: nowrap;
   opacity: 0;
+  font-family: var(--font-lexend), sans-serif;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
