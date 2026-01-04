@@ -15,7 +15,7 @@
   --social-shadow: rgba(33, 150, 243, 0.2); 
 
   width: 100%;
-  max-width: 900px;
+  max-width: 1280px;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -39,8 +39,8 @@
   display: flex;
   position: relative;
   flex-wrap: nowrap;
-  justify-content: flex-start; /* Ganti dari center agar tab dimulai dari kiri */
-  gap: 8px;
+  justify-content: center;
+  gap: 1.2rem;
 
   width: 100%;
   padding: 0.5rem;

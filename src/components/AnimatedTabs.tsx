@@ -648,7 +648,7 @@ const EmailTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
   const emailColor = "#EA4335";
 
   return (
-    <div className={styles.cardLayout} style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
+    <div className={styles.dummyCard} style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
 
       {/* 1. BACKGROUND BANNER */}
       <motion.div

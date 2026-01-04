@@ -1,5 +1,10 @@
 /* src/app/connect/page.module.css */
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 .pageContainer {
   /* Menggunakan padding agar konten tidak terlalu menempel ke MainLayout */
   padding: 40px; 
@@ -19,12 +24,13 @@
   letter-spacing: 0.05em;
   line-height: 1.2;
   margin: 0;
+  margin-top: 20px;
 }
 
 .description {
   font-size: clamp(1rem, 2vw, 1.25rem);
   color: #e6edf3; 
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   max-width: 600px;
 }
 
@@ -41,6 +47,10 @@
   background: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   padding: 20px;
+}
+
+.tabsSection {
+  margin-right: 1rem
 }
 
 .cardContainer {
@@ -76,11 +86,33 @@
   transform: translateX(-2px);
 }
 
+.contentGrid {
+  display: grid;
+  /* Use auto-fit or a conditional toggle */
+  grid-template-columns: 1fr; 
+  gap: 0;
+  transition: all 0.4s ease;
+}
+
+.contentGrid:has(.cardSection) {
+  grid-template-columns: 1.5fr 1fr;
+}
+
+.cardSection {
+  animation: fadeIn 0.5s ease forwards;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1024px) {
     .contentRow {
-        grid-template-columns: 1fr; /* Stack di layar kecil */
-        gap: 20px;
+      grid-template-columns: 1fr; /* Stack di layar kecil */
+      gap: 20px;
+    }
+    .contentGrid:has(.cardSection) {
+      grid-template-columns: 1fr;
+    }
+    .cardSection {
+      display: none;
     }
 }
 
