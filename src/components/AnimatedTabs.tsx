@@ -423,8 +423,8 @@ const LinkedInTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
           alt="Connect on LinkedIn"
           fill
           style={{
-            objectFit: 'cover',
-            borderRadius: '12px',
+            objectFit: 'contain',
+            borderRadius: '20px',
             filter: isDarkMode ? 'brightness(1)' : 'brightness(1)'
           }}
           unoptimized
@@ -497,8 +497,8 @@ const DiscordTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
           alt="Join Discord Community"
           fill
           style={{
-            objectFit: 'cover',
-            borderRadius: isDarkMode ? '12px' : '12px',
+            objectFit: 'contain',
+            borderRadius: isDarkMode ? '20px' : '20px',
             filter: isDarkMode ? 'brightness(0.9)' : 'brightness(1)'
           }}
           unoptimized
@@ -587,8 +587,8 @@ const FacebookTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
           alt="Facebook Profile"
           fill
           style={{
-            objectFit: 'cover',
-            borderRadius: '12px',
+            objectFit: 'contain',
+            borderRadius: '20px',
             filter: isDarkMode ? 'brightness(0.9)' : 'brightness(1)'
           }}
           unoptimized
@@ -663,8 +663,8 @@ const EmailTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
           alt="Contact via Email"
           fill
           style={{
-            objectFit: 'cover',
-            borderRadius: '12px',
+            objectFit: 'contain',
+            borderRadius: '20px',
             filter: isDarkMode ? 'brightness(0.9)' : 'brightness(1)'
           }}
           unoptimized

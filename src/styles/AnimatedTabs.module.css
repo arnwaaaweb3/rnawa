@@ -138,7 +138,7 @@
 .dummyCard {
   display: flex;
   flex-direction: row;
-  align-items: stretch; 
+  align-items: center;
   justify-content: space-between;
   width: 100%;
   height: 100%;
@@ -151,10 +151,10 @@
   width: 50%;
   height: 100%;
   aspect-ratio: 1 / 1;
-  
+  max-height: 240px;
   background: var(--tab-accent); 
   border: 2px dashed var(--tab-border);
-  border-radius: 12px;
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
