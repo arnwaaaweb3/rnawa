@@ -8,7 +8,7 @@ import SignatureNawaCard from '../../components/SignatureNawaCard';
 
 const ConnectPage: React.FC = () => {
   const router = useRouter();
-  
+
   // Initialize sidebar state safely for SSR
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     if (typeof window === 'undefined') return true; // SSR fallback
@@ -42,25 +42,23 @@ const ConnectPage: React.FC = () => {
         <header className={styles.headerSection}>
           <h1 className={styles.heading}>Let&apos;s Connect!</h1>
           <p className={styles.description}>
-            Don&apos;t hesitate to say Hi and leave me a message on:
+            Don&apos;t be hesitate to say Hi and leave me a message on:
           </p>
         </header>
 
-        <div className={styles.contentGrid}>
+        <div className={styles.contentGrid} data-sidebar={isSidebarOpen ? "open" : "closed"}>
           <section className={styles.tabsSection}>
             <AnimatedTabs />
           </section>
-          
-          {/* Removed AnimatePresence & motion.aside */}
-          {!isSidebarOpen && (
-            <aside className={styles.cardSection}>
-              <SignatureNawaCard 
-                name="Nawa" 
-                role="Fullstack Developer" 
-                image="/profil-nawa.jpg" 
-              />
-            </aside>
-          )}
+
+          {/* Always render for wide screens, but the CSS will handle the visibility */}
+          <aside className={styles.cardSection}>
+            <SignatureNawaCard
+              name="Nawa"
+              role="Fullstack Developer"
+              image="/profil-nawa.jpg"
+            />
+          </aside>
         </div>
       </div>
 

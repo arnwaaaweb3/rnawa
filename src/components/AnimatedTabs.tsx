@@ -423,7 +423,7 @@ const LinkedInTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
           alt="Connect on LinkedIn"
           fill
           style={{
-            objectFit: 'contain',
+            objectFit: 'cover',
             borderRadius: '20px',
             filter: isDarkMode ? 'brightness(1)' : 'brightness(1)'
           }}
@@ -497,7 +497,7 @@ const DiscordTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
           alt="Join Discord Community"
           fill
           style={{
-            objectFit: 'contain',
+            objectFit: 'cover',
             borderRadius: isDarkMode ? '20px' : '20px',
             filter: isDarkMode ? 'brightness(0.9)' : 'brightness(1)'
           }}
@@ -587,7 +587,7 @@ const FacebookTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
           alt="Facebook Profile"
           fill
           style={{
-            objectFit: 'contain',
+            objectFit: 'cover',
             borderRadius: '20px',
             filter: isDarkMode ? 'brightness(0.9)' : 'brightness(1)'
           }}
@@ -663,7 +663,7 @@ const EmailTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
           alt="Contact via Email"
           fill
           style={{
-            objectFit: 'contain',
+            objectFit: 'cover',
             borderRadius: '20px',
             filter: isDarkMode ? 'brightness(0.9)' : 'brightness(1)'
           }}
@@ -725,6 +725,7 @@ const EmailTabContent = ({ isDarkMode }: { isDarkMode: boolean }) => {
     </div>
   );
 };
+
 const AnimatedTabs: React.FC = () => {
   // 1. Initialize theme from localStorage ON MOUNT (no effect needed)
   const [activeTab, setActiveTab] = useState<string>("instagram");

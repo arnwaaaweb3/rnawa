@@ -1,77 +1,118 @@
 import { defineField, defineType } from 'sanity'
+import { CaseIcon } from '@sanity/icons'
 
 export default defineType({
   name: 'portfolioItem',
-  title: 'Portofolio',
+  title: 'Project Portfolio',
   type: 'document',
+  icon: CaseIcon,
   fields: [
     defineField({
       name: 'title',
-      title: 'Name:',
+      title: 'Project Name',
       type: 'string',
-      description: 'This is the name of your project.',
+      description: 'What is your project name?',
       validation: (Rule) => Rule.required(),
-      }),
+    }),
     defineField({
       name: 'slug',
-      title: 'Slug:',
+      title: 'Slug',
       type: 'slug',
       options: {
         source: 'title',
         maxLength: 96,
+        isUnique: () => true,
       },
-      description: 'This is your unique URL identifier for your project.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'projectType',
-      title: 'Type:',
+      name: 'projectStatus',
+      title: 'Project Status',
       type: 'string',
-      description: 'This is the type of your project.',
+      description: 'How is it going with this project?',
       options: {
         list: [
-          { title: 'Public Relations', value: 'pubrelations' },
-          { title: 'Web App', value: 'webapp' },
-          { title: 'Digital Marketing', value: 'digimarketing' },
-          { title: 'Blockchain', value: 'blockchain' },
-          { title: 'Social Media Content', value: 'smcontent' },
-          { title: 'Banner', value: 'banner' },
-          { title: 'Company Profile', value: 'comprofile' },
-          { title: 'Business Model Canvas', value: 'bmcanvas' },
-          { title: 'Feeds', value: 'feeds' },
-          { title: 'Icon / Logo', value: 'iconlogo' },
-          { title: 'Poster', value: 'poster' },
-          { title: 'M.I.C.E', value: 'mice' },
-          { title: 'News Media Report', value: 'newsreport' },
-          { title: 'Press Release', value: 'pressrelease' },
-          { title: 'Content Storyline', value: 'cstoryline' },
-          { title: 'Video', value: 'video' },
-          { title: 'Copywriting', value: 'copywriting' },
+          { title: '🚀 Ongoing', value: 'ongoing' },
+          { title: '✅ Completed', value: 'completed' },
+          { title: '💡 Idea/Concept', value: 'concept' },
         ],
+        layout: 'radio',
       },
+      initialValue: 'completed',
+    }),
+    defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      description: 'Place this project under a relevant category!',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'tags',
+      title: 'Tech Stack / Skill (Tags)',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: { layout: 'tags' },
+      description: 'Add  skill or tech stack that you use in this project. (e.g: React, Next.js, Marketing, etc.)',
     }),
     defineField({
       name: 'projectUrl',
-      title: 'URL:',
+      title: 'Link / URL Address',
       type: 'url',
-      description: 'This is the URL address of your project.',
       validation: (Rule) => Rule.uri({
         scheme: ['http', 'https'],
       }),
     }),
     defineField({
-      name: 'description',
-      title: 'Description:',
-      type: 'text',
-      description: 'This is the description of your project.',
-    }),
-    defineField({
       name: 'coverImage',
-      title: 'Cover',
+      title: 'Image',
       type: 'image',
-      description: 'This is the cover image of your project.',
       options: { hotspot: true },
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alternative Text',
+          validation: (Rule) => Rule.required(),
+        }
+      ],
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: 'description',
+      title: 'Problem & Solution',
+      type: 'blockContent',
+      description: 'Describe your problem and the solution within this project.',
+    }),
+    
+    defineField({
+      name: 'relatedDocs',
+      title: 'Notes & Documentation',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'documentation' }] }],
+      description: 'Is there any notes or documentation related to this project?',
+    }),
+    defineField({
+      name: 'relatedJournal',
+      title: 'Journal',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'journal' }] }],
+      description: 'Is there any journal entry related to this project?',
+    }),
   ],
+  preview: {
+    select: {
+      title: 'title',
+      category: 'category.title',
+      media: 'coverImage',
+    },
+    prepare({ title, category, media }) {
+      return {
+        title: title,
+        subtitle: category ? `📁 ${category}` : 'No Category',
+        media: media,
+      }
+    },
+  },
 })

@@ -88,8 +88,7 @@
 
 .contentGrid {
   display: grid;
-  /* Use auto-fit or a conditional toggle */
-  grid-template-columns: 1fr; 
+  grid-template-columns: 1fr 320px; /* Force the card to a professional width */
   gap: 0;
   transition: all 0.4s ease;
 }
@@ -103,6 +102,15 @@
 }
 
 /* Responsive adjustments */
+@media (max-width: 1400px) {
+  .contentGrid[data-sidebar="open"] {
+    grid-template-columns: 1fr;
+  }
+  .contentGrid[data-sidebar="open"] .cardSection {
+    display: none;
+  }
+}
+
 @media (max-width: 1024px) {
     .contentRow {
       grid-template-columns: 1fr; /* Stack di layar kecil */
