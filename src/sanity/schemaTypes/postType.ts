@@ -11,7 +11,7 @@ export const postType = defineType({
       name: 'title',
       title: 'Headline',
       type: 'string',
-      description: 'Bikin judul yang clickbait tapi berbobot.',
+      description: 'Write your headline here..',
       validation: (Rule) => Rule.required().min(10).max(80),
     }),
     defineField({
@@ -26,10 +26,10 @@ export const postType = defineType({
     }),
     defineField({
       name: 'excerpt',
-      title: 'Summary / Teaser',
+      title: 'Summary',
       type: 'text',
       rows: 3,
-      description: 'Deskripsi singkat buat muncul di card artikel atau Meta Description SEO.',
+      description: 'A brief summary of your post for SEO optimization.',
       validation: (Rule) => Rule.max(160),
     }),
     defineField({
@@ -71,7 +71,7 @@ export const postType = defineType({
       name: 'estimatedReadingTime',
       title: 'Reading Time (Minutes)',
       type: 'number',
-      description: 'Biar pembaca tau mereka butuh berapa lama buat dapet pencerahan dari lo.',
+      description: 'How many minutes does it estimated for your post to be read?',
     }),
     defineField({
       name: 'body',
@@ -82,7 +82,7 @@ export const postType = defineType({
       name: 'isFeatured',
       title: 'Featured Post',
       type: 'boolean',
-      description: 'Ceklis kalo lo mau postingan ini nangkring di highlight utama.',
+      description: 'Check this if you want to feature this post on the main page..',
       initialValue: false,
     }),
   ],
