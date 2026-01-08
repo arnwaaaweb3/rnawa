@@ -1,31 +1,107 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '../../components/layout/HeaderProjects';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
+import { client } from '@/sanity/lib/client';
+import Image from 'next/image';
+import { motion } from 'framer-motion'; // Tambahin ini buat animasi card
+
+interface Project {
+  _id: string;
+  title: string;
+  projectStatus: string;
+  slug: string;
+  imageUrl: string;
+}
 
 export default function ProjectsPage() {
-  // State utama kita pindahkan ke sini
   const [darkMode, setDarkMode] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]); 
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
 
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const query = `*[_type == "portfolioItem"] | order(publishedAt desc) {
+          _id,
+          title,
+          projectStatus,
+          "slug": slug.current,
+          "imageUrl": coverImage.asset->url
+        }`;
+        const data = await client.fetch(query);
+        setProjects(data);
+      } catch (error) {
+        console.error("Gagal ambil data proyek:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
   return (
-    // Kita tambahkan class darkMode ke mainBackground jika state true
     <main className={`${styles.mainBackground} ${darkMode ? styles.darkModeActive : ''}`}>
-      {/* Kita kirim state dan fungsi toggle ke Header sebagai props */}
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
       
       <div className={styles.content}>
-        <h2 style={{ color: darkMode ? '#fff' : '#000' }}>
-        </h2>
+        {loading ? (
+          <div className={styles.loader}>
+             <motion.div 
+               animate={{ rotate: 360 }} 
+               transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+               className={styles.spinner}
+             />
+             <p>Fetching your masterpieces...</p>
+          </div>
+        ) : (
+          <div className={styles.projectGrid}>
+            {projects.map((project, index) => (
+              <motion.div 
+                key={project._id} 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className={`${styles.projectCard} ${darkMode ? styles.cardDark : ''}`}
+              >
+                {/* Efek visual yang sama kayak di Header lo */}
+                <div className={styles.cardVisualEffect} />
+
+                {project.imageUrl && (
+                  <div className={styles.imageWrapper}>
+                    <Image 
+                      src={project.imageUrl} 
+                      alt={project.title} 
+                      fill
+                      className={styles.cardImage}
+                    />
+                  </div>
+                )}
+                
+                <div className={styles.cardInfo}>
+                  <div className={styles.cardHeader}>
+                    <span className={styles.statusBadge}>{project.projectStatus}</span>
+                    <h3 className={styles.cardTitle}>{project.title}</h3>
+                  </div>
+                  <button className={styles.detailButton}>
+                    Explore Project <span>→</span>
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
+
       <div className={styles.backButtonWrapper}>
         <button
-          className={styles.backButton}
-          onClick={() => router.push("/")} // Use router instead of window.history
+          className={`${styles.backButton} ${darkMode ? styles.darkModeButton : ''}`}
+          onClick={() => router.push("/")}
         >
           ← Back
         </button>

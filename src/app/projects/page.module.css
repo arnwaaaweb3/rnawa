@@ -1,48 +1,185 @@
 .mainBackground {
   min-height: 100vh;
   width: 100%;
-  background-color: #ffffff; /* Warna default light mode */
-  transition: background-color 0.5s ease, color 0.5s ease;
+  background-color: #ffffff;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 2rem;
+  font-family: 'Lexend', sans-serif;
 }
 
-/* Class ini akan aktif saat darkMode state di page.tsx bernilai true */
 .darkModeActive {
-  background-color: rgba(255, 255, 255, 0.014);
+  background-color: #0a0a0a;
   color: #ffffff;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.projectGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.5rem;
+}
+
+/* Card Styling - Samain sama Header lo */
+.projectCard {
+  position: relative;
+  background: #ffffff;
+  border: 2px solid #0f0f0f; /* Border tegas kayak Header */
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.cardDark {
+  background: rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.projectCard:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 15px 45px 0 rgba(31, 38, 135, 0.2);
+}
+
+/* Visual Effect dalam Card */
+.cardVisualEffect {
+  position: absolute;
+  top: -20%;
+  right: -20%;
+  width: 150px;
+  height: 150px;
+  background: #ff85e5;
+  filter: blur(40px);
+  opacity: 0.3;
+  border-radius: 50%;
+  z-index: -1;
+  transition: all 0.8s ease;
+}
+
+.cardDark .cardVisualEffect {
+  background: #190b61;
+  opacity: 0.5;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  border-bottom: 2px solid #0f0f0f;
+}
+
+.cardDark .imageWrapper {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.cardImage {
+  object-fit: cover;
+}
+
+.cardInfo {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.cardDark .cardTitle {
+  color: #ffffff;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #0f0f0f;
+  color: #fff;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.cardDark .statusBadge {
+  background: #ffffff;
+  color: #0f0f0f;
+}
+
+.detailButton {
+  background: transparent;
+  border: 1px solid #0f0f0f;
+  padding: 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #0f0f0f;
+}
+
+.cardDark .detailButton {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+
+.detailButton:hover {
+  background: #0f0f0f;
+  color: #fff;
+}
+
+.cardDark .detailButton:hover {
+  background: #ffffff;
+  color: #0f0f0f;
+}
+
+/* Loader Styling */
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0,0,0,0.1);
+  border-top: 4px solid #ff85e5;
+  border-radius: 50%;
 }
 
 .backButtonWrapper {
   position: fixed;
-  bottom: 0;
+  bottom: 0; 
   right: 0;
   padding: clamp(20px, 5vw, 40px);
   z-index: 11;
 }
 
-/* Mode Terang (default) */
 .backButton {
   padding: clamp(8px, 2.5vw, 10px) clamp(14px, 4vw, 22px);
   font-size: clamp(0.85rem, 2.5vw, 1rem);
-  border: 1px solid #0f0f0f;
-  color: #333; /* Warna teks mode terang */
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
   border-radius: 1rem;
-  background: rgba(0,0,0,0.05); /* Latar belakang lebih terang */
+  background: rgba(255,255,255,0.08);
   cursor: pointer;
   backdrop-filter: blur(6px);
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
-/* Mode Gelap */
-.darkModeButton {
-  border: 1px solid rgba(255,255,255,0.15); /* Border lebih terang */
-  color: #f0f0f0; /* Warna teks lebih terang */
-  background: rgba(255,255,255,0.12); /* Latar lebih gelap */
-}
-
-/* Hover effect untuk kedua mode */
-.backButton:hover,
-.darkModeButton:hover {
-  background: rgba(255,255,255,0.2);
+.backButton:hover {
+  background: rgba(255,255,255,0.18);
   transform: translateX(-2px);
 }
