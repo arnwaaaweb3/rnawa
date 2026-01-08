@@ -1,10 +1,10 @@
 .mainBackground {
-  min-height: 100vh;
   width: 100%;
   background-color: #ffffff;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 2rem;
   font-family: 'Lexend', sans-serif;
+  min-height: 100vh;
 }
 
 .darkModeActive {
@@ -14,7 +14,10 @@
 
 .content {
   max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  margin-left: 0; 
+  margin-right: auto;
+  padding-top: 2rem;
 }
 
 .projectGrid {
@@ -46,24 +49,17 @@
   box-shadow: 0 15px 45px 0 rgba(31, 38, 135, 0.2);
 }
 
-/* Visual Effect dalam Card */
-.cardVisualEffect {
+.visualEffect {
   position: absolute;
-  top: -20%;
-  right: -20%;
-  width: 150px;
-  height: 150px;
-  background: #ff85e5;
-  filter: blur(40px);
-  opacity: 0.3;
+  bottom: -50%;
+  left: 0;
+  width: 300px;
+  height: 300px;
+  filter: blur(45px);
+  opacity: 0.4;
   border-radius: 50%;
-  z-index: -1;
-  transition: all 0.8s ease;
-}
-
-.cardDark .cardVisualEffect {
-  background: #190b61;
-  opacity: 0.5;
+  z-index: -1; /* Di bawah teks */
+  pointer-events: none;
 }
 
 .imageWrapper {
@@ -117,7 +113,7 @@
 
 .detailButton {
   background: transparent;
-  border: 1px solid #0f0f0f;
+  border: 2px solid #0f0f0f;
   padding: 10px;
   border-radius: 12px;
   font-weight: 600;
@@ -170,16 +166,85 @@
 .backButton {
   padding: clamp(8px, 2.5vw, 10px) clamp(14px, 4vw, 22px);
   font-size: clamp(0.85rem, 2.5vw, 1rem);
-  border: 1px solid rgba(255,255,255,0.25);
-  color: white;
+  border: 1px solid #0f0f0f; /* Default border item buat light mode */
+  color: #0f0f0f; /* Default teks item buat light mode */
   border-radius: 1rem;
-  background: rgba(255,255,255,0.08);
+  font-family: "Lexend", sans-serif;
+  background: rgba(0, 0, 0, 0.05);
   cursor: pointer;
   backdrop-filter: blur(6px);
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: all 0.3s ease;
+  font-weight: 600;
 }
 
 .backButton:hover {
-  background: rgba(255,255,255,0.18);
-  transform: translateX(-2px);
+  background: #0f0f0f;
+  color: #ffffff;
+  transform: translateX(-5px);
+}
+
+/* Ini class yang dipanggil pas darkMode: true */
+.darkModeButton {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-family: "Lexend", sans-serif;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.darkModeButton:hover {
+  background: #ffffff;
+  color: #0a0a0a;
+}
+
+.loadingState {
+  font-size: clamp(0.75rem, 1.25vw, 1.75rem);
+  font-family: "Lexend", sans-serif;
+  color: #0a0a0a50;
+}
+
+.filterContainer {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.filterTab {
+  background: none;
+  border: none;
+  font-family: 'Lexend', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.4);
+  position: relative;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+}
+
+.activeTab {
+  color: #0f0f0f !important;
+}
+
+.darkModeActive .filterTab {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.darkModeActive .activeTab {
+  color: #ffffff !important;
+}
+
+.activeUnderline {
+  position: absolute;
+  bottom: -0.6rem;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #ff85e5; /* Pink pas light mode */
+  border-radius: 10px;
+}
+
+.darkModeActive .activeUnderline {
+  background: #ffffff;
+  box-shadow: 0 0 15px #190b61;
 }

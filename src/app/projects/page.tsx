@@ -18,8 +18,9 @@ interface Project {
 
 export default function ProjectsPage() {
   const [darkMode, setDarkMode] = useState(false);
-  const [projects, setProjects] = useState<Project[]>([]); 
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
   const router = useRouter();
 
   const toggleDarkMode = () => setDarkMode(!darkMode);
@@ -48,52 +49,80 @@ export default function ProjectsPage() {
   return (
     <main className={`${styles.mainBackground} ${darkMode ? styles.darkModeActive : ''}`}>
       <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-      
+      <div className={styles.filterContainer}>
+        {['all', 'completed', 'ongoing'].map((status) => (
+          <button
+            key={status}
+            onClick={() => setFilter(status)}
+            className={`${styles.filterTab} ${filter === status ? styles.activeTab : ''}`}
+          >
+            {status.toUpperCase()}
+            {filter === status && (
+              <motion.div
+                layoutId="underline"
+                className={styles.activeUnderline}
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+          </button>
+        ))}
+      </div>
       <div className={styles.content}>
         {loading ? (
           <div className={styles.loader}>
-             <motion.div 
-               animate={{ rotate: 360 }} 
-               transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-               className={styles.spinner}
-             />
-             <p>Fetching your masterpieces...</p>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+              className={styles.spinner}
+            />
+            <p className={styles.loadingState}>Loading Nawa&apos;s Projects...</p>
           </div>
+
         ) : (
           <div className={styles.projectGrid}>
-            {projects.map((project, index) => (
-              <motion.div 
-                key={project._id} 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`${styles.projectCard} ${darkMode ? styles.cardDark : ''}`}
-              >
-                {/* Efek visual yang sama kayak di Header lo */}
-                <div className={styles.cardVisualEffect} />
+            {projects
+              .filter(p => filter === 'all' || p.projectStatus === filter)
+              .map((project, index) => (
+                <motion.div
+                  key={project._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`${styles.projectCard} ${darkMode ? styles.cardDark : ''}`}
+                >
+                  {/* Efek visual yang sama kayak di Header lo */}
+                  <motion.div
+                    className={styles.visualEffect}
+                    animate={{
+                      backgroundColor: darkMode ? '#190b61' : '#ff85e5',
+                      scale: darkMode ? 1.5 : 1,
+                      x: darkMode ? '20%' : '-20%',
+                    }}
+                    transition={{ duration: 0.8, ease: "circOut" }}
+                  />
 
-                {project.imageUrl && (
-                  <div className={styles.imageWrapper}>
-                    <Image 
-                      src={project.imageUrl} 
-                      alt={project.title} 
-                      fill
-                      className={styles.cardImage}
-                    />
+                  {project.imageUrl && (
+                    <div className={styles.imageWrapper}>
+                      <Image
+                        src={project.imageUrl}
+                        alt={project.title}
+                        fill
+                        className={styles.cardImage}
+                      />
+                    </div>
+                  )}
+
+                  <div className={styles.cardInfo}>
+                    <div className={styles.cardHeader}>
+                      <span className={styles.statusBadge}>{project.projectStatus}</span>
+                      <h3 className={styles.cardTitle}>{project.title}</h3>
+                    </div>
+                    <button className={styles.detailButton}>
+                      Explore Project <span>→</span>
+                    </button>
                   </div>
-                )}
-                
-                <div className={styles.cardInfo}>
-                  <div className={styles.cardHeader}>
-                    <span className={styles.statusBadge}>{project.projectStatus}</span>
-                    <h3 className={styles.cardTitle}>{project.title}</h3>
-                  </div>
-                  <button className={styles.detailButton}>
-                    Explore Project <span>→</span>
-                  </button>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
           </div>
         )}
       </div>

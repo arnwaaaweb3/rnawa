@@ -46,7 +46,7 @@
   text-align: start;
   font-family: 'Lexend', sans-serif;
   color: rgba(0, 0, 0, 0.76);
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.5rem, 4vw, 4rem);
   animation: slideInRight 0.8s ease-out;
   z-index: 2;
 }
