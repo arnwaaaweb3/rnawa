@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './Header.module.css';
+import styles from './HeaderProjects.module.css';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -22,7 +22,7 @@ export const Header = ({ darkMode, toggleDarkMode }: HeaderProps) => {
         transition={{ duration: 0.8, ease: "circOut" }}
       />
 
-      <h1 className={styles.headerTitle}>Portfolio</h1>
+      <h1 className={styles.headerTitle}>Projects</h1>
       
       <button onClick={toggleDarkMode} className={styles.darkModeToggle}>
         <AnimatePresence mode="wait" initial={false}>

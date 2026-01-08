@@ -21,17 +21,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
 
-  const immersiveRoutes = ['/portfolio', '/studio'];
+  const immersiveRoutes = ['/projects', '/studio'];
   const shouldShowVeil = !immersiveRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
 
   const navItems = [
-    { text: "Portfolio", url: "/portfolio" },
     { text: "Me", url: "/me" },
-    { text: "Project", url: "/projects" },
-    { text: "Documentation", url: "/docs" },
     { text: "Connect", url: "/connect" },
+    { text: "Services", url: "/services"},
+    { text: "Projects", url: "/projects" },
+    { text: "Documentation", url: "/docs" },
   ];
 
   useEffect(() => {

@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Header } from '../../components/layout/Header';
+import { Header } from '../../components/layout/HeaderProjects';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
 
-export default function PortfolioPage() {
+export default function ProjectsPage() {
   // State utama kita pindahkan ke sini
   const [darkMode, setDarkMode] = useState(false);
   const router = useRouter();
@@ -21,7 +21,6 @@ export default function PortfolioPage() {
       <div className={styles.content}>
         <h2 style={{ color: darkMode ? '#fff' : '#000' }}>
         </h2>
-        {/* Konten portfolio lainnya */}
       </div>
       <div className={styles.backButtonWrapper}>
         <button
