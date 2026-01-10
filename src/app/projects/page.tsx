@@ -29,12 +29,25 @@ interface Project {
   relatedJournal?: { title: string; slug: string }[];
 }
 
-// Definisikan struktur data code block-nya
+// Definisikan struktur data code block Sanity
 interface SanityCodeValue {
   code: string;
   language?: string;
   filename?: string;
 }
+
+const portableTextComponents = {
+  types: {
+    code: ({ value }: { value: SanityCodeValue }) => (
+      <div className={styles.codeBlockWrapper}>
+        {value.filename && <div className={styles.codeFilename}>{value.filename}</div>}
+        <pre className={styles.preBlock}>
+          <code>{value.code}</code>
+        </pre>
+      </div>
+    ),
+  },
+};
 
 export default function ProjectsPage() {
   const router = useRouter();
@@ -132,23 +145,6 @@ export default function ProjectsPage() {
     } finally {
       setIsDetailLoading(false);
     }
-  };
-
-  const portableTextComponents = {
-    types: {
-      code: ({ value }: { value: SanityCodeValue }) => (
-        <div className={styles.codeBlockWrapper}>
-          {value.filename && (
-            <div className={styles.codeFilename}>
-              {value.filename}
-            </div>
-          )}
-          <pre className={styles.preBlock}>
-            <code>{value.code}</code>
-          </pre>
-        </div>
-      ),
-    },
   };
 
   /* =======================
