@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Header } from '../../components/layout/HeaderProjects';
-import styles from './page.module.css';
+import { Header } from '../../../components/layout/HeaderProjects';
+import styles from '../[[...slug]]/page.module.css';
 import { useRouter } from 'next/navigation';
 import { client } from '@/sanity/lib/client';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PortableText } from '@portabletext/react';
 import { PortableTextBlock } from '@portabletext/types';
+import ReactMarkdown from 'react-markdown';
 
 interface Category {
   title: string;
@@ -29,6 +30,10 @@ interface Project {
   relatedJournal?: { title: string; slug: string }[];
 }
 
+interface PageProps {
+  params: Promise<{ slug?: string[] }>;
+}
+
 // Definisikan struktur data code block Sanity
 interface SanityCodeValue {
   code: string;
@@ -38,19 +43,36 @@ interface SanityCodeValue {
 
 const portableTextComponents = {
   types: {
-    code: ({ value }: { value: SanityCodeValue }) => (
+    codeBlock: ({ value }: { value: SanityCodeValue }) => (
       <div className={styles.codeBlockWrapper}>
         {value.filename && <div className={styles.codeFilename}>{value.filename}</div>}
         <pre className={styles.preBlock}>
-          <code>{value.code}</code>
+          {/* Pakai ReactMarkdown buat nerjemahin teks kodenya */}
+          <div className={styles.markdownContent}>
+            <ReactMarkdown>
+              {value.code}
+            </ReactMarkdown>
+          </div>
         </pre>
       </div>
     ),
   },
 };
 
-export default function ProjectsPage() {
+export default function ProjectsPage({ params }: PageProps) {
+  const resolvedParams = React.use(params); 
+  const slug = resolvedParams.slug ? resolvedParams.slug[0] : null;
+
   const router = useRouter();
+
+  useEffect(() => {
+    if (slug) {
+      handleExplore(slug);
+    } else {
+      // Kalau visitor balik ke /projects (tanpa slug)
+      setSelectedProject(null);
+    }
+  }, [slug]);
 
   const [darkMode, setDarkMode] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -140,11 +162,19 @@ export default function ProjectsPage() {
       // TypeScript sekarang tau 'data' adalah 'Project' atau 'null'
       const data: Project | null = await client.fetch(query, { slug });
       setSelectedProject(data);
+
+      // UPDATE: Mengubah URL di browser tanpa reload halaman
+      window.history.pushState(null, '', `/projects/${slug}`);
     } catch (error) {
       console.error('Error fetching detail:', error);
     } finally {
       setIsDetailLoading(false);
     }
+  };
+
+  const closePanel = () => {
+    setSelectedProject(null);
+    window.history.pushState(null, '', '/projects'); // Balikin URL ke asal
   };
 
   /* =======================
@@ -294,7 +324,7 @@ export default function ProjectsPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className={styles.overlayBackdrop}
-            onClick={() => setSelectedProject(null)} // Klik luar buat nutup
+            onClick={() => closePanel()} // Klik luar buat nutup
           >
             <motion.div
               initial={{ x: '100%' }} // Muncul dari kanan ala panel
@@ -305,8 +335,20 @@ export default function ProjectsPage() {
             >
               <button
                 className={styles.closePanel}
-                onClick={() => setSelectedProject(null)}>✕ Close</button>
+                onClick={() => closePanel()}>✕ Close</button>
               <h2 className={styles.panelTitle}>{selectedProject.title}</h2>
+              {selectedProject.externalLink && (
+                <motion.a
+                  href={selectedProject.externalLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.ctaDetailLinkButton}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Visit Live Project <span>↗</span>
+                </motion.a>
+              )}
               <div className={styles.projectBody}>
                 {selectedProject.description ? (
                   <PortableText
@@ -316,6 +358,23 @@ export default function ProjectsPage() {
                 ) : (
                   <p>No description available.</p>
                 )}
+              </div>
+              <div className={styles.panelCategoryWrapper}>
+                <p className={styles.panelLabel}>Classified Under:</p>
+                <div className={styles.panelCategoryList}>
+                  {selectedProject.categories?.map((cat) => (
+                    <button
+                      key={cat.slug}
+                      className={styles.panelCategoryTag}
+                      onClick={() => {
+                        setCategoryFilter(cat.title); // Trigger filter di main page
+                        closePanel(); // Tutup panel biar keliatan hasilnya
+                      }}
+                    >
+                      # {cat.title.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </motion.div>

@@ -37,7 +37,6 @@
 /* =========================
    CARD
 ========================= */
-
 .projectCard {
   position: relative;
   background: #ffffff;
@@ -425,6 +424,88 @@
   border-left: 5px solid #ff85e5;
 }
 
+.panelTitle {
+  font-size: 3rem;
+  align-items: flex-start;
+  margin-top: 2rem;
+  line-height: 8svh;
+}
+
+.ctaDetailLinkButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  background: #ff85e5;
+  color: #0a0a0a;
+  border: 2px solid #0a0a0a;
+  border-bottom: 5px solid #0a0a0a;
+  border-right: 3px solid #0a0a0a;
+  border-radius: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.darkModeActive .ctadDetailLinkButton {
+  background: #ffffff;
+  border-color: #ff85e5;
+}
+
+/* =========================
+   CATEGORY TAGS FOR PANEL DETAIL
+   ========================= */
+/* Category Tags di Panel */
+.panelCategoryWrapper {
+  margin: 2rem 0;
+}
+
+.panelLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.panelCategoryList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.panelCategoryTag {
+  background: transparent;
+  border: 1.5px solid #0a0a0a;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: "Lexend", sans-serif;
+  font-weight: 700;
+  color: #0a0a0a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.panelCategoryTag:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+.darkModeActive .panelCategoryTag {
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+.darkModeActive .panelCategoryTag:hover {
+  background: #ff85e5;
+  color: #0a0a0a;
+  border-color: #0a0a0a;
+}
+
 /* =========================
    CLOSE PANEL BUTTON
    ========================= */
@@ -479,13 +560,6 @@
   transform: translateY(-2px);
 }
 
-.panelTitle {
-  font-size: 3rem;
-  align-items: flex-start;
-  margin-top: 2rem;
-  line-height: 8svh;
-}
-
 /* =========================
    CODE BLOCK ENGINE (NEO-BRUTALISM STYLE)
    ========================= */
@@ -530,8 +604,10 @@
   padding: 1.5rem;
   background: #0f0f0f;
   margin: 0;
-  overflow-x: auto;
-  /* Custom scrollbar biar gak ngerusak style */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .preBlock code {
@@ -572,6 +648,21 @@
   background: #ff85e5;
   color: #0a0a0a;
 }
+
+/* =========================
+   CODE BLOCK
+   ========================= */
+.markdownContent {
+  color: #e0e0e0;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* Styling tag spesifik hasil terjemahan markdown */
+.markdownContent h1, .markdownContent h2 { color: #ff85e5; margin-top: 1rem; }
+.markdownContent strong { color: #ff85e5; font-weight: bold; }
+.markdownContent ul { padding-left: 1.5rem; margin: 1rem 0; }
 
 /* =========================
    MEDIA QUERIES
