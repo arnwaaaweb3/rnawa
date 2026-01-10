@@ -14,6 +14,22 @@
   position: relative;
 }
 
+.layoutRoot:has(.immersiveContent) .magnetToggle {
+  box-shadow: none !important;
+}
+
+/* Immersive Content */
+.immersiveContent {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  /* Hapus absolute dan inset, biarkan dia tetep di aliran flex */
+  flex: 1 !important; 
+  position: relative;
+  z-index: 1;
+  /* Kita tetep butuh overflow hidden biar shadow sidebar gak nembus */
+  overflow: hidden; 
+}
+
 /* BACKGROUND */
 .backgroundVeil {
   position: fixed;
@@ -84,7 +100,6 @@
   flex: 1; 
   min-height: 100dvh;
   background: rgba(13, 17, 23, 0.55);
-  backdrop-filter: blur(0.5rem);
   position: relative;
   z-index: 1;
   width: 100%;

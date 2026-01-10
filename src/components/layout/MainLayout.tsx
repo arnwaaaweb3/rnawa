@@ -22,6 +22,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [isMobile, setIsMobile] = useState(false);
 
   const immersiveRoutes = ['/projects', '/studio'];
+  const isImmersive = immersiveRoutes.some(route =>
+    pathname === route || pathname.startsWith(`${route}/`));
   const shouldShowVeil = !immersiveRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
@@ -29,7 +31,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const navItems = [
     { text: "Me", url: "/me" },
     { text: "Connect", url: "/connect" },
-    { text: "Services", url: "/services"},
+    { text: "Services", url: "/services" },
     { text: "Projects", url: "/projects" },
     { text: "Documentation", url: "/docs" },
   ];
@@ -47,23 +49,23 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   // Framer Motion Variants
   const panelVariants = (delay: number): Variants => ({
-    open: { 
-      x: 0, 
-      transition: { 
-        duration: 0.6, 
+    open: {
+      x: 0,
+      transition: {
+        duration: 0.6,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ease: [0.22, 1, 0.36, 1] as any, 
-        delay 
-      } 
+        ease: [0.22, 1, 0.36, 1] as any,
+        delay
+      }
     },
-    closed: { 
-      x: -currentSidebarWidth, 
-      transition: { 
-        duration: 0.5, 
+    closed: {
+      x: -currentSidebarWidth,
+      transition: {
+        duration: 0.5,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ease: [0.22, 1, 0.36, 1] as any, 
-        delay: delay * 0.5 
-      } 
+        ease: [0.22, 1, 0.36, 1] as any,
+        delay: delay * 0.5
+      }
     }
   });
 
@@ -133,14 +135,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
         </div>
       </motion.div>
-
-      <motion.main 
-        layout 
-        className={styles.mainContent}
-        style={{ 
+      <motion.main
+        layout
+        className={`${styles.mainContent} ${isImmersive ? styles.immersiveContent : ''}`}
+        style={{
+          // Logika: Tetep kasih margin & width dinamis biar viewport kepotong pas sidebar ON
           marginLeft: !isMobile && isOpen ? currentSidebarWidth : 0,
           width: !isMobile && isOpen ? `calc(100% - ${currentSidebarWidth}px)` : '100%'
         }}
+        // Pakai transition yang sama dengan sidebar biar geraknya barengan (sinkron)
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}

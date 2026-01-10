@@ -108,6 +108,7 @@
 .cardTitle {
   font-size: 1.5rem;
   font-weight: 700;
+  line-height: 2rem;
 }
 
 .cardDark .cardTitle {
@@ -405,6 +406,7 @@
   top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.8);
   backdrop-filter: blur(8px);
+  border: none;
   z-index: 100;
   display: flex;
   justify-content: flex-end;
@@ -437,6 +439,7 @@
   justify-content: center;
   gap: 10px;
   width: 100%;
+  font-size: 1.25rem;
   padding: 1rem;
   margin: 1.5rem 0;
   background: #ff85e5;
@@ -451,9 +454,28 @@
   letter-spacing: 1px;
 }
 
-.darkModeActive .ctadDetailLinkButton {
-  background: #ffffff;
+.ctaDetailLinkButton:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+  border: 2px solid #0a0a0a;
+  border-bottom: 5px solid #0a0a0a;
+  border-right: 3px solid #0a0a0a;
+}
+
+.darkModeActive .ctaDetailLinkButton {
+  background: #190b61;
   border-color: #ff85e5;
+  color: #ffffff;
+  border-bottom: 5px solid #ff85e5;
+  border-right: 3px solid #ffffff;
+}
+
+.darkModeActive .ctaDetailLinkButton:hover {
+  background: #ffffff;
+  color: #0a0a0a;
+  border: 2px solid #ffffff;
+  border-bottom: 5px solid #190b61;
+  border-right: 3px solid #ff85e5;
 }
 
 /* =========================
@@ -478,9 +500,11 @@
 }
 
 .panelCategoryTag {
-  background: transparent;
-  border: 1.5px solid #0a0a0a;
+  background: #ff85e5;
+  border: 2px solid #0a0a0a;
   padding: 6px 12px;
+  border-bottom: 6px solid #0a0a0a;
+  border-right: 4px solid #0a0a0a;
   border-radius: 8px;
   font-size: 1rem;
   font-family: "Lexend", sans-serif;
@@ -496,14 +520,19 @@
 }
 
 .darkModeActive .panelCategoryTag {
-  border: 1px solid #ffffff;
+  border: 2px solid #ff85e5;
+  border-bottom: 6px solid #ff85e5;
+  border-right: 4px solid #ffffff;
   color: #ffffff;
+  background: #190b61;
 }
 
 .darkModeActive .panelCategoryTag:hover {
-  background: #ff85e5;
+  background: #ffffff;
   color: #0a0a0a;
-  border-color: #0a0a0a;
+  border: 2px solid #190b61;
+  border-bottom: 6px solid #190b61;
+  border-right: 4px solid #ff85e5;
 }
 
 /* =========================
@@ -577,10 +606,10 @@
 }
 
 .codeFilename {
-  background: #0a0a0a;
-  color: #ff85e5; /* Pink signature lo */
+  background: #ffffff;
+  color: #0a0a0a; 
   padding: 0.6rem 1.2rem;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-family: 'Lexend', sans-serif;
   font-weight: 700;
   text-transform: uppercase;
@@ -618,21 +647,20 @@
 }
 
 /* --- DARK MODE ADJUSTMENT --- */
-
 .darkModeActive .codeBlockWrapper {
   background: #1a1a1a;
-  border-color: #ff85e5;
-  border-bottom: 5px solid #ff85e5;
+  border-color: #ffffff;
+  border-bottom: 5px solid #ffffff;
   border-right: 3px solid #ffffff;
 }
 
 .darkModeActive .codeFilename {
-  background: #ff85e5;
-  color: #0a0a0a;
+  background: #190b61;
+  color: #ffffff;
 }
 
 .darkModeActive .codeFilename::before {
-  background: #0a0a0a;
+  background: #ffffff;
 }
 
 .darkModeActive .preBlock {
@@ -640,7 +668,7 @@
 }
 
 .darkModeActive .preBlock code {
-  color: #ffbff4; /* Pink soft biar enak dibaca pas gelap */
+  color: #ffbff4; 
 }
 
 /* Selection color biar keren */
@@ -660,9 +688,18 @@
 }
 
 /* Styling tag spesifik hasil terjemahan markdown */
-.markdownContent h1, .markdownContent h2 { color: #ff85e5; margin-top: 1rem; }
-.markdownContent strong { color: #ff85e5; font-weight: bold; }
-.markdownContent ul { padding-left: 1.5rem; margin: 1rem 0; }
+.markdownContent h1, .markdownContent h2 { 
+  color: #ff85e5; 
+  margin-top: 1rem; 
+}
+.markdownContent strong { 
+  color: #ff85e5; 
+  font-weight: bold; 
+}
+.markdownContent ul { 
+  padding-left: 1.5rem; 
+  margin: 1rem 0; 
+}
 
 /* =========================
    MEDIA QUERIES

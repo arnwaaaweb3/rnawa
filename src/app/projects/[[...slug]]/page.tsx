@@ -26,7 +26,7 @@ interface Project {
   categories?: Category[];
   description?: PortableTextBlock[];
   gallery?: string[];
-  externalLink?: string;
+  projectUrl?: string;
   relatedJournal?: { title: string; slug: string }[];
 }
 
@@ -128,6 +128,7 @@ export default function ProjectsPage({ params }: PageProps) {
           projectStatus,
           "slug": slug.current,
           "imageUrl": coverImage.asset->url,
+          "projectUrl": projectUrl,
           "categories": categories[]->{
             title,
             "slug": slug.current,
@@ -337,14 +338,14 @@ export default function ProjectsPage({ params }: PageProps) {
                 className={styles.closePanel}
                 onClick={() => closePanel()}>✕ Close</button>
               <h2 className={styles.panelTitle}>{selectedProject.title}</h2>
-              {selectedProject.externalLink && (
+              {selectedProject.projectUrl && (
                 <motion.a
-                  href={selectedProject.externalLink}
+                  href={selectedProject.projectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={styles.ctaDetailLinkButton}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.02, opacity: 1 }}
+                  whileTap={{ scale: 0.98, opacity: 1 }}
                 >
                   Visit Live Project <span>↗</span>
                 </motion.a>
@@ -367,8 +368,8 @@ export default function ProjectsPage({ params }: PageProps) {
                       key={cat.slug}
                       className={styles.panelCategoryTag}
                       onClick={() => {
-                        setCategoryFilter(cat.title); // Trigger filter di main page
-                        closePanel(); // Tutup panel biar keliatan hasilnya
+                        setCategoryFilter(cat.title); 
+                        closePanel();
                       }}
                     >
                       # {cat.title.toUpperCase()}
