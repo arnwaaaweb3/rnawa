@@ -14,6 +14,7 @@ export default defineType({
       description: 'What is your project name?',
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: 'slug',
       title: 'Slug',
@@ -25,6 +26,7 @@ export default defineType({
       },
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: 'projectStatus',
       title: 'Project Status',
@@ -40,6 +42,7 @@ export default defineType({
       },
       initialValue: 'completed',
     }),
+
     defineField({
       name: 'category',
       title: 'Category',
@@ -48,6 +51,7 @@ export default defineType({
       description: 'Place this project under a relevant category!',
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: 'tags',
       title: 'Tech Stack / Skill (Tags)',
@@ -56,6 +60,7 @@ export default defineType({
       options: { layout: 'tags' },
       description: 'Add  skill or tech stack that you use in this project. (e.g: React, Next.js, Marketing, etc.)',
     }),
+
     defineField({
       name: 'projectUrl',
       title: 'Link / URL Address',
@@ -64,6 +69,7 @@ export default defineType({
         scheme: ['http', 'https'],
       }),
     }),
+
     defineField({
       name: 'coverImage',
       title: 'Image',
@@ -79,6 +85,7 @@ export default defineType({
       ],
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: 'description',
       title: 'Problem & Solution',
@@ -93,6 +100,7 @@ export default defineType({
       of: [{ type: 'reference', to: [{ type: 'documentation' }] }],
       description: 'Is there any notes or documentation related to this project?',
     }),
+
     defineField({
       name: 'relatedJournal',
       title: 'Journal',
@@ -100,7 +108,15 @@ export default defineType({
       of: [{ type: 'reference', to: [{ type: 'journal' }] }],
       description: 'Is there any journal entry related to this project?',
     }),
+
+    defineField({
+      name: 'categories',
+      title: 'Categories',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'category' } }],
+    }),
   ],
+  
   preview: {
     select: {
       title: 'title',

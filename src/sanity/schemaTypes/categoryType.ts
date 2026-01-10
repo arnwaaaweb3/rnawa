@@ -13,6 +13,7 @@ export const categoryType = defineType({
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
+
     defineField({
       name: 'slug',
       title: 'Slug',
@@ -28,6 +29,13 @@ export const categoryType = defineType({
       title: 'Description',
       type: 'text',
       description: 'Describe this category briefly.',
+    }),
+    
+    defineField({
+      name: 'parent',
+      title: 'Parent Category',
+      type: 'reference',
+      to: [{ type: 'category' }], // Merujuk ke dirinya sendiri buat hierarchy
     }),
   ],
 })
