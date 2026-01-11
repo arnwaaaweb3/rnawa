@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PortableText } from '@portabletext/react';
 import { PortableTextBlock } from '@portabletext/types';
 import ReactMarkdown from 'react-markdown';
+import { CategoryDrawer } from '../../../components/ui/CategoryDrawer';
 
 interface Category {
   title: string;
@@ -60,7 +61,7 @@ const portableTextComponents = {
 };
 
 export default function ProjectsPage({ params }: PageProps) {
-  const resolvedParams = React.use(params); 
+  const resolvedParams = React.use(params);
   const slug = resolvedParams.slug ? resolvedParams.slug[0] : null;
 
   const router = useRouter();
@@ -212,32 +213,12 @@ export default function ProjectsPage({ params }: PageProps) {
         ))}
       </div>
 
-      {/* CATEGORY FILTER */}
-      <div className={styles.categoryFilterContainer}>
-        {availableCategories.map((cat) => (
-          <motion.button
-            key={cat}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setCategoryFilter(cat)}
-            className={`${styles.categoryTab} ${categoryFilter === cat ? styles.activeCategory : ''
-              }`}
-          >
-            {/* Background Pill yang gerak pas diklik */}
-            {categoryFilter === cat && (
-              <motion.div
-                layoutId="activeCategoryPill"
-                className={styles.activeCategoryBg}
-                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-              />
-            )}
-
-            <span className={styles.categoryTabText}>
-              {cat === 'all' ? '📁 ALL PROJECTS' : cat.toUpperCase()}
-            </span>
-          </motion.button>
-        ))}
-      </div>
+      <CategoryDrawer
+        categories={availableCategories}
+        activeCategory={categoryFilter}
+        onCategoryChange={setCategoryFilter}
+        darkMode={darkMode}
+      />
 
       {/* CONTENT */}
       <div className={styles.content}>
@@ -368,7 +349,7 @@ export default function ProjectsPage({ params }: PageProps) {
                       key={cat.slug}
                       className={styles.panelCategoryTag}
                       onClick={() => {
-                        setCategoryFilter(cat.title); 
+                        setCategoryFilter(cat.title);
                         closePanel();
                       }}
                     >
