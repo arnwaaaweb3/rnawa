@@ -5,60 +5,15 @@ import { Header } from '../../../components/layout/HeaderProjects';
 import styles from '../[[...slug]]/page.module.css';
 import { useRouter } from 'next/navigation';
 import { client } from '@/sanity/lib/client';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PortableText } from '@portabletext/react';
-import { PortableTextBlock } from '@portabletext/types';
-import ReactMarkdown from 'react-markdown';
 import { CategoryDrawer } from '../../../components/ui/CategoryDrawer';
-
-interface Category {
-  title: string;
-  slug: string;
-  parent?: string;
-}
-
-interface Project {
-  _id: string;
-  title: string;
-  projectStatus: string;
-  slug: string;
-  imageUrl: string;
-  categories?: Category[];
-  description?: PortableTextBlock[];
-  gallery?: string[];
-  projectUrl?: string;
-  relatedJournal?: { title: string; slug: string }[];
-}
+import { Category, Project } from '@/app/projects/[[...slug]]/types';
+import { ProjectCard } from './ProjectCard';
+import { ProjectDetailPanel } from './ProjectDetailPanel';
 
 interface PageProps {
   params: Promise<{ slug?: string[] }>;
 }
-
-// Definisikan struktur data code block Sanity
-interface SanityCodeValue {
-  code: string;
-  language?: string;
-  filename?: string;
-}
-
-const portableTextComponents = {
-  types: {
-    codeBlock: ({ value }: { value: SanityCodeValue }) => (
-      <div className={styles.codeBlockWrapper}>
-        {value.filename && <div className={styles.codeFilename}>{value.filename}</div>}
-        <pre className={styles.preBlock}>
-          {/* Pakai ReactMarkdown buat nerjemahin teks kodenya */}
-          <div className={styles.markdownContent}>
-            <ReactMarkdown>
-              {value.code}
-            </ReactMarkdown>
-          </div>
-        </pre>
-      </div>
-    ),
-  },
-};
 
 export default function ProjectsPage({ params }: PageProps) {
   const resolvedParams = React.use(params);
@@ -90,10 +45,15 @@ export default function ProjectsPage({ params }: PageProps) {
     return [
       'all',
       ...new Set(
-        projects.flatMap((p) => p.categories?.map((c) => c.title) || [])
+        projects.flatMap((p: Project) => p.categories?.map((c: Category) => c.title) || [])
       ),
     ];
   }, [projects]);
+
+  const closePanel = () => {
+    setSelectedProject(null);
+    window.history.pushState(null, '', '/projects');
+  };
 
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
@@ -174,11 +134,6 @@ export default function ProjectsPage({ params }: PageProps) {
     }
   };
 
-  const closePanel = () => {
-    setSelectedProject(null);
-    window.history.pushState(null, '', '/projects'); // Balikin URL ke asal
-  };
-
   /* =======================
      RENDER
   ======================= */
@@ -234,134 +189,32 @@ export default function ProjectsPage({ params }: PageProps) {
             </p>
           </div>
         ) : (
+
           <div className={styles.projectGrid}>
             <AnimatePresence mode="popLayout">
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project._id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className={`${styles.projectCard} ${darkMode ? styles.cardDark : ''
-                    }`}
-                >
-                  <motion.div
-                    className={styles.visualEffect}
-                    animate={{
-                      backgroundColor: darkMode ? '#190b61' : '#ff85e5',
-                      scale: darkMode ? 1.5 : 1,
-                      x: darkMode ? '120' : '-60',
-                    }}
-                    transition={{ duration: 0.8, ease: 'circOut' }}
-                  />
-
-                  {project.imageUrl && (
-                    <div className={styles.imageWrapper}>
-                      <Image
-                        src={project.imageUrl}
-                        alt={project.title}
-                        fill
-                        className={styles.cardImage}
-                      />
-                    </div>
-                  )}
-
-                  <div className={styles.cardInfo}>
-                    <div className={styles.cardHeader}>
-                      <span className={styles.statusBadge}>
-                        {project.projectStatus}
-                      </span>
-
-                      <div className={styles.cardCategoryList}>
-                        {project.categories?.map((cat) => (
-                          <span key={cat.slug} className={styles.miniTag}>
-                            #{cat.title}
-                          </span>
-                        ))}
-                      </div>
-
-                      <h3 className={styles.cardTitle}>{project.title}</h3>
-                    </div>
-
-                    <button
-                      className={styles.detailButton}
-                      onClick={() => handleExplore(project.slug)}
-                    >
-                      {isDetailLoading && selectedProject?.slug === project.slug ? 'Opening...' : 'See more details'} <span>→</span>
-                    </button>
-                  </div>
-                </motion.div>
+              {filteredProjects.map((p, i) => (
+                <ProjectCard
+                  key={p._id}
+                  project={p}
+                  index={i}
+                  darkMode={darkMode}
+                  isDetailLoading={isDetailLoading}
+                  isSelected={selectedProject?.slug === p.slug}
+                  onExplore={handleExplore}
+                />
               ))}
             </AnimatePresence>
           </div>
         )}
       </div>
 
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className={styles.overlayBackdrop}
-            onClick={() => closePanel()} // Klik luar buat nutup
-          >
-            <motion.div
-              initial={{ x: '100%' }} // Muncul dari kanan ala panel
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              className={styles.detailPanel}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                className={styles.closePanel}
-                onClick={() => closePanel()}>✕ Close</button>
-              <h2 className={styles.panelTitle}>{selectedProject.title}</h2>
-              {selectedProject.projectUrl && (
-                <motion.a
-                  href={selectedProject.projectUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.ctaDetailLinkButton}
-                  whileHover={{ scale: 1.02, opacity: 1 }}
-                  whileTap={{ scale: 0.98, opacity: 1 }}
-                >
-                  Visit Live Project <span>↗</span>
-                </motion.a>
-              )}
-              <div className={styles.projectBody}>
-                {selectedProject.description ? (
-                  <PortableText
-                    value={selectedProject.description}
-                    components={portableTextComponents}
-                  />
-                ) : (
-                  <p>No description available.</p>
-                )}
-              </div>
-              <div className={styles.panelCategoryWrapper}>
-                <p className={styles.panelLabel}>Classified Under:</p>
-                <div className={styles.panelCategoryList}>
-                  {selectedProject.categories?.map((cat) => (
-                    <button
-                      key={cat.slug}
-                      className={styles.panelCategoryTag}
-                      onClick={() => {
-                        setCategoryFilter(cat.title);
-                        closePanel();
-                      }}
-                    >
-                      # {cat.title.toUpperCase()}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ProjectDetailPanel 
+        project={selectedProject} 
+        onClose={closePanel} 
+        onCategoryClick={(cat) => { 
+          setCategoryFilter(cat); 
+          closePanel(); }} 
+      />
 
       {/* BACK BUTTON */}
       <div className={styles.backButtonWrapper}>
