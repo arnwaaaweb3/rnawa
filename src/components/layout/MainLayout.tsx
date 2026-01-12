@@ -23,7 +23,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [isMobile, setIsMobile] = useState(false);
   
   // Ambil state isSidebarOpen global dari Context
-  const { isSidebarOpen, setIsSidebarOpen } = useTheme();
+  const { isSidebarOpen, setIsSidebarOpen, isProjectDetailOpen } = useTheme();
   
   // Pakai state lokal buat kontrol animasi, tapi di-sync sama Context
   const [isOpen, setIsOpen] = useState(true);
@@ -88,8 +88,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div
       className={styles.layoutRoot}
-      data-sidebar={isOpen ? 'open' : 'closed'}
-      data-immersive={!isSidebarOpen}
+      data-sidebar={isSidebarOpen ? 'open' : 'closed'}
+      data-immersive={isProjectDetailOpen}
     >
       {shouldShowVeil && (
         <div className={styles.backgroundVeil}>
@@ -160,9 +160,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
         layout
         className={`${styles.mainContent} ${isImmersive ? styles.immersiveContent : ''}`}
         style={{
-          // Logika Viewport Lebar: Kalau sidebar closed, marginLeft 0 & Width 100%
-          marginLeft: !isMobile && isOpen ? currentSidebarWidth : 0,
-          width: !isMobile && isOpen ? `calc(100% - ${currentSidebarWidth}px)` : '100%'
+          marginLeft: !isMobile && isSidebarOpen ? currentSidebarWidth : 0,
+          width: !isMobile && isSidebarOpen ? `calc(100% - ${currentSidebarWidth}px)` : undefined 
         }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >

@@ -14,6 +14,8 @@ type ThemeContextType = {
   mounted: boolean;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (open: boolean) => void;
+  isProjectDetailOpen: boolean; 
+  setIsProjectDetailOpen: (open: boolean) => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -23,6 +25,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setThemeState] = useState<Theme>('light');
   const [mounted, setMounted] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isProjectDetailOpen, setIsProjectDetailOpen] = useState(false);
 
   // 2. Efek buat inisialisasi (Cuma jalan sekali pas mount)
   useEffect(() => {
@@ -69,7 +72,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         toggleDarkMode: toggleTheme,
         mounted,
         isSidebarOpen,
-        setIsSidebarOpen
+        setIsSidebarOpen,
+        isProjectDetailOpen,
+        setIsProjectDetailOpen
       }}
     >
       {children}

@@ -25,7 +25,6 @@ export default function ProjectsPage({ params }: PageProps) {
   const router = useRouter();
   const { theme, mounted } = useTheme();
   const isDark = theme === 'dark';
-  const { setIsSidebarOpen } = useTheme();
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -33,6 +32,7 @@ export default function ProjectsPage({ params }: PageProps) {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
+  const { setIsSidebarOpen, setIsProjectDetailOpen } = useTheme();
 
   const availableCategories = useMemo(() => {
     return [
@@ -60,7 +60,8 @@ export default function ProjectsPage({ params }: PageProps) {
 
   const closePanel = () => {
     setSelectedProject(null);
-    setIsSidebarOpen(true);
+    setIsProjectDetailOpen(false); // Detail ditutup
+    setIsSidebarOpen(true); // Balikne sidebar pas metu seko detail
     window.history.pushState(null, '', '/projects');
   };
 
@@ -125,10 +126,11 @@ export default function ProjectsPage({ params }: PageProps) {
     if (slug) {
       handleExplore(slug);
       setIsSidebarOpen(false); // Sidebar minggir dhisik cok!
+      setIsProjectDetailOpen(true);
     } else {
-      setIsSidebarOpen(true); // Balikne nek panel tutup
+      setIsProjectDetailOpen(false); // Wis gak moco detail
     }
-  }, [slug, setIsSidebarOpen]);
+  }, [slug, setIsSidebarOpen, setIsProjectDetailOpen]);
 
   return (
     <main className={containerClass}>
