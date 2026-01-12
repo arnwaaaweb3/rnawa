@@ -1,3 +1,4 @@
+// src/app/projects/[[...slug]]/ProjectCard.tsx
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Project } from './types';
@@ -19,7 +20,8 @@ export const ProjectCard = ({
   isSelected,
   onExplore,
 }: ProjectCardProps) => {
-  const { theme } = useTheme();
+  // Ambil mounted sisan nggo jaga-jaga hydration mismatch
+  const { theme, mounted } = useTheme(); 
   const isDark = theme === 'dark';
 
   return (
@@ -31,13 +33,14 @@ export const ProjectCard = ({
       transition={{ duration: 0.3, delay: index * 0.05 }}
       className={styles.projectCard}
     >
+      {/* Visual effect mung mlaku animasine nek wis bener-bener mounted */}
       <motion.div
         className={styles.visualEffect}
-        animate={{
+        animate={mounted ? {
           backgroundColor: isDark ? '#190b61' : '#ff85e5',
           scale: isDark ? 1.5 : 1,
           x: isDark ? 120 : -60,
-        }}
+        } : {}} // Nek durung mounted, jarke kosong (ikut CSS default)
         transition={{ duration: 0.8 }}
       />
 
@@ -47,6 +50,7 @@ export const ProjectCard = ({
             src={project.imageUrl}
             alt={project.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Tambah iki ben Next.js gak rewel
             className={styles.cardImage}
           />
         </div>
@@ -72,6 +76,7 @@ export const ProjectCard = ({
         <button
           className={styles.detailButton}
           onClick={() => onExplore(project.slug)}
+          disabled={isDetailLoading && isSelected} // Tambah disabled ben gak diklik ping pindho
         >
           {isDetailLoading && isSelected
             ? 'Opening...'

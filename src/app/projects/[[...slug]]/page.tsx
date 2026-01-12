@@ -21,8 +21,9 @@ export default function ProjectsPage({ params }: PageProps) {
   const slug = resolvedParams.slug ? resolvedParams.slug[0] : null;
 
   const router = useRouter();
-  const { theme } = useTheme();
+  const { theme, mounted } = useTheme();
   const isDark = theme === 'dark';
+  const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
 
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -117,7 +118,7 @@ export default function ProjectsPage({ params }: PageProps) {
   };
 
   return (
-    <main className={`${styles.mainBackground} ${isDark ? styles.darkModeActive : ''}`}>
+    <main className={containerClass}>
       <Header />
 
       <div className={styles.filterContainer}>
@@ -176,7 +177,7 @@ export default function ProjectsPage({ params }: PageProps) {
 
       <div className={styles.backButtonWrapper}>
         <button
-          className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`}
+          className={`${styles.backButton} ${mounted && isDark ? styles.darkModeButton : ''}`}
           onClick={() => router.push('/')}
         >
           ← Back

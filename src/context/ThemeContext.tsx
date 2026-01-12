@@ -1,67 +1,70 @@
 // src/context/ThemeContext.tsx
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 type Theme = 'light' | 'dark';
 
 type ThemeContextType = {
-  // NEW (recommended)
   theme: Theme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
-
-  // LEGACY (backward compatible)
   darkMode: boolean;
   toggleDarkMode: () => void;
+  mounted: boolean;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-/**
- * ===== Utils =====
- */
-const getInitialTheme = (): Theme => {
-  if (typeof window === 'undefined') return 'light';
-  return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
-};
-
-const syncThemeToDOM = (theme: Theme) => {
-  document.documentElement.classList.toggle('dark', theme === 'dark');
-};
-
-/**
- * ===== Provider =====
- */
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  // ✅ Single source of truth (NO setState in effect)
-  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
+  // 1. State 'theme' default 'light' (sinkron sama SSR)
+  const [theme, setThemeState] = useState<Theme>('light');
+  const [mounted, setMounted] = useState(false);
 
-  // ✅ Effect ONLY syncs external system (DOM)
+  // 2. Efek buat inisialisasi (Cuma jalan sekali pas mount)
   useEffect(() => {
+    const saved = localStorage.getItem('theme') as Theme | null;
+    
+    // Biar ESLint nggak ngamuk "cascading", kita cek dulu
+    // Kalau emang beda sama default ('light'), baru kita update
+    if (saved && saved !== theme) {
+      setThemeState(saved);
+    }
+    
+    setMounted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Cukup sekali pas lahir
+
+  // 3. Efek buat sinkronisasi ke DOM & Storage
+  useEffect(() => {
+    if (!mounted) return;
+
     localStorage.setItem('theme', theme);
-    syncThemeToDOM(theme);
-  }, [theme]);
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme, mounted]);
 
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-  };
-
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setThemeState((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
+  }, []);
+
+  const setTheme = useCallback((newTheme: Theme) => {
+    setThemeState(newTheme);
+  }, []);
 
   return (
     <ThemeContext.Provider
       value={{
-        // new API
         theme,
         setTheme,
         toggleTheme,
-
-        // legacy API
         darkMode: theme === 'dark',
         toggleDarkMode: toggleTheme,
+        mounted,
       }}
     >
       {children}
@@ -69,13 +72,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-/**
- * ===== Hook =====
- */
 export const useTheme = () => {
   const ctx = useContext(ThemeContext);
-  if (!ctx) {
-    throw new Error('useTheme harus dipakai di dalam ThemeProvider');
-  }
+  if (!ctx) throw new Error('useTheme kudu neng jero ThemeProvider');
   return ctx;
 };
