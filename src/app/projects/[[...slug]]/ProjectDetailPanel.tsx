@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { PortableText } from '@portabletext/react';
 import { Project } from './types';
 import { portableTextComponents } from './PortableTextComponents';
-import styles from './page.module.css';
+import styles from '@/app/projects/[[...slug]]/styles/ProjectDetailPanel.module.css';
 
 interface PanelProps {
   project: Project | null;

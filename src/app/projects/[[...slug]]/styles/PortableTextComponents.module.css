@@ -1,0 +1,205 @@
+/* =========================
+   CODE BLOCK ENGINE
+   (NEO-BRUTALISM STYLE)
+========================= */
+
+.codeBlockWrapper {
+  margin: 2rem 0;
+  background: #f5f5f5;
+  border: 2px solid #0a0a0a;
+  border-radius: 12px;
+  overflow: hidden;
+
+  /* Sharp brutalist shadow */
+  border-bottom: 5px solid #0a0a0a;
+  border-right: 3px solid #0a0a0a;
+
+  transition: transform 0.2s ease;
+}
+
+.codeBlockWrapper:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   CODE FILENAME HEADER
+========================= */
+
+.codeFilename {
+  background: #ffffff;
+  color: #0a0a0a;
+  padding: 0.6rem 1.2rem;
+
+  font-size: 0.8rem;
+  font-family: 'Lexend', sans-serif;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Terminal-style dot */
+.codeFilename::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #ff85e5;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* =========================
+   PRE / CODE AREA
+========================= */
+
+.preBlock {
+  padding: 1.5rem;
+  background: #0f0f0f;
+
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.preBlock code {
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #e0e0e0;
+}
+
+/* Selection highlight */
+.preBlock code::selection {
+  background: #ff85e5;
+  color: #0a0a0a;
+}
+
+/* =========================
+   MARKDOWN CONTENT
+========================= */
+
+.markdownContent {
+  color: #e0e0e0;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* Markdown-specific tags */
+.markdownContent h1,
+.markdownContent h2 {
+  color: #ff85e5;
+  margin-top: 1rem;
+}
+
+.markdownContent strong {
+  color: #ff85e5;
+  font-weight: bold;
+}
+
+.markdownContent ul {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+/* =========================
+   DARK MODE SUPPORT
+   (inherit from parent)
+========================= */
+
+:global(.darkModeActive) .codeBlockWrapper {
+  background: #1a1a1a;
+  border-color: #ffffff;
+  border-bottom: 5px solid #ffffff;
+  border-right: 3px solid #ffffff;
+}
+
+:global(.darkModeActive) .codeFilename {
+  background: #190b61;
+  color: #ffffff;
+}
+
+:global(.darkModeActive) .codeFilename::before {
+  background: #ffffff;
+}
+
+:global(.darkModeActive) .preBlock {
+  background: #050505;
+}
+
+:global(.darkModeActive) .preBlock code {
+  color: #ffbff4;
+}
+
+/* =========================
+   RESPONSIVENESS
+========================= */
+
+/* --- SMART TV (≥1921px) --- */
+@media (min-width: 1921px) {
+  .codeBlockWrapper {
+    margin: 3rem 0;
+  }
+
+  .preBlock code {
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+}
+
+/* --- DESKTOP / PC (≤1440px) --- */
+@media (max-width: 1440px) {
+  .preBlock code {
+    font-size: 0.95rem;
+  }
+}
+
+/* --- LAPTOP (≤1200px) --- */
+@media (max-width: 1200px) {
+  .codeBlockWrapper {
+    margin: 1.75rem 0;
+  }
+}
+
+/* --- TABLET / iPad (≤768px) --- */
+@media (max-width: 768px) {
+  .codeFilename {
+    font-size: 0.7rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .preBlock {
+    padding: 1.25rem;
+  }
+
+  .preBlock code {
+    font-size: 0.85rem;
+  }
+}
+
+/* --- MOBILE / HP (≤480px) --- */
+@media (max-width: 480px) {
+  .codeBlockWrapper {
+    margin: 1.25rem 0;
+  }
+
+  .codeFilename {
+    font-size: 0.65rem;
+  }
+
+  .preBlock {
+    padding: 1rem;
+  }
+
+  .preBlock code {
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+}

@@ -1,39 +1,37 @@
 import React from 'react';
 import styles from './HeaderProjects.module.css';
 import { FaSun, FaMoon } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'; // Tambah AnimatePresence biar keren
+import { useTheme } from '@/context/ThemeContext';
 
-// Definisi tipe data props (TypeScript)
-interface HeaderProps {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-}
+export const Header = () => {
+  const { darkMode, toggleDarkMode } = useTheme();
 
-export const Header = ({ darkMode, toggleDarkMode }: HeaderProps) => {
   return (
     <header className={`${styles.headerContainer} ${darkMode ? styles.darkMode : ''}`}>
       <motion.div 
         className={styles.visualEffect}
         animate={{
           backgroundColor: darkMode ? '#190b61' : '#ff85e5',
-          scale: darkMode ? 1.5 : 1,
-          x: darkMode ? '20%' : '-20%',
+          scale: darkMode ? 1.8 : 1,
+          x: darkMode ? '30%' : '-10%',
         }}
         transition={{ duration: 0.8, ease: "circOut" }}
       />
 
       <h1 className={styles.headerTitle}>Projects</h1>
       
+      {/* Kasih className biar style-nya jalan! */}
       <button onClick={toggleDarkMode} className={styles.darkModeToggle}>
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence mode="wait">
           <motion.div
             key={darkMode ? "sun" : "moon"}
-            initial={{ y: 20, opacity: 0, rotate: -45 }}
-            animate={{ y: 0, opacity: 1, rotate: 0 }}
-            exit={{ y: -20, opacity: 0, rotate: 45 }}
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -10, opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            {darkMode ? <FaSun size={24} /> : <FaMoon size={24} />}
+            {darkMode ? <FaSun size={20} /> : <FaMoon size={20} />}
           </motion.div>
         </AnimatePresence>
       </button>

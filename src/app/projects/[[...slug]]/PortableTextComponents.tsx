@@ -1,7 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import styles from './page.module.css';
+import styles from '@/app/projects/[[...slug]]/styles/PortableTextComponents.module.css';
 import { SanityCodeValue } from './types';
 
 export const portableTextComponents = {

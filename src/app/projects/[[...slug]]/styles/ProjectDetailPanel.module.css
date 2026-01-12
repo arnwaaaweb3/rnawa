@@ -1,0 +1,273 @@
+/* =========================
+   OVERLAY / BACKDROP
+========================= */
+
+.overlayBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* =========================
+   DETAIL PANEL
+========================= */
+
+.detailPanel {
+  width: clamp(300px, 50vw, 600px);
+  height: 100%;
+  background: #ffffff;
+  padding: 3rem;
+  border-left: 5px solid #0f0f0f;
+  overflow-y: auto;
+  position: relative;
+}
+
+.darkModeActive .detailPanel {
+  background: #0a0a0a;
+  border-left: 5px solid #ff85e5;
+}
+
+/* =========================
+   CLOSE BUTTON
+========================= */
+
+.closePanel {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-family: 'Lexend', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: #ffffff;
+  color: #0a0a0a;
+  border: 2px solid #0a0a0a;
+  border-bottom: 4px solid #0a0a0a;
+  border-right: 3px solid #0a0a0a;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.closePanel:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: #ff85e5;
+  transform: translateY(-2px);
+}
+
+.darkModeActive .closePanel {
+  background: #0a0a0a;
+  color: #ffffff;
+  border: 2px solid #ff85e5;
+  border-top: 2px solid #ffffff;
+  border-bottom: 4px solid #ff85e5;
+  border-right: 3px solid #ffffff;
+}
+
+.darkModeActive .closePanel:hover {
+  background: #190b61;
+  border-color: #ffffff;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+.panelTitle {
+  font-size: 3rem;
+  margin-top: 2rem;
+  line-height: 8svh;
+}
+
+/* =========================
+   CTA BUTTON
+========================= */
+
+.ctaDetailLinkButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  font-size: 1.25rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  background: #ff85e5;
+  color: #0a0a0a;
+  border: 2px solid #0a0a0a;
+  border-bottom: 5px solid #0a0a0a;
+  border-right: 3px solid #0a0a0a;
+  border-radius: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.25s ease;
+}
+
+.ctaDetailLinkButton:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+.darkModeActive .ctaDetailLinkButton {
+  background: #190b61;
+  color: #ffffff;
+  border-color: #ff85e5;
+  border-bottom: 5px solid #ff85e5;
+  border-right: 3px solid #ffffff;
+}
+
+.darkModeActive .ctaDetailLinkButton:hover {
+  background: #ffffff;
+  color: #0a0a0a;
+}
+
+/* =========================
+   PROJECT BODY / CONTENT
+========================= */
+
+.projectBody {
+  margin-top: 1.5rem;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* =========================
+   CATEGORY SECTION
+========================= */
+
+.panelCategoryWrapper {
+  margin: 2rem 0;
+}
+
+.panelLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.panelCategoryList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.panelCategoryTag {
+  background: #ff85e5;
+  border: 2px solid #0a0a0a;
+  padding: 6px 12px;
+  border-bottom: 6px solid #0a0a0a;
+  border-right: 4px solid #0a0a0a;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Lexend', sans-serif;
+  font-weight: 700;
+  color: #0a0a0a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.panelCategoryTag:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+.darkModeActive .panelCategoryTag {
+  background: #190b61;
+  color: #ffffff;
+  border-color: #ff85e5;
+  border-bottom-color: #ff85e5;
+  border-right-color: #ffffff;
+}
+
+.darkModeActive .panelCategoryTag:hover {
+  background: #ffffff;
+  color: #0a0a0a;
+}
+
+/* =========================
+   RESPONSIVENESS
+========================= */
+
+/* --- SMART TV --- */
+@media (min-width: 1921px) {
+  .detailPanel {
+    width: 35vw;
+    padding: 4rem;
+  }
+
+  .panelTitle {
+    font-size: 4rem;
+    line-height: 10svh;
+  }
+}
+
+/* --- DESKTOP --- */
+@media (max-width: 1440px) {
+  .panelTitle {
+    font-size: 3rem;
+  }
+}
+
+/* --- LAPTOP --- */
+@media (max-width: 1200px) {
+  .detailPanel {
+    width: 60vw;
+    padding: 2.5rem;
+  }
+
+  .panelTitle {
+    font-size: 2.5rem;
+    line-height: 7svh;
+  }
+}
+
+/* --- TABLET --- */
+@media (max-width: 768px) {
+  .detailPanel {
+    width: 80vw;
+    padding: 2rem;
+  }
+
+  .panelTitle {
+    font-size: 2.2rem;
+    line-height: 6svh;
+    margin-top: 3rem;
+  }
+}
+
+/* --- MOBILE --- */
+@media (max-width: 480px) {
+  .detailPanel {
+    width: 100%;
+    padding: 1.5rem;
+    border-left: none;
+    border-top: 5px solid #0f0f0f;
+  }
+
+  .darkModeActive .detailPanel {
+    border-top-color: #ff85e5;
+  }
+
+  .panelTitle {
+    font-size: 1.8rem;
+    line-height: 1.2;
+    margin-top: 4rem;
+  }
+
+  .closePanel {
+    top: 1rem;
+    right: 1rem;
+    padding: 6px 12px;
+    font-size: 0.65rem;
+  }
+}

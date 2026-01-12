@@ -1,0 +1,244 @@
+/* =========================
+   PROJECT CARD BASE
+========================= */
+
+.projectCard {
+  position: relative;
+  background: #ffffff;
+  border: 2px solid #0f0f0f;
+  border-radius: 20px;
+  overflow: hidden;
+
+  border-bottom: 6px solid #0a0a0a;
+  border-right: 4px solid #0a0a0a;
+
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.projectCard:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+}
+
+/* =========================
+   DARK MODE (GLOBAL)
+========================= */
+
+:global(html.dark) .projectCard {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: #ff85e5;
+  border-right-color: #ffffff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================
+   VISUAL EFFECT (GLOW)
+========================= */
+
+.visualEffect {
+  position: absolute;
+  bottom: -50%;
+  left: -60%;
+  width: 400px;
+  height: 400px;
+  border-radius: 25%;
+  filter: blur(45px);
+  opacity: 0.4;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* =========================
+   IMAGE
+========================= */
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  border-bottom: 2px solid #0f0f0f;
+  z-index: 2;
+}
+
+:global(html.dark) .imageWrapper {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.cardImage {
+  object-fit: cover;
+}
+
+/* =========================
+   CARD CONTENT
+========================= */
+
+.cardInfo {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 2rem;
+  color: #0f0f0f;
+}
+
+:global(html.dark) .cardTitle {
+  color: #ffffff;
+}
+
+/* =========================
+   STATUS BADGE
+========================= */
+
+.statusBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: #0f0f0f;
+  color: #ffffff;
+  width: fit-content;
+}
+
+:global(html.dark) .statusBadge {
+  background: #ff85e5;
+  color: #0f0f0f;
+}
+
+/* =========================
+   CATEGORY TAGS
+========================= */
+
+.cardCategoryList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.miniTag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #0a0a0a;
+}
+
+:global(html.dark) .miniTag {
+  color: #ffffff;
+}
+
+/* =========================
+   DETAIL BUTTON
+========================= */
+
+.detailButton {
+  background: #ffffff;
+  border: 2px solid #0f0f0f;
+  padding: 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-family: 'Lexend', sans-serif;
+  cursor: pointer;
+  color: #0f0f0f;
+  transition: all 0.25s ease;
+}
+
+.detailButton:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: #0a0a0a;
+}
+
+:global(html.dark) .detailButton {
+  background: #0f0f0f;
+  border-color: #ff85e5;
+  color: #ffffff;
+}
+
+:global(html.dark) .detailButton:hover {
+  background: #ff85e5;
+  color: #0f0f0f;
+  border-color: #0a0a0a;
+}
+
+/* =========================
+   RESPONSIVENESS
+========================= */
+
+/* --- SMART TV (≥1921px) --- */
+@media (min-width: 1921px) {
+  .imageWrapper {
+    height: 280px;
+  }
+
+  .cardTitle {
+    font-size: 2rem;
+    line-height: 2.6rem;
+  }
+
+  .cardInfo {
+    padding: 2rem;
+  }
+}
+
+/* --- DESKTOP / PC (≤1440px) --- */
+@media (max-width: 1440px) {
+  .cardTitle {
+    font-size: 1.4rem;
+  }
+}
+
+/* --- LAPTOP (≤1200px) --- */
+@media (max-width: 1200px) {
+  .imageWrapper {
+    height: 200px;
+  }
+
+  .cardInfo {
+    padding: 1.25rem;
+  }
+}
+
+/* --- TABLET / iPAD (≤768px) --- */
+@media (max-width: 768px) {
+  .imageWrapper {
+    height: 190px;
+  }
+
+  .cardTitle {
+    font-size: 1.3rem;
+  }
+
+  .detailButton {
+    width: 100%;
+  }
+}
+
+/* --- MOBILE / HP (≤480px) --- */
+@media (max-width: 480px) {
+  .imageWrapper {
+    height: 170px;
+  }
+
+  .cardTitle {
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+  }
+
+  .cardInfo {
+    padding: 1rem;
+  }
+}

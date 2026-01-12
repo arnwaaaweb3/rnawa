@@ -7,13 +7,21 @@
   z-index: 10;
 }
 
-/* --- LIGHT MODE (Default) --- */
+/* ===============================
+   LIGHT MODE (DEFAULT)
+   =============================== */
+
 .drawerTrigger {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 10px 20px;
-  background: linear-gradient(90deg, #ff85e5 65%, #ffbff4 85%, #ffffff 100%);
+  background: linear-gradient(
+    90deg,
+    #ff85e5 65%,
+    #ffbff4 85%,
+    #ffffff 100%
+  );
   border: 2px solid #0a0a0a;
   border-bottom: 5px solid #0a0a0a;
   border-right: 3px solid #0a0a0a;
@@ -22,19 +30,22 @@
   font-family: 'Lexend', sans-serif;
   font-weight: 700;
   color: #0a0a0a;
-  transition: all 0.2s ease;
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .drawerTrigger:active {
   background: #0a0a0a;
-  border-color: #0f0f0f;
   color: #ffffff;
 }
 
-.triggerActive {
-  background: linear-gradient(90deg, #ff85e5 65%, #ffbff4 85%, #ffffff 100%);
-  color: #ffffff !important;
-  border-color: #0a0a0a;
+.drawerTrigger.triggerActive {
+  background: linear-gradient(
+    90deg,
+    #ff85e5 65%,
+    #ffbff4 85%,
+    #ffffff 100%
+  );
+  color: #ffffff;
 }
 
 .drawerLabel {
@@ -56,57 +67,71 @@
   scrollbar-width: none;
 }
 
+/* ===============================
+   CATEGORY TAB (LIGHT)
+   =============================== */
+
 .categoryTab {
   border: 2px solid #0a0a0a;
+  border-right: 3px solid #0a0a0a;
+  border-bottom: 5px solid #0a0a0a;
   padding: 8px 16px;
   border-radius: 8px;
   background: #ffffff;
   color: #0a0a0a;
-  font-family: "Lexend", sans-serif;
-  white-space: nowrap;
+  font-family: 'Lexend', sans-serif;
   font-size: 1rem;
   font-weight: 700;
-  border-right: 3px solid #0a0a0a;
-  border-bottom: 5px solid #0a0a0a;
-  transition: all 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
 }
 
-.activeCategory {
-  background: #e7e56a !important;
-  color: #0a0a0a !important;
+.categoryTab.activeCategory {
+  background: #e7e56a;
+  color: #0a0a0a;
 }
 
-/* --- DARK MODE OVERRIDES --- */
-.darkModeActive .drawerTrigger {
-  background: linear-gradient(90deg, #190b61 65%, #140a49 85%, #0a0a0a 100%);
+/* ===============================
+   DARK MODE (GLOBAL)
+   =============================== */
+
+:global(html.dark) .drawerTrigger {
+  background: linear-gradient(
+    90deg,
+    #190b61 65%,
+    #140a49 85%,
+    #0a0a0a 100%
+  );
   border-color: #ff85e5;
   border-bottom-color: #ff85e5;
   border-right-color: #ffffff;
   color: #ffffff;
 }
 
-.darkModeActive .drawerTrigger:active {
+:global(html.dark) .drawerTrigger:active {
   background: #ffffff;
-  border-color: #190b61;
   color: #190b61;
 }
 
-.darkModeActive .triggerActive {
-  background: #ffffff !important;
-  color: #190b61 !important;
-  border-color: #ff85e5;
+:global(html.dark) .drawerTrigger.triggerActive {
+  background: #ffffff;
+  color: #190b61;
 }
 
-.darkModeActive .categoryTab {
+/* ===============================
+   CATEGORY TAB (DARK)
+   =============================== */
+
+:global(html.dark) .categoryTab {
   background: #0a0a0a;
+  color: #ffffff;
   border-color: #ffffff;
   border-bottom-color: #ff85e5;
   border-right-color: #ffffff;
-  color: #ffffff;
 }
 
-.darkModeActive .categoryTab.activeCategory {
-  background: #e7e56a !important;
-  color: #0a0a0a !important;
-  border-color: #ffffff;
+:global(html.dark) .categoryTab.activeCategory {
+  background: #e7e56a;
+  color: #0a0a0a;
 }

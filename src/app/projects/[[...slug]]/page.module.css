@@ -24,6 +24,48 @@
 }
 
 /* =========================
+   FILTER
+========================= */
+
+.filterContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.filterTab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #ff85e5;
+  position: relative;
+}
+
+.darkModeActive .filterTab {
+  color: #ffffff;
+}
+
+.activeTab {
+  color: #0f0f0f;
+}
+
+.darkModeActive .activeTab {
+  color: #ff85e5;
+}
+
+.activeUnderline {
+  position: absolute;
+  bottom: -0.6rem;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 10px;
+  background: #ff85e5;
+}
+
+/* =========================
    GRID
 ========================= */
 
@@ -31,23 +73,22 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2.5rem;
-  z-index: 0;
 }
 
 /* =========================
    CARD
 ========================= */
+
 .projectCard {
   position: relative;
   background: #ffffff;
   border: 2px solid #0f0f0f;
   border-radius: 20px;
   overflow: hidden;
-
   border-bottom: 6px solid #0a0a0a;
   border-right: 4px solid #0a0a0a;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .projectCard:hover {
@@ -99,10 +140,18 @@
 ========================= */
 
 .cardInfo {
+  position: relative;
+  z-index: 2;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .cardTitle {
@@ -120,7 +169,6 @@
   padding: 4px 12px;
   border-radius: 999px;
   font-size: 0.7rem;
-  margin-bottom: 0.5rem;
   font-weight: 700;
   letter-spacing: 1px;
   background: #0f0f0f;
@@ -132,14 +180,8 @@
   color: #0f0f0f;
 }
 
-.cardInfo,
-.imageWrapper {
-  position: relative;
-  z-index: 2;
-}
-
 /* =========================
-   CATEGORY TAG
+   CATEGORY TAG (CARD)
 ========================= */
 
 .cardCategoryList {
@@ -159,101 +201,28 @@
 }
 
 /* =========================
-   BUTTONS (GLOBAL)
+   BUTTONS
 ========================= */
 
-.detailButton,
-.backButton,
-.categoryTab {
-  font-family: 'Lexend', sans-serif;
+.detailButton {
+  background: #ffffff;
+  border: 2px solid #0f0f0f;
+  padding: 10px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-/* Detail Button */
-
-.detailButton { 
-  background: #ffffff; 
-  border: 2px solid #0f0f0f; 
-  padding: 10px; 
-  border-radius: 12px; 
-  font-weight: 600; 
-  cursor: pointer; 
-  transition: all 0.3s ease; 
-  color: #0f0f0f;
-}
-
-.detailButton:hover { 
-  background: #0a0a0a; 
+.detailButton:hover {
+  background: #0a0a0a;
   color: #ffffff;
-  border: 2px solid #0a0a0a; 
 }
 
 .cardDark .detailButton {
   background: #0f0f0f;
-  border: 2px solid #ff85e5; 
-  color: #ffffff; 
-}
-
-.cardDark .detailButton:hover { 
-  background: #ff85e5; 
-  color: #0f0f0f;
-  border: 2px solid #0a0a0a; 
-}
-
-/* =========================
-   FILTER TABS
-========================= */
-
-.filterContainer {
-  display: flex;
-  gap: 1rem;
-}
-
-.filterTab {
-  background: none;
-  cursor: pointer;
-  border: none;
-  font-size: 1rem;
-  letter-spacing: 1px;
-  font-family: "Lexend", sans-serif;
-  color: #ff85e5;
-  font-weight: 600;
-  position: relative;
-}
-
-.darkModeActive .filterTab {
+  border-color: #ff85e5;
   color: #ffffff;
-  font-family: "Lexend", sans-serif;
-  font-weight: 600;
-}
-
-.activeTab {
-  color: #0f0f0f;
-  font-weight: 600;
-  font-family: "Lexend", sans-serif;
-}
-
-.darkModeActive .activeTab {
-  color: #ff85e5;
-  font-weight: 600;
-  font-family: "Lexend", sans-serif;
-}
-
-.activeUnderline {
-  position: absolute;
-  bottom: -0.6rem;
-  left: 0;
-  right: 0;
-  height: 4px;
-  font-family: "Lexend", sans-serif;
-  border-radius: 10px;
-  background: #ff85e5;
-}
-
-.darkModeActive .activeUnderline {
-  background: #ff85e5;
 }
 
 /* =========================
@@ -264,9 +233,8 @@
   height: 50vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
 }
 
 .spinner {
@@ -278,70 +246,18 @@
 }
 
 .loadingState {
-  font-size: clamp(0.75rem, 1.25vw, 1.2rem);
   opacity: 0.5;
 }
 
 /* =========================
-   BACK BUTTON
+   DETAIL PANEL
 ========================= */
 
-.backButtonWrapper {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  padding: clamp(20px, 5vw, 40px);
-}
-
-.backButton {
-  padding: clamp(8px, 2.5vw, 10px) clamp(14px, 4vw, 22px);
-  border-radius: 1rem;
-  border: 2px solid #0a0a0a;
-  background: transparent;
-  font-size: clamp(0.5rem, 1rem, 1.5rem);
-  backdrop-filter: blur(6px);
-  border-bottom: 4px solid #0a0a0a;
-  color: #0a0a0a;
-}
-
-.backButton:hover {
-  background: #0a0a0a;
-  color: #ffffff;
-  border: 2px solid #ff85e5;
-  transform: translateX(-5px);
-  border-bottom: 4px solid #ff85e5;
-}
-
-.darkModeButton {
-  padding: clamp(8px, 2.5vw, 10px) clamp(14px, 4vw, 22px);
-  border-radius: 1rem;
-  border: 2px solid #ff85e5;
-  background: transparent;
-  font-size: clamp(0.5rem, 1rem, 1.5rem);
-  backdrop-filter: blur(6px);
-  border-bottom: 4px solid #ff85e5;
-  border-right: 2px solid #ffffff;
-  color: #ffffff;
-}
-
-.darkModeButton:hover {
-  background: #140a49;
-  color: #ffffff;
-  border: 2px solid #ffffff;
-  border-right: 2px solid #ff85e5;
-  transform: translateX(-5px);
-  border-bottom: 4px solid #ffffff;
-}
-
-/* =========================
-   PANEL DETAIL PROJECT
-   ========================= */
 .overlayBackdrop {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  inset: 0;
   background: rgba(0,0,0,0.8);
   backdrop-filter: blur(8px);
-  border: none;
   z-index: 100;
   display: flex;
   justify-content: flex-end;
@@ -358,73 +274,24 @@
 
 .darkModeActive .detailPanel {
   background: #0a0a0a;
-  border-left: 5px solid #ff85e5;
+  border-left-color: #ff85e5;
 }
 
 .panelTitle {
   font-size: 3rem;
-  align-items: flex-start;
   margin-top: 2rem;
-  line-height: 8svh;
-}
-
-.ctaDetailLinkButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  font-size: 1.25rem;
-  padding: 1rem;
-  margin: 1.5rem 0;
-  background: #ff85e5;
-  color: #0a0a0a;
-  border: 2px solid #0a0a0a;
-  border-bottom: 5px solid #0a0a0a;
-  border-right: 3px solid #0a0a0a;
-  border-radius: 12px;
-  font-weight: 800;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.ctaDetailLinkButton:hover {
-  background: #0a0a0a;
-  color: #ffffff;
-  border: 2px solid #0a0a0a;
-  border-bottom: 5px solid #0a0a0a;
-  border-right: 3px solid #0a0a0a;
-}
-
-.darkModeActive .ctaDetailLinkButton {
-  background: #190b61;
-  border-color: #ff85e5;
-  color: #ffffff;
-  border-bottom: 5px solid #ff85e5;
-  border-right: 3px solid #ffffff;
-}
-
-.darkModeActive .ctaDetailLinkButton:hover {
-  background: #ffffff;
-  color: #0a0a0a;
-  border: 2px solid #ffffff;
-  border-bottom: 5px solid #190b61;
-  border-right: 3px solid #ff85e5;
 }
 
 /* =========================
-   CATEGORY TAGS FOR PANEL DETAIL
-   ========================= */
-/* Category Tags di Panel */
+   PANEL CATEGORY
+========================= */
+
 .panelCategoryWrapper {
   margin: 2rem 0;
 }
 
 .panelLabel {
-  font-size: 1rem;
   font-weight: 700;
-  text-transform: uppercase;
   margin-bottom: 0.5rem;
 }
 
@@ -438,315 +305,95 @@
   background: #ff85e5;
   border: 2px solid #0a0a0a;
   padding: 6px 12px;
-  border-bottom: 6px solid #0a0a0a;
-  border-right: 4px solid #0a0a0a;
   border-radius: 8px;
-  font-size: 1rem;
-  font-family: "Lexend", sans-serif;
   font-weight: 700;
-  color: #0a0a0a;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.panelCategoryTag:hover {
-  background: #0a0a0a;
-  color: #ffffff;
-}
-
-.darkModeActive .panelCategoryTag {
-  border: 2px solid #ff85e5;
-  border-bottom: 6px solid #ff85e5;
-  border-right: 4px solid #ffffff;
-  color: #ffffff;
-  background: #190b61;
-}
-
-.darkModeActive .panelCategoryTag:hover {
-  background: #ffffff;
-  color: #0a0a0a;
-  border: 2px solid #190b61;
-  border-bottom: 6px solid #190b61;
-  border-right: 4px solid #ff85e5;
-}
-
-/* =========================
-   CLOSE PANEL BUTTON
-   ========================= */
-.closePanel {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  padding: 8px 16px;
-  border-radius: 12px;
-  font-family: 'Lexend', sans-serif;
-  font-weight: 700;
-  font-size: 0.75rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  background: #ffffff;
-  color: #0a0a0a;
-  border: 2px solid #0a0a0a;
-  border-bottom: 4px solid #0a0a0a;
-  border-right: 3px solid #0a0a0a;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.closePanel:hover {
-  background: #0a0a0a;
-  color: #ffffff;
-
-  border: 2px solid #ff85e5;
-  border-bottom: 4px solid #ff85e5;
-  border-right: 3px solid #ff85e5;
-
-  transform: translateY(-2px);
-}
-
-.darkModeActive .closePanel {
-  background: #0a0a0a;
-  color: #ffffff;
-
-  border: 2px solid #ff85e5;
-  border-top: 2px solid #ffffff;
-  border-bottom: 4px solid hsl(313, 100%, 76%);
-  border-right: 3px solid #ffffff;
-}
-
-.darkModeActive .closePanel:hover {
-  background: #190b61;
-  color: #ffffff;
-  border: 2px solid #ffffff;
-  border-top: 2px solid #ff85e5;
-  border-bottom: 4px solid #ffffff;
-  border-right: 3px solid #ff85e5;
-  transform: translateY(-2px);
-}
-
-/* =========================
-   CODE BLOCK ENGINE (NEO-BRUTALISM STYLE)
-   ========================= */
-
-.codeBlockWrapper {
-  margin: 2rem 0;
-  background: #f5f5f5;
-  border: 2px solid #0a0a0a;
-  border-radius: 12px;
-  overflow: hidden;
-  /* Shadow tajem khas style lo */
-  border-bottom: 5px solid #0a0a0a;
-  border-right: 3px solid #0a0a0a;
-  transition: transform 0.2s ease;
-}
-
-.codeFilename {
-  background: #ffffff;
-  color: #0a0a0a; 
-  padding: 0.6rem 1.2rem;
-  font-size: 0.8rem;
-  font-family: 'Lexend', sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Bulatan ala window terminal */
-.codeFilename::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  background: #ff85e5;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.preBlock {
-  padding: 1.5rem;
-  background: #0f0f0f;
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.preBlock code {
-  font-family: 'Fira Code', 'Courier New', monospace;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  color: #e0e0e0;
-}
-
-/* --- DARK MODE ADJUSTMENT --- */
-.darkModeActive .codeBlockWrapper {
-  background: #1a1a1a;
-  border-color: #ffffff;
-  border-bottom: 5px solid #ffffff;
-  border-right: 3px solid #ffffff;
-}
-
-.darkModeActive .codeFilename {
-  background: #190b61;
-  color: #ffffff;
-}
-
-.darkModeActive .codeFilename::before {
-  background: #ffffff;
-}
-
-.darkModeActive .preBlock {
-  background: #050505;
-}
-
-.darkModeActive .preBlock code {
-  color: #ffbff4; 
-}
-
-/* Selection color biar keren */
-.preBlock code::selection {
-  background: #ff85e5;
-  color: #0a0a0a;
 }
 
 /* =========================
    CODE BLOCK
-   ========================= */
+========================= */
+
+.codeBlockWrapper {
+  margin: 2rem 0;
+  border: 2px solid #0a0a0a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.codeFilename {
+  padding: 0.6rem 1.2rem;
+  font-weight: 700;
+  background: #ffffff;
+}
+
+.preBlock {
+  background: #0f0f0f;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
 .markdownContent {
-  color: #e0e0e0;
   font-family: 'Fira Code', monospace;
   font-size: 0.9rem;
   line-height: 1.6;
 }
 
-/* Styling tag spesifik hasil terjemahan markdown */
-.markdownContent h1, .markdownContent h2 { 
-  color: #ff85e5; 
-  margin-top: 1rem; 
+/* =========================
+   BACK BUTTON
+========================= */
+
+.backButtonWrapper {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 20px;
 }
-.markdownContent strong { 
-  color: #ff85e5; 
-  font-weight: bold; 
-}
-.markdownContent ul { 
-  padding-left: 1.5rem; 
-  margin: 1rem 0; 
+
+.backButton {
+  border: 2px solid #0a0a0a;
+  padding: 8px 20px;
+  border-radius: 1rem;
+  background: transparent;
+  cursor: pointer;
 }
 
 /* =========================
-   MEDIA QUERIES
-   ========================= */
+   RESPONSIVE
+========================= */
 
-/* --- 1. SMART TV (Min-width: 1921px) --- */
-@media (min-width: 1921px) {
-  .content { max-width: 1600px; }
-  .projectGrid { grid-template-columns: repeat(4, 1fr); gap: 3.5rem; }
-  .panelTitle { font-size: 4rem; line-height: 10svh; } /* Lebih megah di TV */
-  .detailPanel { width: 35vw; }
-}
-
-/* --- 2. PC / DESKTOP (Max-width: 1440px) --- */
-@media (max-width: 1440px) {
-  .projectGrid { grid-template-columns: repeat(3, 1fr); }
-  .panelTitle { font-size: 3rem; } /* Sesuai standar awalmu */
-}
-
-/* --- 3. LAPTOP (Max-width: 1200px) --- */
-@media (max-width: 1200px) {
-  .projectGrid { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-  .detailPanel { width: 60vw; padding: 2.5rem; }
-  .panelTitle { font-size: 2.5rem; line-height: 7svh; }
-}
-
-/* --- 4. TAB / TABLET (Max-width: 768px) --- */
 @media (max-width: 768px) {
-  .filterContainer, .categoryFilterContainer {
-    overflow-x: auto;
-    padding-bottom: 1rem;
-    flex-wrap: nowrap;
-    gap: 0.75rem;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  .filterTab, .categoryTab { 
-    flex-shrink: 0; 
-    font-size: 0.9rem; 
+  .projectGrid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .projectGrid { 
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 1.5rem; 
-  }
-  
-  .detailPanel { 
-    width: 80vw; 
-    padding: 2rem; 
+  .detailPanel {
+    width: 80vw;
+    padding: 2rem;
   }
 
-  .panelTitle { 
+  .panelTitle {
     font-size: 2.2rem;
-    line-height: 6svh; 
-    margin-top: 3rem; 
   }
 }
 
-/* --- 5. HP / MOBILE (Max-width: 480px) --- */
 @media (max-width: 480px) {
-  .mainBackground { 
-    padding: 1rem; 
+  .mainBackground {
+    padding: 1rem;
   }
 
-  .projectGrid { 
-    grid-template-columns: 1fr; 
-    gap: 1.5rem; 
-  }
-  
-  /* Panel Title Adjustment agar tidak overflow */
-  .panelTitle { 
-    font-size: 1.8rem; 
-    line-height: 1.2; /* Pakai unit relatif agar aman di layar pendek */
-    margin-top: 4rem; /* Beri ruang ekstra karena ada tombol close di atas */
+  .projectGrid {
+    grid-template-columns: 1fr;
   }
 
-  .imageWrapper { 
-    height: 180px; 
+  .detailPanel {
+    width: 100%;
+    padding: 1.5rem;
+    border-left: none;
+    border-top: 5px solid #0f0f0f;
   }
 
-  .cardTitle { 
-    font-size: 1.25rem; 
-  }
-
-  /* Full Screen Detail Panel */
-  .detailPanel { 
-    width: 100%; 
-    padding: 1.5rem; 
-    border-left: none; 
-    border-top: 5px solid #0f0f0f; 
-  }
-
-  .darkModeActive .detailPanel { 
-    border-top-color: #ff85e5; 
-  }
-
-  .detailButton { 
-    width: 100%; 
-  }
-
-  .closePanel {
-    top: 1rem;
-    right: 1rem;
-    padding: 6px 12px;
-    font-size: 0.65rem;
-  }
-
-  .backButtonWrapper { 
-    padding: 10px; 
-  }
-
-  .backButton, .darkModeButton { 
-    font-size: 0.75rem; 
+  .panelTitle {
+    font-size: 1.8rem;
   }
 }

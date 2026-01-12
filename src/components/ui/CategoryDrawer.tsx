@@ -4,27 +4,33 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdFolder, MdClose } from 'react-icons/md';
 import styles from './CategoryDrawer.module.css';
+import { useTheme } from '@/context/ThemeContext';
 
 interface CategoryDrawerProps {
   categories: string[];
   activeCategory: string;
   onCategoryChange: (category: string) => void;
-  darkMode: boolean;
 }
 
-export const CategoryDrawer = ({ 
-  categories, 
-  activeCategory, 
-  onCategoryChange, 
-  darkMode 
+export const CategoryDrawer = ({
+  categories,
+  activeCategory,
+  onCategoryChange,
 }: CategoryDrawerProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { darkMode } = useTheme();
 
   return (
-    <div className={`${styles.drawerWrapper} ${darkMode ? styles.darkModeActive : ''}`}>
+    <div
+      className={`${styles.drawerWrapper} ${
+        darkMode ? styles.darkModeActive : ''
+      }`}
+    >
       {/* Trigger Button */}
       <motion.button
-        className={`${styles.drawerTrigger} ${isDrawerOpen ? styles.triggerActive : ''}`}
+        className={`${styles.drawerTrigger} ${
+          isDrawerOpen ? styles.triggerActive : ''
+        }`}
         onClick={() => setIsDrawerOpen(!isDrawerOpen)}
         whileHover={{ scale: 1.025 }}
         whileTap={{ scale: 0.95 }}
@@ -35,14 +41,13 @@ export const CategoryDrawer = ({
         </span>
       </motion.button>
 
-      {/* Horizontal Drawer Content */}
       <AnimatePresence>
         {isDrawerOpen && (
           <motion.div
             initial={{ width: 0, opacity: 0, x: -20 }}
             animate={{ width: 'auto', opacity: 1, x: 0 }}
             exit={{ width: 0, opacity: 0, x: -20 }}
-            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
             className={styles.horizontalDrawer}
           >
             <div className={styles.drawerContent}>
@@ -50,7 +55,9 @@ export const CategoryDrawer = ({
                 <motion.button
                   key={cat}
                   onClick={() => onCategoryChange(cat)}
-                  className={`${styles.categoryTab} ${activeCategory === cat ? styles.activeCategory : ''}`}
+                  className={`${styles.categoryTab} ${
+                    activeCategory === cat ? styles.activeCategory : ''
+                  }`}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
