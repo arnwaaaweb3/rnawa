@@ -5,6 +5,23 @@
   pointer-events: none;
 }
 
+/* --- LOGIC BARU: IMMERSIVE MODE (Project Panel Open) --- */
+.layoutRoot[data-immersive="true"] .mainContent {
+  margin-left: 0 !important; 
+  width: 100% !important;
+  max-width: 100vw !important;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.layoutRoot[data-immersive="true"] .smPanel {
+  transform: translateX(-100%) !important;
+  transition: transform 0.5s ease-in-out !important;
+}
+
+.layoutRoot:has(.immersiveContent) .magnetToggle {
+  box-shadow: none !important;
+}
+
 .layoutRoot {
   display: flex; 
   min-height: 100dvh;
@@ -14,19 +31,13 @@
   position: relative;
 }
 
-.layoutRoot:has(.immersiveContent) .magnetToggle {
-  box-shadow: none !important;
-}
-
 /* Immersive Content */
 .immersiveContent {
   background: transparent !important;
   backdrop-filter: none !important;
-  /* Hapus absolute dan inset, biarkan dia tetep di aliran flex */
   flex: 1 !important; 
   position: relative;
   z-index: 1;
-  /* Kita tetep butuh overflow hidden biar shadow sidebar gak nembus */
   overflow: hidden; 
 }
 
@@ -77,11 +88,9 @@
   position: absolute;
   top: 1.875rem;
   right: 0;
-  /* FIX: Pushes the button outside the sidebar bounds */
   transform: translateX(100%); 
   width: 2rem;
   height: 2.5rem;
-  /* FIX: Correct syntax for your global variable */
   background: #ff85e5; 
   color: var(--background);
   border: none;
@@ -90,7 +99,6 @@
   align-items: center;
   justify-content: center;
   border-radius: 0 0.3125rem 0.3125rem 0;
-  /* FIX: High z-index to ensure it stays above the mainContent */
   z-index: 100; 
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
 }

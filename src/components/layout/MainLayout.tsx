@@ -1,3 +1,4 @@
+// src/components/layout/MainLayout.tsx
 'use client';
 
 import Image from 'next/image';
@@ -7,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import { motion, type Variants } from 'framer-motion';
 import styles from './MainLayout.module.css';
 import DarkVeil from '../DarkVeil';
+import { useTheme } from '@/context/ThemeContext';
 import RealTimeClock from "../RealTimeClock";
 import NawaLogo from '../../../public/nawa.png';
 import { useSidebarWidth } from '../../hooks/useSidebarWidth';
@@ -16,14 +18,20 @@ interface MainLayoutProps {
 }
 
 export default function MainLayout({ children }: MainLayoutProps) {
-  const [isOpen, setIsOpen] = useState(true);
   const currentSidebarWidth = useSidebarWidth();
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
+  
+  // Ambil state isSidebarOpen global dari Context
+  const { isSidebarOpen, setIsSidebarOpen } = useTheme();
+  
+  // Pakai state lokal buat kontrol animasi, tapi di-sync sama Context
+  const [isOpen, setIsOpen] = useState(true);
 
   const immersiveRoutes = ['/projects', '/studio'];
   const isImmersive = immersiveRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`));
+  
   const shouldShowVeil = !immersiveRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
@@ -36,16 +44,26 @@ export default function MainLayout({ children }: MainLayoutProps) {
     { text: "Documentation", url: "/docs" },
   ];
 
+  // 1. Sync state lokal dengan state Global Context
+  useEffect(() => {
+    setIsOpen(isSidebarOpen);
+  }, [isSidebarOpen]);
+
   useEffect(() => {
     const mql = window.matchMedia('(max-width: 1023px)');
     const onChange = (e: MediaQueryListEvent | MediaQueryList) => {
       setIsMobile(e.matches);
-      setIsOpen(!e.matches);
+      // Kalau mobile, paksa tutup
+      if (e.matches) {
+        setIsSidebarOpen(false);
+      } else {
+        setIsSidebarOpen(true);
+      }
     };
     onChange(mql);
     mql.addEventListener('change', onChange);
     return () => mql.removeEventListener('change', onChange);
-  }, []);
+  }, [setIsSidebarOpen]);
 
   // Framer Motion Variants
   const panelVariants = (delay: number): Variants => ({
@@ -53,8 +71,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       x: 0,
       transition: {
         duration: 0.6,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ease: [0.22, 1, 0.36, 1] as any,
+        ease: [0.22, 1, 0.36, 1] as const,
         delay
       }
     },
@@ -62,8 +79,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       x: -currentSidebarWidth,
       transition: {
         duration: 0.5,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ease: [0.22, 1, 0.36, 1] as any,
+        ease: [0.22, 1, 0.36, 1] as const,
         delay: delay * 0.5
       }
     }
@@ -73,6 +89,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     <div
       className={styles.layoutRoot}
       data-sidebar={isOpen ? 'open' : 'closed'}
+      data-immersive={!isSidebarOpen}
     >
       {shouldShowVeil && (
         <div className={styles.backgroundVeil}>
@@ -84,6 +101,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </div>
       )}
 
+      {/* Background Panels */}
       <motion.div
         variants={panelVariants(0.6)}
         animate={isOpen ? "open" : "closed"}
@@ -98,6 +116,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         style={{ width: currentSidebarWidth }}
       />
 
+      {/* Main Sidebar Panel */}
       <motion.div
         variants={panelVariants(0.001)}
         animate={isOpen ? "open" : "closed"}
@@ -105,7 +124,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         style={{ width: currentSidebarWidth }}
       >
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setIsSidebarOpen(!isOpen)}
           className={styles.magnetToggle}
         >
           {isOpen ? '«' : '»'}
@@ -135,15 +154,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
         </div>
       </motion.div>
+
+      {/* Viewport Content */}
       <motion.main
         layout
         className={`${styles.mainContent} ${isImmersive ? styles.immersiveContent : ''}`}
         style={{
-          // Logika: Tetep kasih margin & width dinamis biar viewport kepotong pas sidebar ON
+          // Logika Viewport Lebar: Kalau sidebar closed, marginLeft 0 & Width 100%
           marginLeft: !isMobile && isOpen ? currentSidebarWidth : 0,
           width: !isMobile && isOpen ? `calc(100% - ${currentSidebarWidth}px)` : '100%'
         }}
-        // Pakai transition yang sama dengan sidebar biar geraknya barengan (sinkron)
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}

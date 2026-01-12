@@ -1,5 +1,6 @@
 'use client';
 
+// =========== Import
 import React, { useState, useEffect, useMemo } from 'react';
 import { Header } from '../../../components/layout/HeaderProjects';
 import styles from '../[[...slug]]/page.module.css';
@@ -12,34 +13,26 @@ import { ProjectCard } from './ProjectCard';
 import { ProjectDetailPanel } from './ProjectDetailPanel';
 import { useTheme } from '@/context/ThemeContext';
 
+// =========== Interface
 interface PageProps {
   params: Promise<{ slug?: string[] }>;
 }
 
+// =========== Constant
 export default function ProjectsPage({ params }: PageProps) {
   const resolvedParams = React.use(params);
   const slug = resolvedParams.slug ? resolvedParams.slug[0] : null;
-
   const router = useRouter();
   const { theme, mounted } = useTheme();
   const isDark = theme === 'dark';
+  const { setIsSidebarOpen } = useTheme();
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
-
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
   const [filter, setFilter] = useState<'all' | 'completed' | 'ongoing'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
-
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
-
-  useEffect(() => {
-    if (slug) {
-      handleExplore(slug);
-    } else {
-      setSelectedProject(null);
-    }
-  }, [slug]);
 
   const availableCategories = useMemo(() => {
     return [
@@ -67,8 +60,36 @@ export default function ProjectsPage({ params }: PageProps) {
 
   const closePanel = () => {
     setSelectedProject(null);
+    setIsSidebarOpen(true);
     window.history.pushState(null, '', '/projects');
   };
+
+  const handleExplore = async (slug: string) => {
+    setIsDetailLoading(true);
+    try {
+      const query = `*[_type == "portfolioItem" && slug.current == $slug][0] {
+        ...,
+        "imageUrl": coverImage.asset->url,
+        "gallery": gallery[].asset->url,
+        "categories": categories[]->{ title, "slug": slug.current }
+      }`;
+
+      const data: Project | null = await client.fetch(query, { slug });
+      setSelectedProject(data);
+      window.history.pushState(null, '', `/projects/${slug}`);
+    } finally {
+      setIsDetailLoading(false);
+    }
+  };
+
+  // =========== Effect
+  useEffect(() => {
+    if (slug) {
+      handleExplore(slug);
+    } else {
+      setSelectedProject(null);
+    }
+  }, [slug]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -99,23 +120,15 @@ export default function ProjectsPage({ params }: PageProps) {
     fetchProjects();
   }, []);
 
-  const handleExplore = async (slug: string) => {
-    setIsDetailLoading(true);
-    try {
-      const query = `*[_type == "portfolioItem" && slug.current == $slug][0] {
-        ...,
-        "imageUrl": coverImage.asset->url,
-        "gallery": gallery[].asset->url,
-        "categories": categories[]->{ title, "slug": slug.current }
-      }`;
-
-      const data: Project | null = await client.fetch(query, { slug });
-      setSelectedProject(data);
-      window.history.pushState(null, '', `/projects/${slug}`);
-    } finally {
-      setIsDetailLoading(false);
+  // Trigger pas project dipilih
+  useEffect(() => {
+    if (slug) {
+      handleExplore(slug);
+      setIsSidebarOpen(false); // Sidebar minggir dhisik cok!
+    } else {
+      setIsSidebarOpen(true); // Balikne nek panel tutup
     }
-  };
+  }, [slug, setIsSidebarOpen]);
 
   return (
     <main className={containerClass}>
