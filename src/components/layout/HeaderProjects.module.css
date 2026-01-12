@@ -45,22 +45,72 @@
 
 .darkModeToggle {
   background: transparent;
-  border: 2px solid #0f0f0f; /* Tambahi border sithik biar ketok tombol */
+  border: 2px solid #0f0f0f; /* Light mode border */
   border-radius: 12px;
-  padding: 8px;
+  padding: 8px 12px; /* Sedikit lebih lebar untuk ikon */
   cursor: pointer;
   margin-left: auto;
-  color: #0f0f0f;
+  color: #0f0f0f; /* Light mode text */
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s active;
+  transition: all 0.3s ease; /* Smooth transition untuk semua perubahan */
   z-index: 20;
+  position: relative;
+  overflow: hidden; /* Untuk pseudo-element glare */
+  user-select: none; /* Mencegah text terpilih saat ditekan */
 }
 
+/* --- ICON STYLING (FaSun & FaMoon) --- */
+.darkModeToggle .icon {
+  font-size: 1.2rem; /* Ukuran ikon */
+  transition: transform 0.3s ease; /* Animasi rotasi */
+}
+
+/* --- HOVER STATE --- */
+.darkModeToggle:hover {
+  transform: translateY(-2px); /* Sedikit naik saat hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan saat hover */
+}
+
+/* --- ACTIVE STATE (saat ditekan) --- */
+.darkModeToggle:active {
+  transform: translateY(0) scale(0.95); /* Kembali ke posisi awal + sedikit mengecil */
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); /* Efek "ditekan" */
+}
+
+/* --- DARK MODE STATE --- */
 .darkMode .darkModeToggle {
-  color: #ffffff;
-  border-color: #ffffff;
+  color: #ffffff; /* Dark mode text */
+  border-color: #ffffff; /* Dark mode border */
+  background: transparent;
+}
+
+/* --- ANIMASI ROTASI IKON SAAT GANTI MODE --- */
+.darkMode .darkModeToggle .icon {
+  transform: rotate(30deg); /* Rotasi 30deg di dark mode */
+}
+
+/* --- GLARE EFFECT (opsional) --- */
+.darkModeToggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3), /* Glare putih di hover */
+    transparent
+  );
+  transition: left 0.5s ease;
+  z-index: -1;
+}
+
+.darkModeToggle:hover::before {
+  left: 100%; /* Geser glare saat hover */
 }
 
 .visualEffect {

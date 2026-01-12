@@ -49,31 +49,58 @@
   background: #ffffff;
   color: #0a0a0a;
   border: 2px solid #0a0a0a;
-  border-bottom: 4px solid #0a0a0a;
-  border-right: 3px solid #0a0a0a;
+  border-bottom: 4px solid #0a0a0a; /* Efek 3D */
+  border-right: 3px solid #0a0a0a; /* Efek 3D */
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Bayangan ringan */
+  user-select: none; /* Mencegah text terpilih saat ditekan */
 }
 
+/* --- HOVER STATE (LIGHT MODE) --- */
 .closePanel:hover {
   background: #0a0a0a;
   color: #ffffff;
-  border-color: #ff85e5;
-  transform: translateY(-2px);
+  border-color: #ff85e5; /* Border pink saat hover */
+  border-bottom: 4px solid #ff85e5; /* Sesuai dengan border-color */
+  border-right: 3px solid #ff85e5; /* Sesuai dengan border-color */
+  transform: translateY(-2px) scale(1.02); /* Sedikit naik + scale */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan lebih tebal saat hover */
 }
 
+/* --- ACTIVE STATE (saat ditekan) --- */
+.closePanel:active {
+  transform: translateY(0) scale(0.98); /* Kembali ke posisi awal + sedikit mengecil */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Efek "ditekan" */
+  border-bottom: 2px solid #ff85e5; /* Border bottom mengecil saat ditekan */
+  border-right: 2px solid #ff85e5; /* Border right mengecil saat ditekan */
+}
+
+/* --- DARK MODE STATE --- */
 .darkModeActive .closePanel {
   background: #0a0a0a;
   color: #ffffff;
-  border: 2px solid #ff85e5;
-  border-top: 2px solid #ffffff;
-  border-bottom: 4px solid #ff85e5;
-  border-right: 3px solid #ffffff;
+  border: 2px solid #ff85e5; /* Border pink di dark mode */
+  border-bottom: 4px solid #ff85e5; /* Efek 3D pink */
+  border-right: 3px solid #ff85e5; /* Efek 3D pink */
+  box-shadow: 0 2px 4px rgba(255, 133, 229, 0.3); /* Bayangan pink */
 }
 
+/* --- HOVER STATE (DARK MODE) --- */
 .darkModeActive .closePanel:hover {
-  background: #190b61;
-  border-color: #ffffff;
+  background: #190b61; /* Warna ungu gelap saat hover */
+  border-color: #ffffff; /* Border putih saat hover */
+  border-bottom: 4px solid #ffffff; /* Sesuai dengan border-color */
+  border-right: 3px solid #ffffff; /* Sesuai dengan border-color */
+  box-shadow: 0 4px 12px rgba(255, 133, 229, 0.5); /* Bayangan pink lebih tebal */
+}
+
+/* --- ACTIVE STATE (DARK MODE) --- */
+.darkModeActive .closePanel:active {
+  transform: translateY(0) scale(0.98); /* Kembali ke posisi awal + sedikit mengecil */
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2); /* Efek "ditekan" dengan shadow putih */
+  border-bottom: 2px solid #ffffff; /* Border bottom mengecil saat ditekan */
+  border-right: 2px solid #ffffff; /* Border right mengecil saat ditekan */
 }
 
 /* =========================
@@ -89,7 +116,6 @@
 /* =========================
    CTA BUTTON
 ========================= */
-
 .ctaDetailLinkButton {
   display: inline-flex;
   align-items: center;
@@ -102,32 +128,64 @@
   background: #ff85e5;
   color: #0a0a0a;
   border: 2px solid #0a0a0a;
-  border-bottom: 5px solid #0a0a0a;
-  border-right: 3px solid #0a0a0a;
+  border-bottom: 5px solid #0a0a0a; /* Efek 3D */
+  border-right: 3px solid #0a0a0a; /* Efek 3D */
   border-radius: 12px;
   font-weight: 800;
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 1px;
-  transition: all 0.25s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
+  box-shadow: 0 4px 8px rgba(255, 133, 229, 0.3); /* Bayangan pink */
+  cursor: pointer;
+  user-select: none; /* Mencegah text terpilih saat ditekan */
 }
 
+/* --- HOVER STATE (LIGHT MODE) --- */
 .ctaDetailLinkButton:hover {
   background: #0a0a0a;
   color: #ffffff;
+  border-color: #ff85e5; /* Border pink saat hover */
+  border-bottom: 5px solid #ff85e5; /* Sesuai dengan border-color */
+  border-right: 3px solid #ff85e5; /* Sesuai dengan border-color */
+  transform: translateY(-2px) scale(1.02); /* Sedikit naik + scale */
+  box-shadow: 0 6px 12px rgba(255, 133, 229, 0.5); /* Bayangan lebih tebal */
 }
 
+/* --- ACTIVE STATE (saat ditekan) --- */
+.ctaDetailLinkButton:active {
+  transform: translateY(0) scale(0.98); /* Kembali ke posisi awal + sedikit mengecil */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Efek "ditekan" */
+  border-bottom: 3px solid #ff85e5; /* Border bottom mengecil saat ditekan */
+  border-right: 2px solid #ff85e5; /* Border right mengecil saat ditekan */
+}
+
+/* --- DARK MODE STATE --- */
 .darkModeActive .ctaDetailLinkButton {
   background: #190b61;
   color: #ffffff;
-  border-color: #ff85e5;
-  border-bottom: 5px solid #ff85e5;
-  border-right: 3px solid #ffffff;
+  border: 2px solid #ff85e5; /* Border pink di dark mode */
+  border-bottom: 5px solid #ff85e5; /* Efek 3D pink */
+  border-right: 3px solid #ffffff; /* Border right putih (kontras) */
+  box-shadow: 0 4px 8px rgba(255, 133, 229, 0.4); /* Bayangan pink */
 }
 
+/* --- HOVER STATE (DARK MODE) --- */
 .darkModeActive .ctaDetailLinkButton:hover {
   background: #ffffff;
   color: #0a0a0a;
+  border-color: #190b61; /* Border ungu saat hover */
+  border-bottom: 5px solid #190b61; /* Sesuai dengan border-color */
+  border-right: 3px solid #190b61; /* Sesuai dengan border-color */
+  box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3); /* Bayangan putih */
+}
+
+/* --- ACTIVE STATE (DARK MODE) --- */
+.darkModeActive .ctaDetailLinkButton:active {
+  transform: translateY(0) scale(0.98); /* Kembali ke posisi awal + sedikit mengecil */
+  box-shadow: inset 0 2px 4px rgba(25, 11, 97, 0.5); /* Efek "ditekan" dengan shadow ungu */
+  border-bottom: 3px solid #190b61; /* Border bottom mengecil saat ditekan */
+  border-right: 2px solid #190b61; /* Border right mengecil saat ditekan */
 }
 
 /* =========================
