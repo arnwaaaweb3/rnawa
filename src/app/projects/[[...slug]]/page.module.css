@@ -351,11 +351,90 @@
 }
 
 .backButton {
+  position: relative;
   border: 2px solid #0a0a0a;
   padding: 8px 20px;
+  color: #0a0a0a;
+  font-family: 'Lexend', sans-serif;
+  font-weight: 700;
   border-radius: 1rem;
   background: transparent;
   cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  user-select: none; /* Mencegah text terpilih saat ditekan */
+}
+
+/* Pseudo-element untuk efek glare */
+.backButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 133, 229, 0.5), /* Pink neon transparan */
+    transparent
+  );
+  transition: left 0.5s ease;
+  z-index: -1; /* Di bawah text */
+}
+
+/* --- HOVER STATE --- */
+.backButton:hover {
+  box-shadow: 3px 4px #0a0a0a;
+  background: white;
+  color: #0a0a0a;
+  transform: translateY(-2px);
+}
+
+.backButton:hover::before {
+  left: 100%; /* Geser glare ke kanan saat hover */
+}
+
+/* --- ACTIVE STATE (saat ditekan) --- */
+.backButton:active {
+  transform: translateY(0) scale(0.98); /* Kembali ke posisi awal + sedikit mengecil */
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); /* Efek "ditekan" */
+}
+
+/* --- LIGHT MODE ACTIVE --- */
+.backButton:active {
+  background: #ff85e5; /* Pink neon */
+  color: #0a0a0a;
+  border-color: #0a0a0a;
+}
+
+/* --- DARK MODE SUPPORT --- */
+.darkModeActive .backButton {
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  background: transparent;
+}
+
+.darkModeActive .backButton::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3), /* Glare putih transparan */
+    transparent
+  );
+}
+
+.darkModeActive .backButton:hover {
+  box-shadow: 3px 4px #ffffff;
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+/* --- DARK MODE ACTIVE --- */
+.darkModeActive .backButton:active {
+  background: #ffffff; /* Putih */
+  color: #0a0a0a;
+  border-color: #0a0a0a;
 }
 
 /* =========================

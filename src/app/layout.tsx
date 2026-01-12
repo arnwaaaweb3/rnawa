@@ -20,11 +20,25 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={lexend.variable} suppressHydrationWarning> 
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const theme = localStorage.getItem('theme');
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="antialiased"> 
         <ThemeProvider>
-          <MainLayout> 
-            {children}
-          </MainLayout>
+          <MainLayout>{children}</MainLayout>
         </ThemeProvider>
       </body>
     </html>

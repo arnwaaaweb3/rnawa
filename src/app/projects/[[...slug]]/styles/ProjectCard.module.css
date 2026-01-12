@@ -143,8 +143,8 @@
 /* =========================
    DETAIL BUTTON
 ========================= */
-
 .detailButton {
+  position: relative;
   background: #ffffff;
   border: 2px solid #0f0f0f;
   padding: 10px;
@@ -154,23 +154,78 @@
   cursor: pointer;
   color: #0f0f0f;
   transition: all 0.25s ease;
+  overflow: hidden;
+  user-select: none; /* Mencegah text terpilih saat ditekan */
 }
 
+/* Pseudo-element untuk efek glare */
+.detailButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 133, 229, 0.4), /* Pink neon transparan */
+    transparent
+  );
+  transition: left 0.5s ease;
+  z-index: 1;
+}
+
+/* --- HOVER STATE --- */
 .detailButton:hover {
   background: #0a0a0a;
   color: #ffffff;
   border-color: #0a0a0a;
 }
 
+.detailButton:hover::before {
+  left: 100%; /* Geser glare saat hover */
+}
+
+/* --- ACTIVE STATE (saat ditekan) --- */
+.detailButton:active {
+  transform: scale(0.98); /* Sedikit mengecil */
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); /* Efek "ditekan" */
+}
+
+/* --- LIGHT MODE ACTIVE --- */
+.detailButton:active {
+  background: #ff85e5; /* Pink neon */
+  color: #0a0a0a;
+  border-color: #0a0a0a;
+}
+
+/* --- DARK MODE SUPPORT --- */
 :global(html.dark) .detailButton {
   background: #0f0f0f;
   border-color: #ff85e5;
   color: #ffffff;
 }
 
+:global(html.dark) .detailButton::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3), /* Glare putih di dark mode */
+    transparent
+  );
+}
+
 :global(html.dark) .detailButton:hover {
   background: #ff85e5;
   color: #0f0f0f;
+  border-color: #0a0a0a;
+}
+
+/* --- DARK MODE ACTIVE --- */
+:global(html.dark) .detailButton:active {
+  background: #ffffff; /* Putih */
+  color: #0a0a0a;
   border-color: #0a0a0a;
 }
 
