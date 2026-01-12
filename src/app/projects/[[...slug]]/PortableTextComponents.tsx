@@ -1,16 +1,17 @@
 // src/app/projects/[[...slug]]/PortableTextComponents.tsx
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism'; // Tambah vs nggo light mode
+import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styles from '@/app/projects/[[...slug]]/styles/PortableTextComponents.module.css';
 import { SanityCodeValue } from './types';
-import { useTheme } from '@/context/ThemeContext'; // Import theme
+import { useTheme } from '@/context/ThemeContext';
 
 const CodeBlock = ({ value }: { value: SanityCodeValue }) => {
   const { darkMode, mounted } = useTheme();
 
-  // Pilih style berdasarkan tema, default ke dark nek durung mounted
-  const codeStyle = mounted && !darkMode ? vs : vscDarkPlus;
+  // Nek durung mounted, default nggo dark biar gak flicker putih (mergo biasane dev nggo dark mode)
+  // Tapi nek wis mounted, ngetutne state darkMode asli
+  const codeStyle = mounted ? (darkMode ? vscDarkPlus : vs) : vscDarkPlus;
 
   if (value.language === 'markdown') {
     return (
@@ -26,7 +27,7 @@ const CodeBlock = ({ value }: { value: SanityCodeValue }) => {
     <div className={styles.codeBlockWrapper}>
       {value.filename && <div className={styles.codeFilename}>{value.filename}</div>}
       <SyntaxHighlighter
-        language={value.language || 'typescript'} // Fallback ke TS luwih umum
+        language={value.language || 'typescript'}
         style={codeStyle}
         showLineNumbers
         wrapLines

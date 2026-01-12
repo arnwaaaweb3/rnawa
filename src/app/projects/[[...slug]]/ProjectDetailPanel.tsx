@@ -13,7 +13,7 @@ interface PanelProps {
 }
 
 export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelProps) => {
-  const { mounted } = useTheme();
+  const { mounted, darkMode } = useTheme();
 
   // Nek durung mounted, ojo render AnimatePresence/motion dhisik biar gak mismatch atribut
   if (!mounted) return null;
@@ -21,29 +21,29 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
   return (
     <AnimatePresence>
       {project && (
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          exit={{ opacity: 0 }} 
-          className={styles.overlayBackdrop} 
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className={`${styles.overlayBackdrop} ${darkMode ? styles.darkModeActive : ''}`}
           onClick={onClose}
         >
-          <motion.div 
-            initial={{ x: '100%' }} 
-            animate={{ x: 0 }} 
-            exit={{ x: '100%' }} 
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }} // Tambah transition ben luwih 'smooth'
-            className={styles.detailPanel} 
+            className={styles.detailPanel}
             onClick={(e) => e.stopPropagation()}
           >
             <button className={styles.closePanel} onClick={onClose}>✕ Close</button>
             <h2 className={styles.panelTitle}>{project.title}</h2>
-            
+
             {project.projectUrl && (
-              <a 
-                href={project.projectUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href={project.projectUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className={styles.ctaDetailLinkButton}
               >
                 Visit Live Project <span>↗</span>
@@ -51,10 +51,8 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
             )}
 
             <div className={styles.projectBody}>
-              {project.description ? (
+              {project.description && (
                 <PortableText value={project.description} components={portableTextComponents} />
-              ) : (
-                <p className={styles.noDescription}>No description available.</p>
               )}
             </div>
 
@@ -62,9 +60,9 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
               <p className={styles.panelLabel}>Classified Under:</p>
               <div className={styles.panelCategoryList}>
                 {project.categories?.map((cat) => (
-                  <button 
-                    key={cat.slug} 
-                    className={styles.panelCategoryTag} 
+                  <button
+                    key={cat.slug}
+                    className={styles.panelCategoryTag}
                     onClick={() => onCategoryClick(cat.title)}
                   >
                     # {cat.title.toUpperCase()}

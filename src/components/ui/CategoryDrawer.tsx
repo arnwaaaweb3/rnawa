@@ -1,3 +1,4 @@
+// src/components/ui/CategoryDrawer.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -18,14 +19,15 @@ export const CategoryDrawer = ({
   onCategoryChange,
 }: CategoryDrawerProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const { darkMode } = useTheme();
+  const { darkMode, mounted } = useTheme(); // Tambah mounted
+
+  // Gabungne class wrapper
+  const drawerClass = `${styles.drawerWrapper} ${
+    mounted && darkMode ? styles.darkModeActive : ''
+  }`;
 
   return (
-    <div
-      className={`${styles.drawerWrapper} ${
-        darkMode ? styles.darkModeActive : ''
-      }`}
-    >
+    <div className={drawerClass}>
       {/* Trigger Button */}
       <motion.button
         className={`${styles.drawerTrigger} ${
