@@ -15,6 +15,7 @@ export interface Project {
   categories?: Category[];
   description?: PortableTextBlock[];
   gallery?: string[];
+  youtubeId?: string;
   projectUrl?: string;
   relatedJournal?: { title: string; slug: string }[];
 }

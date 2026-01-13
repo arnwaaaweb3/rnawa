@@ -71,6 +71,13 @@ export default defineType({
     }),
 
     defineField({
+      name: 'youtubeId',
+      title: 'YouTube Video ID',
+      type: 'string',
+      description: 'Paste your unique YouTube video ID here. (Example: sCssw_-MTZI)',
+    }),
+
+    defineField({
       name: 'coverImage',
       title: 'Image',
       type: 'image',

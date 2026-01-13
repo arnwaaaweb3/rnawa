@@ -28,6 +28,24 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
           className={`${styles.overlayBackdrop} ${darkMode ? styles.darkModeActive : ''}`}
           onClick={onClose}
         >
+          {/* 1. CONTAINER VIDEO DI TENAH VIEWPORT (SEBELAH KIRI PANEL) */}
+          {project.youtubeId && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className={styles.floatingVideoWrapper}
+              onClick={(e) => e.stopPropagation()} // Biar gak ketutup pas klik video
+            >
+              <iframe
+                src={`https://www.youtube.com/embed/${project.youtubeId}`}
+                title="Project Video"
+                allowFullScreen
+                className={styles.videoFrame}
+              />
+            </motion.div>
+          )}
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}

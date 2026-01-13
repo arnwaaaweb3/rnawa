@@ -69,6 +69,7 @@ export default function ProjectsPage({ params }: PageProps) {
     try {
       const query = `*[_type == "portfolioItem" && slug.current == $slug][0] {
         ...,
+        youtubeId,
         "imageUrl": coverImage.asset->url,
         "gallery": gallery[].asset->url,
         "categories": categories[]->{ title, "slug": slug.current }
