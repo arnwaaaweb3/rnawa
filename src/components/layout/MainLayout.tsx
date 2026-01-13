@@ -111,7 +111,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
       <motion.div
         variants={panelVariants(0.3)}
-        animate={isOpen ? "open" : "closed"}
+        animate={isProjectDetailOpen ? "closed" : (isOpen ? "open" : "closed")}
         className={`${styles.smPanel} ${styles.bg1}`}
         style={{ width: currentSidebarWidth }}
       />
@@ -119,14 +119,22 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {/* Main Sidebar Panel */}
       <motion.div
         variants={panelVariants(0.001)}
-        // Jika detail buka, paksa animasi ke "closed"
         animate={isProjectDetailOpen ? "closed" : (isOpen ? "open" : "closed")}
         className={`${styles.smPanel} ${styles.mainPanel}`}
         style={{ width: currentSidebarWidth }}
       >
         <button
-          onClick={() => setIsSidebarOpen(!isOpen)}
+          onClick={() => {
+            // RULE KERAS: Kalau detail lagi buka, klik ini gak bakal ngefek apa-apa
+            if (isProjectDetailOpen) return;
+            setIsSidebarOpen(!isOpen);
+          }}
           className={styles.magnetToggle}
+          style={{
+            // Kasih feedback visual kalau tombolnya lagi "lumpuh"
+            cursor: isProjectDetailOpen ? 'not-allowed' : 'pointer',
+            opacity: isProjectDetailOpen ? 0.5 : 1
+          }}
         >
           {isOpen ? '«' : '»'}
         </button>
