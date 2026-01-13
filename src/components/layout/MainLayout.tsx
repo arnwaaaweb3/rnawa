@@ -104,7 +104,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {/* Background Panels */}
       <motion.div
         variants={panelVariants(0.6)}
-        animate={isOpen ? "open" : "closed"}
+        animate={isProjectDetailOpen ? "closed" : (isOpen ? "open" : "closed")}
         className={`${styles.smPanel} ${styles.bg2}`}
         style={{ width: currentSidebarWidth }}
       />

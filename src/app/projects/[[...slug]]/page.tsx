@@ -122,12 +122,11 @@ export default function ProjectsPage({ params }: PageProps) {
 
   useEffect(() => {
     if (slug) {
-      // Pas detail dibuka: Paksa sidebar OFF biar immersive
+      // Detail buka: Sidebar matiin
       setIsSidebarOpen(false);
       setIsProjectDetailOpen(true);
     } else {
-      // Pas detail ditutup: Cukup matikan flag detail, 
-      // JANGAN paksa setIsSidebarOpen(true) biar gak narik sidebar otomatis
+      // Detail tutup: Flag detail matiin, tapi JANGAN paksa sidebar nyala
       setIsProjectDetailOpen(false);
     }
   }, [slug, setIsSidebarOpen, setIsProjectDetailOpen]); //
