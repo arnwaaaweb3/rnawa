@@ -21,17 +21,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const currentSidebarWidth = useSidebarWidth();
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
-  
+
   // Ambil state isSidebarOpen global dari Context
   const { isSidebarOpen, setIsSidebarOpen, isProjectDetailOpen } = useTheme();
-  
+
   // Pakai state lokal buat kontrol animasi, tapi di-sync sama Context
   const [isOpen, setIsOpen] = useState(true);
 
   const immersiveRoutes = ['/projects', '/studio'];
   const isImmersive = immersiveRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`));
-  
+
   const shouldShowVeil = !immersiveRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
@@ -160,8 +160,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
         layout
         className={`${styles.mainContent} ${isImmersive ? styles.immersiveContent : ''}`}
         style={{
-          marginLeft: !isMobile && isSidebarOpen ? currentSidebarWidth : 0,
-          width: !isMobile && isSidebarOpen ? `calc(100% - ${currentSidebarWidth}px)` : undefined 
+          // Mung pasang marginLeft NEK ora lagi Immersive
+          marginLeft: !isMobile && isSidebarOpen && !isProjectDetailOpen ? currentSidebarWidth : 0,
+          width: !isMobile && isSidebarOpen && !isProjectDetailOpen ? `calc(100% - ${currentSidebarWidth}px)` : '100%'
         }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >

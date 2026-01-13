@@ -61,7 +61,6 @@ export default function ProjectsPage({ params }: PageProps) {
   const closePanel = () => {
     setSelectedProject(null);
     setIsProjectDetailOpen(false); // Detail ditutup
-    setIsSidebarOpen(true); // Balikne sidebar pas metu seko detail
     window.history.pushState(null, '', '/projects');
   };
 
@@ -124,11 +123,12 @@ export default function ProjectsPage({ params }: PageProps) {
   // Trigger pas project dipilih
   useEffect(() => {
     if (slug) {
-      handleExplore(slug);
-      setIsSidebarOpen(false); // Sidebar minggir dhisik cok!
+      // Pas moco detail: Sidebar kudu OFF, Immersive kudu ON
+      setIsSidebarOpen(false);
       setIsProjectDetailOpen(true);
     } else {
-      setIsProjectDetailOpen(false); // Wis gak moco detail
+      setIsProjectDetailOpen(false);
+      setIsSidebarOpen(true);
     }
   }, [slug, setIsSidebarOpen, setIsProjectDetailOpen]);
 

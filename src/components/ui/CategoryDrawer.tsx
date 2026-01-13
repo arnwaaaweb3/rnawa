@@ -34,7 +34,7 @@ export const CategoryDrawer = ({
           isDrawerOpen ? styles.triggerActive : ''
         }`}
         onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-        whileHover={{ scale: 1.025 }}
+        whileHover={{ scale: 1}}
         whileTap={{ scale: 0.95 }}
       >
         {isDrawerOpen ? <MdClose size={20} /> : <MdFolder size={20} />}

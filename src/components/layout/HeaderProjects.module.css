@@ -70,6 +70,8 @@
 /* --- HOVER STATE --- */
 .darkModeToggle:hover {
   transform: translateY(-2px); /* Sedikit naik saat hover */
+  border-right: 4px solid #0a0a0a;
+  border-bottom: 6px solid #0a0a0a;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan saat hover */
 }
 

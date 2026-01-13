@@ -38,7 +38,7 @@ export const ProjectCard = ({
         className={styles.visualEffect}
         animate={mounted ? {
           backgroundColor: isDark ? '#190b61' : '#ff85e5',
-          scale: isDark ? 1.5 : 1,
+          scale: isDark ? 0.85 : 1,
           x: isDark ? 120 : -60,
         } : {}} // Nek durung mounted, jarke kosong (ikut CSS default)
         transition={{ duration: 0.8 }}

@@ -26,7 +26,7 @@
 ========================= */
 
 :global(html.dark) .projectCard {
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.653);
   border-color: #ff85e5;
   border-right-color: #ffffff;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
