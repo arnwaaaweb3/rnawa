@@ -60,7 +60,7 @@ export default function ProjectsPage({ params }: PageProps) {
 
   const closePanel = () => {
     setSelectedProject(null);
-    setIsProjectDetailOpen(false); // Detail ditutup
+    // setIsProjectDetailOpen(false); <- Ini bakal ke-trigger otomatis sama useEffect di atas karena slug jadi null
     window.history.pushState(null, '', '/projects');
   };
 
@@ -120,17 +120,17 @@ export default function ProjectsPage({ params }: PageProps) {
     fetchProjects();
   }, []);
 
-  // Trigger pas project dipilih
   useEffect(() => {
     if (slug) {
-      // Pas moco detail: Sidebar kudu OFF, Immersive kudu ON
+      // Pas detail dibuka: Paksa sidebar OFF biar immersive
       setIsSidebarOpen(false);
       setIsProjectDetailOpen(true);
     } else {
+      // Pas detail ditutup: Cukup matikan flag detail, 
+      // JANGAN paksa setIsSidebarOpen(true) biar gak narik sidebar otomatis
       setIsProjectDetailOpen(false);
-      setIsSidebarOpen(true);
     }
-  }, [slug, setIsSidebarOpen, setIsProjectDetailOpen]);
+  }, [slug, setIsSidebarOpen, setIsProjectDetailOpen]); //
 
   return (
     <main className={containerClass}>

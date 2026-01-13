@@ -119,7 +119,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       {/* Main Sidebar Panel */}
       <motion.div
         variants={panelVariants(0.001)}
-        animate={isOpen ? "open" : "closed"}
+        // Jika detail buka, paksa animasi ke "closed"
+        animate={isProjectDetailOpen ? "closed" : (isOpen ? "open" : "closed")}
         className={`${styles.smPanel} ${styles.mainPanel}`}
         style={{ width: currentSidebarWidth }}
       >
@@ -160,7 +161,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
         layout
         className={`${styles.mainContent} ${isImmersive ? styles.immersiveContent : ''}`}
         style={{
-          // Mung pasang marginLeft NEK ora lagi Immersive
           marginLeft: !isMobile && isSidebarOpen && !isProjectDetailOpen ? currentSidebarWidth : 0,
           width: !isMobile && isSidebarOpen && !isProjectDetailOpen ? `calc(100% - ${currentSidebarWidth}px)` : '100%'
         }}
