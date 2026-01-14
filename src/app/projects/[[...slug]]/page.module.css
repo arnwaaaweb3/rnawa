@@ -180,14 +180,18 @@
 
 /* Dark Mode Support */
 .darkModeActive .categoryTooltip {
-  background: #fff;
-  color: #0f0f0f;
+  background: linear-gradient(
+    90deg,
+    #190b61 65%,
+    #140a49 85%,
+    #0a0a0a 100%
+  );
   border-color: #ff85e5;
-  box-shadow: 4px 4px 0px #ff85e5;
+  color: #ffffff;
 }
 
 .darkModeActive .categoryTooltip::after {
-  border-color: transparent #ffffff transparent transparent;
+  border-color: transparent #ff85e5 transparent transparent;
 }
 
 /* =========================
@@ -482,7 +486,7 @@
   font-family: 'Lexend', sans-serif;
   font-weight: 700;
   border-radius: 1rem;
-  background: transparent;
+  background: #ffffff;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -536,7 +540,7 @@
 .darkModeActive .backButton {
   border: 2px solid #ffffff;
   color: #ffffff;
-  background: transparent;
+  background: #0a0a0a;
 }
 
 .darkModeActive .backButton::before {
