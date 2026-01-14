@@ -84,7 +84,7 @@
     #ffbff4 85%,
     #ffffff 100%
   );
-  z-index: 99;
+  z-index: 100;
   border: 2px solid #0a0a0a;
   pointer-events: none;
   white-space: nowrap;
@@ -118,6 +118,59 @@
 .darkModeActive .floatingTooltip::after {
   /* Sesuaikan sama border color lo biar nyambung */
   border-color: transparent transparent transparent #ff85e5;
+}
+
+/* =========================
+   TOOL TIP - CATEGORY
+========================= */
+.drawerWrapper {
+  position: relative;
+  display: inline-flex; /* Pake inline-flex biar wrapper-nya nge-pres ke tombolnya aja */
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.categoryTooltip {
+  position: absolute;
+  top: 50%;
+  left: 60px; /* Geser sesuai posisi tombol drawer lo */
+  transform: translateY(-50%);
+  z-index: 100;
+  background: #0f0f0f;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 99;
+  border: 2px solid #0f0f0f;
+  box-shadow: 4px 4px 0px #0f0f0f;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Panah nunjuk ke KIRI (<) */
+.categoryTooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 100%; /* Di luar batas kiri box */
+  transform: translateY(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent #0f0f0f transparent transparent;
+}
+
+/* Dark Mode Support */
+.darkModeActive .categoryTooltip {
+  background: #fff;
+  color: #0f0f0f;
+  border-color: #ff85e5;
+  box-shadow: 4px 4px 0px #ff85e5;
+}
+
+.darkModeActive .categoryTooltip::after {
+  border-color: transparent #ffffff transparent transparent;
 }
 
 /* =========================

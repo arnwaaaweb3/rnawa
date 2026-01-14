@@ -23,7 +23,7 @@ export default function ProjectsPage({ params }: PageProps) {
   const resolvedParams = React.use(params);
   const slug = resolvedParams.slug ? resolvedParams.slug[0] : null;
   const router = useRouter();
-  const { theme, mounted } = useTheme();
+  const { isSidebarOpen, theme, mounted } = useTheme();
   const [showTooltip, setShowTooltip] = useState(false); // Pindahin ke sini
   const isDark = theme === 'dark';
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
@@ -34,6 +34,7 @@ export default function ProjectsPage({ params }: PageProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const { setIsSidebarOpen, setIsProjectDetailOpen } = useTheme();
+  const [showCategoryTooltip, setShowCategoryTooltip] = useState(false);
 
   const availableCategories = useMemo(() => {
     return [
@@ -151,19 +152,29 @@ export default function ProjectsPage({ params }: PageProps) {
 
   return (
     <main className={containerClass}>
-      {/* Bungkus Header buat deteksi hover */}
-      <div
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        style={{ position: 'relative' }}
-      >
+      {/* 1. HEADER FIX: Pindahin trigger hover-nya */}
+      <div style={{ position: 'relative' }}>
         <Header />
+        
+        {/* Ini area trigger "siluman" tepat di atas tombol toggle (pojok kanan) */}
+        <div 
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+          style={{ 
+            position: 'absolute', 
+            top: 0, 
+            right: 0, 
+            width: '100px', // Sesuaikan lebar tombol toggle lo
+            height: '90px',  // Sesuaikan tinggi header lo
+            zIndex: 30,
+            cursor: 'pointer'
+          }}
+        />
 
-        {/* Tooltip Render di Luar Header Container */}
         <AnimatePresence>
           {showTooltip && mounted && (
             <motion.div
-              initial={{ opacity: 0, x: 10 }} // Muncul dari kanan ke kiri
+              initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
               className={styles.floatingTooltip}
@@ -192,11 +203,32 @@ export default function ProjectsPage({ params }: PageProps) {
         ))}
       </div>
       
-      <CategoryDrawer
-        categories={availableCategories}
-        activeCategory={categoryFilter}
-        onCategoryChange={setCategoryFilter}
-      />
+      {/* 2. CATEGORY TOOLTIP: Pastikan drawerWrapper punya display yang bener */}
+      <div 
+        className={styles.drawerWrapper}
+        onMouseEnter={() => setShowCategoryTooltip(true)}
+        onMouseLeave={() => setShowCategoryTooltip(false)}
+      >
+        <CategoryDrawer
+          categories={availableCategories}
+          activeCategory={categoryFilter}
+          onCategoryChange={setCategoryFilter}
+        />
+
+        <AnimatePresence>
+          {/* Cek isSidebarOpen: Tooltip cuma muncul kalo drawer LAGI TUTUP (false) */}
+          {showCategoryTooltip && !isSidebarOpen && mounted && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              className={styles.categoryTooltip}
+            >
+              Search by category
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       <div className={styles.content}>
         {loading ? (
