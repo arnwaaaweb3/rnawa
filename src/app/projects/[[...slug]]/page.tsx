@@ -154,14 +154,12 @@ export default function ProjectsPage({ params }: PageProps) {
     <main className={containerClass}>
       {/* 1. HEADER FIX: Pindahin trigger hover-nya */}
       <div style={{ position: 'relative' }}>
-        <Header />
-        
-        {/* Ini area trigger "siluman" tepat di atas tombol toggle (pojok kanan) */}
-        <div 
+        <div
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
-          className={styles.tooltipArea}
-        />
+        >
+          <Header onToggleHover={(isHovering) => setShowTooltip(isHovering)} />
+        </div>
 
         <AnimatePresence>
           {showTooltip && mounted && (
@@ -170,7 +168,8 @@ export default function ProjectsPage({ params }: PageProps) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
               className={styles.floatingTooltip}
-              style={{ pointerEvents: 'none' }}
+              // JANGAN LUPA: biarkan tooltip ini 'tembus' kursor
+              style={{ pointerEvents: 'none' }} 
             >
               {theme === 'dark' ? "Switch to Light Mode?" : "Switch to Dark Mode?"}
             </motion.div>
@@ -195,34 +194,34 @@ export default function ProjectsPage({ params }: PageProps) {
           </button>
         ))}
       </div>
-      
-      {/* 2. CATEGORY TOOLTIP: Pastikan drawerWrapper punya display yang bener */}
-      <div 
-  className={styles.drawerWrapper}
-  onMouseEnter={() => setShowCategoryTooltip(true)}
-  onMouseLeave={() => setShowCategoryTooltip(false)}
-  style={{ position: 'relative', display: 'inline-flex' }} // Paksa di sini biar aman
->
-  <CategoryDrawer
-    categories={availableCategories}
-    activeCategory={categoryFilter}
-    onCategoryChange={setCategoryFilter}
-  />
 
-  <AnimatePresence>
-    {/* Gue hapus dulu !isSidebarOpen biar lo liat ini barang muncul dulu atau nggak */}
-    {showCategoryTooltip && mounted && (
-      <motion.div
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: -10 }}
-        className={styles.categoryTooltip}
+      {/* 2. CATEGORY TOOLTIP: Pastikan drawerWrapper punya display yang bener */}
+      <div
+        className={styles.drawerWrapper}
+        onMouseEnter={() => setShowCategoryTooltip(true)}
+        onMouseLeave={() => setShowCategoryTooltip(false)}
+        style={{ position: 'relative', display: 'inline-flex' }} // Paksa di sini biar aman
       >
-        Search by category
-      </motion.div>
-    )}
-  </AnimatePresence>
-</div>
+        <CategoryDrawer
+          categories={availableCategories}
+          activeCategory={categoryFilter}
+          onCategoryChange={setCategoryFilter}
+        />
+
+        <AnimatePresence>
+          {/* Gue hapus dulu !isSidebarOpen biar lo liat ini barang muncul dulu atau nggak */}
+          {showCategoryTooltip && mounted && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              className={styles.categoryTooltip}
+            >
+              Search by category
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       <div className={styles.content}>
         {loading ? (

@@ -4,7 +4,11 @@ import { FaSun, FaMoon } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion'; // Tambah AnimatePresence biar keren
 import { useTheme } from '@/context/ThemeContext';
 
-export const Header = () => {
+interface HeaderProps {
+  onToggleHover?: (isHovering: boolean) => void;
+}
+
+export const Header = ({ onToggleHover }: HeaderProps) => { // Tambah prop ini
   const { toggleDarkMode, mounted, darkMode } = useTheme();
 
   return (
@@ -31,7 +35,9 @@ export const Header = () => {
       <button
         onClick={toggleDarkMode}
         className={styles.darkModeToggle}
-        id="theme-toggle-btn" // Tambahin ID biar gampang dicari posisinya kalau butuh portal
+        onMouseEnter={() => onToggleHover?.(true)}
+        onMouseLeave={() => onToggleHover?.(false)}
+        id="theme-toggle-btn"
       >
         <AnimatePresence mode="wait">
           {mounted ? (
