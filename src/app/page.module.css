@@ -102,7 +102,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  border: none;
+  border: 2px solid #ffffff;
   cursor: pointer;
   background-size: cover;
   background-position: center;
@@ -116,6 +116,8 @@
 
 .navButton:hover {
   background-image: var(--bg-image-hover);
+  transform: box-shadow 0.3s;
+  box-shadow: 0 4px #ffffff;
 }
 
 .navButton::after {

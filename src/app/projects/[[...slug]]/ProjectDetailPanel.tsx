@@ -5,6 +5,8 @@ import { Project } from './types';
 import { portableTextComponents } from './PortableTextComponents';
 import styles from '@/app/projects/[[...slug]]/styles/ProjectDetailPanel.module.css';
 import { useTheme } from '@/context/ThemeContext';
+import { urlFor } from '@/sanity/lib/image';
+import Image from 'next/image';
 
 interface PanelProps {
   project: Project | null;
@@ -28,22 +30,40 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
           className={`${styles.overlayBackdrop} ${darkMode ? styles.darkModeActive : ''}`}
           onClick={onClose}
         >
-          {/* 1. CONTAINER VIDEO DI TENAH VIEWPORT (SEBELAH KIRI PANEL) */}
-          {project.youtubeId && (
+          {/* 1. CONTAINER MEDIA (VIDEO ATAU POSTER) */}
+          {(project.youtubeId || project.posterImage) && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
               className={styles.floatingVideoWrapper}
-              onClick={(e) => e.stopPropagation()} // Biar gak ketutup pas klik video
+              onClick={(e) => e.stopPropagation()}
             >
-              <iframe
-                src={`https://www.youtube.com/embed/${project.youtubeId}`}
-                title="Project Video"
-                allowFullScreen
-                className={styles.videoFrame}
-              />
+              
+              {/* Kondisi Video: Muncul cuma kalau displayType 'video' DAN ada ID-nya */}
+              {project.displayType === 'video' && project.youtubeId && (
+                <iframe
+                  src={`https://www.youtube.com/embed/${project.youtubeId}`}
+                  title="Project Video"
+                  allowFullScreen
+                  className={styles.videoFrame}
+                />
+              )}
+
+              {/* Kondisi Poster - Pake Dimensi Asli */}
+              {project.displayType === 'poster' && project.posterImage && (
+                <div className={styles.posterContainer} style={{ position: 'relative', width: '100%', aspectRatio: '3/4' }}>
+                  <Image
+                    src={urlFor(project.posterImage).url()}
+                    alt={project.posterImage.alt || 'Project Poster'}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    style={{ objectFit: 'contain' }} // ← Gambar ora bakal dipotong, tetep proporsi
+                    className={styles.posterImageContent}
+                  />
+                </div>
+              )}
             </motion.div>
           )}
           <motion.div

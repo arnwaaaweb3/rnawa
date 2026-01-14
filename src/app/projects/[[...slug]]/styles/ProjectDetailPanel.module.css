@@ -81,9 +81,32 @@
 }
 
 /* =========================
+   POSTER
+========================= */
+.posterContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  width: 100%;
+  max-width: 600px; /* ← Batasi width maksimal */
+  max-height: 600px; /* ← Batasi height maksimal (1:1) */
+  aspect-ratio: 1; /* ← Container dadi persegi, tapi gambaré tetep proporsi */
+  margin: 0 auto; /* ← Tengahké */
+}
+
+.posterImageContent {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Biar tetep proporsional di dalam container */
+  display: block;
+}
+
+/* =========================
    DETAIL PANEL
 ========================= */
-
 .detailPanel {
   width: clamp(300px, 50vw, 600px);
   height: 100%;

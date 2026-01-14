@@ -16,6 +16,21 @@ export interface Project {
   description?: PortableTextBlock[];
   gallery?: string[];
   youtubeId?: string;
+  displayType: 'video' | 'poster';
+  posterImage?: {
+    asset: {
+      _id: string;
+      url: string;
+      metadata: {
+        dimensions: {
+          width: number;
+          height: number;
+          aspectRatio: number;
+        };
+      };
+    };
+    alt?: string;
+  };
   projectUrl?: string;
   relatedJournal?: { title: string; slug: string }[];
 }

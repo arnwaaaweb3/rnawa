@@ -68,12 +68,27 @@ export default function ProjectsPage({ params }: PageProps) {
     setIsDetailLoading(true);
     try {
       const query = `*[_type == "portfolioItem" && slug.current == $slug][0] {
-        ...,
-        youtubeId,
-        "imageUrl": coverImage.asset->url,
-        "gallery": gallery[].asset->url,
-        "categories": categories[]->{ title, "slug": slug.current }
-      }`;
+      ...,
+      youtubeId,
+      displayType,
+      "imageUrl": coverImage.asset->url,
+      "gallery": gallery[].asset->url,
+      "categories": categories[]->{ title, "slug": slug.current },
+      "posterImage": {
+        "asset": posterImage.asset-> {
+          _id,
+          url,
+          metadata {
+            dimensions {
+              width,
+              height,
+              aspectRatio
+            }
+          }
+        },
+        "alt": posterImage.alt
+      }
+    }`;
 
       const data: Project | null = await client.fetch(query, { slug });
       setSelectedProject(data);

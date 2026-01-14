@@ -71,9 +71,39 @@ export default defineType({
     }),
 
     defineField({
+      name: 'displayType',
+      title: 'Media Display Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'YouTube Video', value: 'video' },
+          { title: 'Poster / Image', value: 'poster' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'video',
+    }),
+
+    defineField({
+      name: 'posterImage',
+      title: 'Poster Image',
+      type: 'image',
+      options: { hotspot: true },
+      hidden: ({ document }) => document?.displayType !== 'poster',
+      fields: [
+        {
+          name: 'alt',
+          type: 'string',
+          title: 'Alt Text',
+        }
+      ],
+    }),
+
+    defineField({
       name: 'youtubeId',
       title: 'YouTube Video ID',
       type: 'string',
+      hidden: ({ document }) => document?.displayType !== 'video',
       description: 'Paste your unique YouTube video ID here. (Example: sCssw_-MTZI)',
     }),
 
