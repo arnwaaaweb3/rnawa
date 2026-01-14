@@ -29,7 +29,7 @@ export default function ProjectsPage({ params }: PageProps) {
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [filter, setFilter] = useState<'all' | 'completed' | 'ongoing'>('all');
+  const [filter, setFilter] = useState<'all' | 'completed' | 'ongoing' |  'concept'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
@@ -178,10 +178,10 @@ export default function ProjectsPage({ params }: PageProps) {
       </div>
 
       <div className={styles.filterContainer}>
-        {['all', 'completed', 'ongoing'].map((status) => (
+        {['all', 'completed', 'ongoing', 'concept'].map((status) => (
           <button
             key={status}
-            onClick={() => setFilter(status as 'all' | 'completed' | 'ongoing')}
+            onClick={() => setFilter(status as 'all' | 'completed' | 'ongoing' | 'concept')}
             className={`${styles.filterTab} ${filter === status ? styles.activeTab : ''}`}
           >
             {status.toUpperCase()}

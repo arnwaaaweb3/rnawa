@@ -11,7 +11,7 @@ export default defineType({
       name: 'title',
       title: 'Project Name',
       type: 'string',
-      description: 'What is your project name?',
+      description: 'What is your project name? (Title)',
       validation: (Rule) => Rule.required(),
     }),
 
@@ -19,6 +19,7 @@ export default defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
+      description: 'Slug will be used for SEO and URL address for this project. (Slug)',
       options: {
         source: 'title',
         maxLength: 96,
@@ -31,7 +32,7 @@ export default defineType({
       name: 'projectStatus',
       title: 'Project Status',
       type: 'string',
-      description: 'How is it going with this project?',
+      description: 'How is it going with this project? (Progress)',
       options: {
         list: [
           { title: '🚀 Ongoing', value: 'ongoing' },
@@ -48,7 +49,7 @@ export default defineType({
       title: 'Category (Parent)',
       type: 'reference',
       to: [{ type: 'category' }],
-      description: 'Place this project under a relevant category!',
+      description: 'Place this project under a relevant category! (PubRel, Marketing, Dev, etc)',
       validation: (Rule) => Rule.required(),
     }),
 
@@ -58,12 +59,13 @@ export default defineType({
       type: 'array',
       of: [{ type: 'string' }],
       options: { layout: 'tags' },
-      description: 'Add  skill or tech stack that you use in this project. (e.g: React, Next.js, Marketing, etc.)',
+      description: 'Add  skill or tech stack that you use in this project. (React, Next.js, Digital Marketing, etc.)',
     }),
 
     defineField({
       name: 'projectUrl',
       title: 'Link / URL Address',
+      description: 'Add a link address for this project. (URL)',
       type: 'url',
       validation: (Rule) => Rule.uri({
         scheme: ['http', 'https'],
@@ -73,6 +75,7 @@ export default defineType({
     defineField({
       name: 'displayType',
       title: 'Media Display Type',
+      description: 'What is the media type for this project? (Video, Poster, etc).',
       type: 'string',
       options: {
         list: [
@@ -87,6 +90,7 @@ export default defineType({
     defineField({
       name: 'posterImage',
       title: 'Poster Image',
+      description: 'Add your project poster image. (Poster)',
       type: 'image',
       options: { hotspot: true },
       hidden: ({ document }) => document?.displayType !== 'poster',
@@ -94,6 +98,7 @@ export default defineType({
         {
           name: 'alt',
           type: 'string',
+          description: 'Alt text for your poster image. (Alt Text)',
           title: 'Alt Text',
         }
       ],
@@ -111,12 +116,14 @@ export default defineType({
       name: 'coverImage',
       title: 'Image',
       type: 'image',
+      description: 'Add a cover for this project card. (Cover).',
       options: { hotspot: true },
       fields: [
         {
           name: 'alt',
           type: 'string',
           title: 'Alternative Text',
+          description: 'Alt text for your cover image. (Alt Text).',
           validation: (Rule) => Rule.required(),
         }
       ],
@@ -149,6 +156,7 @@ export default defineType({
     defineField({
       name: 'categories',
       title: 'Categories (Sub)',
+      description: 'What is this project output? (Poster, Video, etc - Sub).',
       type: 'array',
       of: [{ type: 'reference', to: { type: 'category' } }],
     }),
