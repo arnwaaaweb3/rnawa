@@ -66,6 +66,61 @@
 }
 
 /* =========================
+   TOOL TIP - MODETOGGLE
+========================= */
+.floatingTooltip {
+  position: absolute;
+  top: 25px; /* Sesuaikan biar sejajar vertikal sama tombol */
+  right: 100px; /* Jarak dari kanan */
+  color: #0a0a0a;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  /* Gradient lo gue pertahanin, tapi opacity gue hapus biar kebaca! */
+  background: linear-gradient(
+    90deg,
+    #ff85e5 65%,
+    #ffbff4 85%,
+    #ffffff 100%
+  );
+  z-index: 99;
+  border: 2px solid #0a0a0a;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.darkModeActive .floatingTooltip {
+  background: linear-gradient(
+    90deg,
+    #190b61 65%,
+    #140a49 85%,
+    #0a0a0a 100%
+  );
+  border-color: #ff85e5;
+  color: #ffffff;
+}
+
+/* PANAH SAMPING (>) */
+.floatingTooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%; /* Geser ke luar sisi kanan box */
+  transform: translateY(-50%);
+  border-width: 8px;
+  border-style: solid;
+  /* Warna di border-left bikin panah nunjuk ke KANAN */
+  border-color: transparent transparent transparent #0a0a0a; 
+}
+
+/* Warna panah pas Dark Mode */
+.darkModeActive .floatingTooltip::after {
+  /* Sesuaikan sama border color lo biar nyambung */
+  border-color: transparent transparent transparent #ff85e5;
+}
+
+/* =========================
    GRID
 ========================= */
 
@@ -119,7 +174,6 @@
 /* =========================
    IMAGE
 ========================= */
-
 .imageWrapper {
   position: relative;
   width: 100%;

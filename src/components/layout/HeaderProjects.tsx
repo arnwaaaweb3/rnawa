@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './HeaderProjects.module.css';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion'; // Tambah AnimatePresence biar keren
 import { useTheme } from '@/context/ThemeContext';
 
 export const Header = () => {
-  const { darkMode, toggleDarkMode, mounted } = useTheme();
-  const [showTooltip, setShowTooltip] = useState(false);
+  const { toggleDarkMode, mounted, darkMode } = useTheme();
 
   return (
     <header className={`${styles.headerContainer} ${mounted && darkMode ? styles.darkMode : ''}`}>
@@ -32,12 +31,9 @@ export const Header = () => {
       <button
         onClick={toggleDarkMode}
         className={styles.darkModeToggle}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        style={{ position: 'relative' }} // Tambahkan ini untuk memastikan posisi relatif
+        id="theme-toggle-btn" // Tambahin ID biar gampang dicari posisinya kalau butuh portal
       >
         <AnimatePresence mode="wait">
-          {/* ICON MUNG DI-RENDER NEK WIS MOUNTED */}
           {mounted ? (
             <motion.div
               key={darkMode ? "sun" : "moon"}
@@ -49,21 +45,7 @@ export const Header = () => {
               {darkMode ? <FaSun size={20} /> : <FaMoon size={20} />}
             </motion.div>
           ) : (
-            <div style={{ width: 20, height: 20 }} /> // Placeholder kosong biar server tenang
-          )}
-        </AnimatePresence>
-        {/* --- TOOLTIP ANIMATION --- */}
-        <AnimatePresence>
-          {showTooltip && (
-            <motion.div
-              className={styles.tooltip}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
-            >
-              {darkMode ? "Switch to Light Mode?" : "Switch to Dark Mode?"}
-            </motion.div>
+            <div style={{ width: 20, height: 20 }} />
           )}
         </AnimatePresence>
       </button>

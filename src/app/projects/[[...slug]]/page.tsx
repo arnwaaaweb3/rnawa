@@ -24,6 +24,7 @@ export default function ProjectsPage({ params }: PageProps) {
   const slug = resolvedParams.slug ? resolvedParams.slug[0] : null;
   const router = useRouter();
   const { theme, mounted } = useTheme();
+  const [showTooltip, setShowTooltip] = useState(false); // Pindahin ke sini
   const isDark = theme === 'dark';
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
   const [loading, setLoading] = useState(true);
@@ -150,7 +151,28 @@ export default function ProjectsPage({ params }: PageProps) {
 
   return (
     <main className={containerClass}>
-      <Header />
+      {/* Bungkus Header buat deteksi hover */}
+      <div
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        style={{ position: 'relative' }}
+      >
+        <Header />
+
+        {/* Tooltip Render di Luar Header Container */}
+        <AnimatePresence>
+          {showTooltip && mounted && (
+            <motion.div
+              initial={{ opacity: 0, x: 10 }} // Muncul dari kanan ke kiri
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
+              className={styles.floatingTooltip}
+            >
+              {theme === 'dark' ? "Switch to Light Mode?" : "Switch to Dark Mode?"}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       <div className={styles.filterContainer}>
         {['all', 'completed', 'ongoing'].map((status) => (
@@ -169,7 +191,7 @@ export default function ProjectsPage({ params }: PageProps) {
           </button>
         ))}
       </div>
-
+      
       <CategoryDrawer
         categories={availableCategories}
         activeCategory={categoryFilter}
