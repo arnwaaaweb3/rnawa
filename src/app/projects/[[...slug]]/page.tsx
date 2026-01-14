@@ -23,7 +23,7 @@ export default function ProjectsPage({ params }: PageProps) {
   const resolvedParams = React.use(params);
   const slug = resolvedParams.slug ? resolvedParams.slug[0] : null;
   const router = useRouter();
-  const { isSidebarOpen, theme, mounted } = useTheme();
+  const { theme, mounted } = useTheme();
   const [showTooltip, setShowTooltip] = useState(false); // Pindahin ke sini
   const isDark = theme === 'dark';
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
@@ -205,30 +205,31 @@ export default function ProjectsPage({ params }: PageProps) {
       
       {/* 2. CATEGORY TOOLTIP: Pastikan drawerWrapper punya display yang bener */}
       <div 
-        className={styles.drawerWrapper}
-        onMouseEnter={() => setShowCategoryTooltip(true)}
-        onMouseLeave={() => setShowCategoryTooltip(false)}
-      >
-        <CategoryDrawer
-          categories={availableCategories}
-          activeCategory={categoryFilter}
-          onCategoryChange={setCategoryFilter}
-        />
+  className={styles.drawerWrapper}
+  onMouseEnter={() => setShowCategoryTooltip(true)}
+  onMouseLeave={() => setShowCategoryTooltip(false)}
+  style={{ position: 'relative', display: 'inline-flex' }} // Paksa di sini biar aman
+>
+  <CategoryDrawer
+    categories={availableCategories}
+    activeCategory={categoryFilter}
+    onCategoryChange={setCategoryFilter}
+  />
 
-        <AnimatePresence>
-          {/* Cek isSidebarOpen: Tooltip cuma muncul kalo drawer LAGI TUTUP (false) */}
-          {showCategoryTooltip && !isSidebarOpen && mounted && (
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              className={styles.categoryTooltip}
-            >
-              Search by category
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+  <AnimatePresence>
+    {/* Gue hapus dulu !isSidebarOpen biar lo liat ini barang muncul dulu atau nggak */}
+    {showCategoryTooltip && mounted && (
+      <motion.div
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -10 }}
+        className={styles.categoryTooltip}
+      >
+        Search by category
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
 
       <div className={styles.content}>
         {loading ? (

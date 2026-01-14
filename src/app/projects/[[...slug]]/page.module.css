@@ -125,36 +125,40 @@
 ========================= */
 .drawerWrapper {
   position: relative;
-  display: inline-flex; /* Pake inline-flex biar wrapper-nya nge-pres ke tombolnya aja */
-  align-items: center;
-  margin-top: 1rem;
+  display: inline-flex;
+  vertical-align: middle;
+  z-index: 50; /* Pastikan di atas grid project */
 }
 
 .categoryTooltip {
   position: absolute;
-  top: 50%;
-  left: 60px; /* Geser sesuai posisi tombol drawer lo */
+  top: 40%;
+  left: 100%; /* Naruh di sebelah kanan tombol drawer */
+  margin-left: 15px; /* Kasih jarak biar nggak nempel banget */
   transform: translateY(-50%);
-  z-index: 100;
-  background: #0f0f0f;
-  color: #fff;
+  background: linear-gradient(
+    90deg,
+    #ff85e5 65%,
+    #ffbff4 85%,
+    #ffffff 100%
+  );
+  color: #0a0a0a;
   padding: 6px 12px;
   border-radius: 10px;
   font-size: 0.75rem;
   font-weight: 600;
-  z-index: 99;
+  z-index: 100;
   border: 2px solid #0f0f0f;
-  box-shadow: 4px 4px 0px #0f0f0f;
   white-space: nowrap;
   pointer-events: none;
 }
 
-/* Panah nunjuk ke KIRI (<) */
+/* Panah ke Kiri (<) */
 .categoryTooltip::after {
   content: '';
   position: absolute;
   top: 50%;
-  right: 100%; /* Di luar batas kiri box */
+  right: 100%;
   transform: translateY(-50%);
   border-width: 8px;
   border-style: solid;
