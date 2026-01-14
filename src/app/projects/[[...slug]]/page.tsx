@@ -160,15 +160,7 @@ export default function ProjectsPage({ params }: PageProps) {
         <div 
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
-          style={{ 
-            position: 'absolute', 
-            top: 0, 
-            right: 0, 
-            width: '100px', // Sesuaikan lebar tombol toggle lo
-            height: '90px',  // Sesuaikan tinggi header lo
-            zIndex: 30,
-            cursor: 'pointer'
-          }}
+          className={styles.tooltipArea}
         />
 
         <AnimatePresence>
@@ -178,6 +170,7 @@ export default function ProjectsPage({ params }: PageProps) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
               className={styles.floatingTooltip}
+              style={{ pointerEvents: 'none' }}
             >
               {theme === 'dark' ? "Switch to Light Mode?" : "Switch to Dark Mode?"}
             </motion.div>
