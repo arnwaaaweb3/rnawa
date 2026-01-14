@@ -45,7 +45,7 @@ export default defineType({
 
     defineField({
       name: 'category',
-      title: 'Category',
+      title: 'Category (Parent)',
       type: 'reference',
       to: [{ type: 'category' }],
       description: 'Place this project under a relevant category!',
@@ -148,7 +148,7 @@ export default defineType({
 
     defineField({
       name: 'categories',
-      title: 'Categories',
+      title: 'Categories (Sub)',
       type: 'array',
       of: [{ type: 'reference', to: { type: 'category' } }],
     }),
