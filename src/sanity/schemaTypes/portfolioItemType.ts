@@ -23,7 +23,14 @@ export default defineType({
       options: {
         source: 'title',
         maxLength: 96,
-        isUnique: () => true,
+        slugify: (input) => input
+          .toLowerCase()
+          .replace(/\b(for|the|a|with|and|in|on|at|to|of|by|di|ke|dari|dan|untuk|yang|pada|dengan|buat)\b/g, '') // Bantai stop words English & Indo
+          .trim()
+          .replace(/[^\w\s-]/g, '') // Hapus karakter aneh biar gak error
+          .replace(/\s+/g, '-')     // Spasi jadi dash
+          .replace(/-+/g, '-')      // Bersihin kalau ada double dash (--) gara-gara kata yang dihapus
+          .slice(0, 96)
       },
       validation: (Rule) => Rule.required(),
     }),
@@ -81,10 +88,22 @@ export default defineType({
         list: [
           { title: 'YouTube Video', value: 'video' },
           { title: 'Poster / Image', value: 'poster' },
+          { title: 'PDF Document', value: 'pdf' }, // Tambahin ini
         ],
         layout: 'radio',
       },
       initialValue: 'video',
+    }),
+
+    defineField({
+      name: 'pdfFile',
+      title: 'PDF File',
+      type: 'file',
+      description: 'Upload your project PDF documentation here.',
+      options: {
+        accept: '.pdf', // Biar gak ada yang upload file aneh-aneh
+      },
+      hidden: ({ document }) => document?.displayType !== 'pdf',
     }),
 
     defineField({
@@ -113,6 +132,7 @@ export default defineType({
         list: [
           { title: 'Landscape (Horizontal)', value: 'landscape' },
           { title: 'Portrait (Vertical)', value: 'portrait' },
+          { title: 'Square (1:1)', value: 'square' }, // Tambahin ini
         ],
         layout: 'radio',
       },

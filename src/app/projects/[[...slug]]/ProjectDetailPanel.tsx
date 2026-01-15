@@ -32,7 +32,7 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
           onClick={onClose}
         >
           {/* 1. CONTAINER MEDIA (VIDEO ATAU POSTER) */}
-          {(project.youtubeId || project.posterImage) && (
+          {(project.youtubeId || project.posterImage || project.pdfFile) && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -58,6 +58,7 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
                   className={clsx(styles.posterContainer, {
                     [styles.portraitMode]: project.imageOrientation === 'portrait',
                     [styles.landscapeMode]: project.imageOrientation === 'landscape',
+                    [styles.squareMode]: project.imageOrientation === 'square',
                   })}
                 >
                   <Image
@@ -68,6 +69,24 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
                     className={styles.posterImageContent}
                     priority
                   />
+                </div>
+              )}
+
+              {/* 3. Kondisi PDF - Pakai Iframe buat preview */}
+              {project.displayType === 'pdf' && project.pdfFile && (
+                <div className={styles.pdfContainer}>
+                  <iframe
+                    src={`${project.pdfFile.asset.url}#toolbar=0`}
+                    className={styles.pdfFrame}
+                    title="Project PDF"
+                  />
+                  <a 
+                    href={project.pdfFile.asset.url} 
+                    target="_blank" 
+                    className={styles.downloadPdfBtn}
+                  >
+                    Open PDF in New Tab ↗
+                  </a>
                 </div>
               )}
             </motion.div>

@@ -76,18 +76,20 @@ export default function ProjectsPage({ params }: PageProps) {
       "imageUrl": coverImage.asset->url,
       "gallery": gallery[].asset->url,
       "categories": categories[]->{ title, "slug": slug.current },
+      "pdfFile": pdfFile.asset-> { url },
       "posterImage": {
-        "asset": posterImage.asset-> {
-          _id,
-          url,
-          metadata {
-            dimensions {
-              width,
-              height,
-              aspectRatio
+        "asset": 
+        posterImage.asset-> {
+          _id, 
+          url, 
+          metadata { 
+            dimensions { 
+              width, 
+              height, 
+              aspectRatio 
+              }
             }
-          }
-        },
+          },
         "alt": posterImage.alt
       }
     }`;

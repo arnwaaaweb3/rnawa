@@ -16,7 +16,13 @@ export interface Project {
   description?: PortableTextBlock[];
   gallery?: string[];
   youtubeId?: string;
-  displayType: 'video' | 'poster';
+  displayType: 'video' | 'poster' | 'pdf';
+  imageOrientation?: 'landscape' | 'portrait' | 'square'; 
+  pdfFile?: {
+    asset: {
+      url: string;
+    };
+  };
   posterImage?: {
     asset: {
       _id: string;
@@ -31,7 +37,6 @@ export interface Project {
     };
     alt?: string;
   };
-  imageOrientation?: 'landscape' | 'portrait';
   projectUrl?: string;
   relatedJournal?: { title: string; slug: string }[];
 }
