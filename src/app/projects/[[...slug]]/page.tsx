@@ -5,13 +5,15 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Header } from '../../../components/layout/HeaderProjects';
 import styles from '../[[...slug]]/page.module.css';
 import { useRouter } from 'next/navigation';
-import { client } from '@/sanity/lib/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CategoryDrawer } from '../../../components/ui/CategoryDrawer';
 import { Category, Project } from '@/app/projects/[[...slug]]/types';
 import { ProjectCard } from './ProjectCard';
 import { ProjectDetailPanel } from './ProjectDetailPanel';
 import { useTheme } from '@/context/ThemeContext';
+
+// 1. IMPORT QUERIES (Ini yang bikin bersih, su!)
+import { fetchAllProjects, fetchSingleProject } from '../actions';
 
 // =========== Interface
 interface PageProps {
@@ -24,12 +26,12 @@ export default function ProjectsPage({ params }: PageProps) {
   const slug = resolvedParams.slug ? resolvedParams.slug[0] : null;
   const router = useRouter();
   const { theme, mounted } = useTheme();
-  const [showTooltip, setShowTooltip] = useState(false); // Pindahin ke sini
+  const [showTooltip, setShowTooltip] = useState(false);
   const isDark = theme === 'dark';
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [filter, setFilter] = useState<'all' | 'completed' | 'ongoing' |  'concept'>('all');
+  const [filter, setFilter] = useState<'all' | 'completed' | 'ongoing' | 'concept'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
@@ -47,60 +49,31 @@ export default function ProjectsPage({ params }: PageProps) {
 
   const filteredProjects = useMemo(() => {
     return projects.filter((project) => {
-      const matchStatus =
-        filter === 'all' || project.projectStatus === filter;
-
+      const matchStatus = filter === 'all' || project.projectStatus === filter;
       const matchCategory =
         categoryFilter === 'all' ||
         project.categories?.some(
           (c) => c.title === categoryFilter || c.parent === categoryFilter
         );
-
       return matchStatus && matchCategory;
     });
   }, [projects, filter, categoryFilter]);
 
   const closePanel = () => {
     setSelectedProject(null);
-    // setIsProjectDetailOpen(false); <- Ini bakal ke-trigger otomatis sama useEffect di atas karena slug jadi null
     window.history.pushState(null, '', '/projects');
   };
 
-  const handleExplore = async (slug: string) => {
+  // 2. AFTER: handleExplore sekarang cuma panggil query via variabel
+  const handleExplore = async (projectSlug: string) => {
     setIsDetailLoading(true);
     try {
-      const query = `*[_type == "portfolioItem" && slug.current == $slug][0] {
-      ...,
-      youtubeId,
-      displayType,
-      "imageUrl": coverImage.asset->url,
-      "pdfFile": {
-        "asset": {
-          "url": pdfFile.asset->url
-        }
-      },
-      "gallery": gallery[].asset->url,
-      "categories": categories[]->{ title, "slug": slug.current },
-      "posterImage": {
-        "asset": 
-        posterImage.asset-> {
-          _id, 
-          url, 
-          metadata { 
-            dimensions { 
-              width, 
-              height, 
-              aspectRatio 
-              }
-            }
-          },
-        "alt": posterImage.alt
-      }
-    }`;
-
-      const data: Project | null = await client.fetch(query, { slug });
+      // Panggil fungsi dari actions.ts
+      const data = await fetchSingleProject(projectSlug);
       setSelectedProject(data);
-      window.history.pushState(null, '', `/projects/${slug}`);
+      window.history.pushState(null, '', `/projects/${projectSlug}`);
+    } catch (err) {
+      console.error("Gagal explore, otak lo konslet!", err);
     } finally {
       setIsDetailLoading(false);
     }
@@ -115,50 +88,33 @@ export default function ProjectsPage({ params }: PageProps) {
     }
   }, [slug]);
 
+  // 3. AFTER: fetchProjects sekarang panggil PROJECTS_QUERY (Bersih!)
   useEffect(() => {
-    const fetchProjects = async () => {
+    const loadInitialData = async () => {
       try {
-        const query = `*[_type == "portfolioItem"] | order(publishedAt desc) {
-          _id,
-          title,
-          projectStatus,
-          "slug": slug.current,
-          "imageUrl": coverImage.asset->url,
-          "projectUrl": projectUrl,
-          "categories": categories[]->{
-            title,
-            "slug": slug.current,
-            "parent": parent->title
-          }
-        }`;
-
-        const data: Project[] = await client.fetch(query);
+        // Panggil fungsi dari actions.ts
+        const data = await fetchAllProjects();
         setProjects(data);
       } catch (err) {
-        console.error(err);
+        console.error("Gagal fetch project list!", err);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchProjects();
+    loadInitialData();
   }, []);
 
   useEffect(() => {
     if (slug) {
-      // Pas detail dibuka: Paksa sidebar OFF biar fokus ke konten (Immersive)
       setIsSidebarOpen(false);
       setIsProjectDetailOpen(true);
     } else {
-      // Pas detail ditutup: Cukup matikan status detail
-      // JANGAN panggil setIsSidebarOpen(true) di sini biar gak narik otomatis
       setIsProjectDetailOpen(false);
     }
   }, [slug, setIsSidebarOpen, setIsProjectDetailOpen]);
 
   return (
     <main className={containerClass}>
-      {/* 1. HEADER FIX: Pindahin trigger hover-nya */}
       <div style={{ position: 'relative' }}>
         <div
           onMouseEnter={() => setShowTooltip(true)}
@@ -174,8 +130,7 @@ export default function ProjectsPage({ params }: PageProps) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 10 }}
               className={styles.floatingTooltip}
-              // JANGAN LUPA: biarkan tooltip ini 'tembus' kursor
-              style={{ pointerEvents: 'none' }} 
+              style={{ pointerEvents: 'none' }}
             >
               {theme === 'dark' ? "Switch to Light Mode?" : "Switch to Dark Mode?"}
             </motion.div>
@@ -187,7 +142,7 @@ export default function ProjectsPage({ params }: PageProps) {
         {['all', 'completed', 'ongoing', 'concept'].map((status) => (
           <button
             key={status}
-            onClick={() => setFilter(status as 'all' | 'completed' | 'ongoing' | 'concept')}
+            onClick={() => setFilter(status as 'all' | 'ongoing' | 'completed' | 'concept')}
             className={`${styles.filterTab} ${filter === status ? styles.activeTab : ''}`}
           >
             {status.toUpperCase()}
@@ -201,12 +156,11 @@ export default function ProjectsPage({ params }: PageProps) {
         ))}
       </div>
 
-      {/* 2. CATEGORY TOOLTIP: Pastikan drawerWrapper punya display yang bener */}
       <div
         className={styles.drawerWrapper}
         onMouseEnter={() => setShowCategoryTooltip(true)}
         onMouseLeave={() => setShowCategoryTooltip(false)}
-        style={{ position: 'relative', display: 'inline-flex' }} // Paksa di sini biar aman
+        style={{ position: 'relative', display: 'inline-flex' }}
       >
         <CategoryDrawer
           categories={availableCategories}
@@ -215,7 +169,6 @@ export default function ProjectsPage({ params }: PageProps) {
         />
 
         <AnimatePresence>
-          {/* Gue hapus dulu !isSidebarOpen biar lo liat ini barang muncul dulu atau nggak */}
           {showCategoryTooltip && mounted && (
             <motion.div
               initial={{ opacity: 0, x: -10 }}
