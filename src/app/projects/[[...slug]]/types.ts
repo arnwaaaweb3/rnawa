@@ -31,6 +31,7 @@ export interface Project {
     };
     alt?: string;
   };
+  imageOrientation?: 'landscape' | 'portrait';
   projectUrl?: string;
   relatedJournal?: { title: string; slug: string }[];
 }

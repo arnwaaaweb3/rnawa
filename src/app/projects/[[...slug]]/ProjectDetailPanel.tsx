@@ -7,6 +7,7 @@ import styles from '@/app/projects/[[...slug]]/styles/ProjectDetailPanel.module.
 import { useTheme } from '@/context/ThemeContext';
 import { urlFor } from '@/sanity/lib/image';
 import Image from 'next/image';
+import clsx from 'clsx';
 
 interface PanelProps {
   project: Project | null;
@@ -40,7 +41,7 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
               className={styles.floatingVideoWrapper}
               onClick={(e) => e.stopPropagation()}
             >
-              
+
               {/* Kondisi Video: Muncul cuma kalau displayType 'video' DAN ada ID-nya */}
               {project.displayType === 'video' && project.youtubeId && (
                 <iframe
@@ -53,14 +54,19 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
 
               {/* Kondisi Poster - Pake Dimensi Asli */}
               {project.displayType === 'poster' && project.posterImage && (
-                <div className={styles.posterContainer} style={{ position: 'relative', width: '100%', aspectRatio: '3/4' }}>
+                <div
+                  className={clsx(styles.posterContainer, {
+                    [styles.portraitMode]: project.imageOrientation === 'portrait',
+                    [styles.landscapeMode]: project.imageOrientation === 'landscape',
+                  })}
+                >
                   <Image
-                    src={urlFor(project.posterImage).url()}
+                    src={urlFor(project.posterImage).format('webp').quality(80).url()}
                     alt={project.posterImage.alt || 'Project Poster'}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    style={{ objectFit: 'contain' }} // ← Gambar ora bakal dipotong, tetep proporsi
                     className={styles.posterImageContent}
+                    priority
                   />
                 </div>
               )}

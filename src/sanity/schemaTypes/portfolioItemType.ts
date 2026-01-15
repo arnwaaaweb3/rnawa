@@ -105,6 +105,22 @@ export default defineType({
     }),
 
     defineField({
+      name: 'imageOrientation',
+      title: 'Poster Orientation',
+      type: 'string',
+      description: 'Select the orientation for your poster.',
+      options: {
+        list: [
+          { title: 'Landscape (Horizontal)', value: 'landscape' },
+          { title: 'Portrait (Vertical)', value: 'portrait' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'portrait',
+      hidden: ({ document }) => document?.displayType !== 'poster', // Sama kayak posterImage
+    }),
+
+    defineField({
       name: 'youtubeId',
       title: 'YouTube Video ID',
       type: 'string',
