@@ -72,17 +72,18 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
                 </div>
               )}
 
-              {/* 3. Kondisi PDF - Pakai Iframe buat preview */}
-              {project.displayType === 'pdf' && project.pdfFile && (
+              {/* 3. Kondisi PDF - Tambahin Optional Chaining di sini! */}
+              {project.displayType === 'pdf' && project.pdfFile?.asset?.url && (
                 <div className={styles.pdfContainer}>
                   <iframe
                     src={`${project.pdfFile.asset.url}#toolbar=0`}
                     className={styles.pdfFrame}
                     title="Project PDF"
                   />
-                  <a 
-                    href={project.pdfFile.asset.url} 
-                    target="_blank" 
+                  <a
+                    href={project.pdfFile.asset.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className={styles.downloadPdfBtn}
                   >
                     Open PDF in New Tab ↗
