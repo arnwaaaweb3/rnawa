@@ -74,7 +74,11 @@ export default function ProjectsPage({ params }: PageProps) {
       youtubeId,
       displayType,
       "imageUrl": coverImage.asset->url,
-      "pdfFile": pdfFile.asset-> { url },
+      "pdfFile": {
+        "asset": {
+          "url": pdfFile.asset->url
+        }
+      },
       "gallery": gallery[].asset->url,
       "categories": categories[]->{ title, "slug": slug.current },
       "posterImage": {

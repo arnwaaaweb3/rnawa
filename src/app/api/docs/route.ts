@@ -9,6 +9,7 @@ const client = createClient({
   useCdn: false,
 })
 
+// src/app/api/docs/route.ts
 export async function GET() {
   const query = groq`
     *[_type == "documentation"]{
@@ -16,6 +17,8 @@ export async function GET() {
       title,
       "slug": slug.current,
       description,
+      displayType,
+      "pdfFile": pdfFile.asset->url,
       "imageUrl": mainImage.asset->url,
       "categoryTitle": category->title,
       "categorySlug": category->slug.current,
