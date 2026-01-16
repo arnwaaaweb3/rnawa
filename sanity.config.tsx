@@ -4,7 +4,7 @@ import React from 'react'
 import { visionTool } from '@sanity/vision'
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
-// Perbaikan di sini: Menggunakan LayoutProps
+import { presentationTool } from 'sanity/presentation';
 import type { LayoutProps } from 'sanity' 
 import { codeInput } from '@sanity/code-input'
 import { apiVersion, dataset, projectId } from './src/sanity/env'
@@ -47,6 +47,13 @@ export default defineConfig({
     structureTool({ structure }),
     visionTool({ defaultApiVersion: apiVersion }),
     codeInput(),
+    presentationTool({
+    previewUrl: {
+      draftMode: {
+        enable: '/api/draft',
+      },
+    },
+  }),
   ],
   studio: {
     components: {

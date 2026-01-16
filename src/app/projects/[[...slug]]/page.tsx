@@ -1,16 +1,18 @@
 'use client';
 
 // =========== Import
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '../../../components/layout/HeaderProjects';
 import styles from '../[[...slug]]/page.module.css';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CategoryDrawer } from '../../../components/ui/CategoryDrawer';
-import { Category, Project } from '@/app/projects/[[...slug]]/types';
+import { Project } from '@/app/projects/[[...slug]]/types';
 import { ProjectCard } from './ProjectCard';
+import { useProjectFilters } from '../hooks/useProjectFilters';
 import { ProjectDetailPanel } from './ProjectDetailPanel';
 import { useTheme } from '@/context/ThemeContext';
+import { ProjectCardSkeleton } from './ProjectCardSkeleton';
 
 // 1. IMPORT QUERIES (Ini yang bikin bersih, su!)
 import { fetchAllProjects, fetchSingleProject } from '../actions';
@@ -31,72 +33,26 @@ export default function ProjectsPage({ params }: PageProps) {
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [filter, setFilter] = useState<'all' | 'completed' | 'ongoing' | 'concept'>('all');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const { setIsSidebarOpen, setIsProjectDetailOpen } = useTheme();
   const [showCategoryTooltip, setShowCategoryTooltip] = useState(false);
 
-  const availableCategories = useMemo(() => {
-    return [
-      'all',
-      ...new Set(
-        projects.flatMap((p) => p.categories?.map((c: Category) => c.title) || [])
-      ),
-    ];
-  }, [projects]);
+  // Gunakan Hook Filter
+  const { 
+    filter, setFilter, 
+    categoryFilter, setCategoryFilter, 
+    availableCategories, filteredProjects 
+  } = useProjectFilters(projects);
 
-  const filteredProjects = useMemo(() => {
-    return projects.filter((project) => {
-      const matchStatus = filter === 'all' || project.projectStatus === filter;
-      const matchCategory =
-        categoryFilter === 'all' ||
-        project.categories?.some(
-          (c) => c.title === categoryFilter || c.parent === categoryFilter
-        );
-      return matchStatus && matchCategory;
-    });
-  }, [projects, filter, categoryFilter]);
-
-  const closePanel = () => {
-    setSelectedProject(null);
-    window.history.pushState(null, '', '/projects');
-  };
-
-  // 2. AFTER: handleExplore sekarang cuma panggil query via variabel
-  const handleExplore = async (projectSlug: string) => {
-    setIsDetailLoading(true);
-    try {
-      // Panggil fungsi dari actions.ts
-      const data = await fetchSingleProject(projectSlug);
-      setSelectedProject(data);
-      window.history.pushState(null, '', `/projects/${projectSlug}`);
-    } catch (err) {
-      console.error("Gagal explore, otak lo konslet!", err);
-    } finally {
-      setIsDetailLoading(false);
-    }
-  };
-
-  // =========== Effect
-  useEffect(() => {
-    if (slug) {
-      handleExplore(slug);
-    } else {
-      setSelectedProject(null);
-    }
-  }, [slug]);
-
-  // 3. AFTER: fetchProjects sekarang panggil PROJECTS_QUERY (Bersih!)
+  // FETCH DATA AWAL (CUKUP SATU SAJA!)
   useEffect(() => {
     const loadInitialData = async () => {
       try {
-        // Panggil fungsi dari actions.ts
         const data = await fetchAllProjects();
         setProjects(data);
       } catch (err) {
-        console.error("Gagal fetch project list!", err);
+        console.error("Failed to fetch projects!", err);
       } finally {
         setLoading(false);
       }
@@ -104,6 +60,23 @@ export default function ProjectsPage({ params }: PageProps) {
     loadInitialData();
   }, []);
 
+  const handleExplore = async (projectSlug: string) => {
+    setIsDetailLoading(true);
+    try {
+      const data = await fetchSingleProject(projectSlug);
+      setSelectedProject(data);
+      window.history.pushState(null, '', `/projects/${projectSlug}`);
+    } finally {
+      setIsDetailLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (slug) handleExplore(slug);
+    else setSelectedProject(null);
+  }, [slug]);
+
+  // Sidebar Logic
   useEffect(() => {
     if (slug) {
       setIsSidebarOpen(false);
@@ -112,6 +85,11 @@ export default function ProjectsPage({ params }: PageProps) {
       setIsProjectDetailOpen(false);
     }
   }, [slug, setIsSidebarOpen, setIsProjectDetailOpen]);
+
+  const closePanel = () => {
+    setSelectedProject(null);
+    window.history.pushState(null, '', '/projects');
+  };
 
   return (
     <main className={containerClass}>
@@ -184,7 +162,9 @@ export default function ProjectsPage({ params }: PageProps) {
 
       <div className={styles.content}>
         {loading ? (
-          <div className={styles.loader}>Loading…</div>
+          <div className={styles.projectGrid}>
+            {[...Array(6)].map((_, i) => <ProjectCardSkeleton key={i} />)}
+          </div>
         ) : (
           <div className={styles.projectGrid}>
             <AnimatePresence>

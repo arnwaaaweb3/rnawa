@@ -5,10 +5,15 @@ export const client: SanityClient = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true, // ✅ cukup untuk data publik, aman di frontend
+  useCdn: true, 
+  // Iki tambahané ben iso Visual Editing
+  stega: {
+    enabled: process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_VIEW_MODE === 'preview',
+    studioUrl: '/studio',
+  },
 })
 
-// Interface tipe data
+// Fungsi fetcher-mu tetep podo, tapi client-e wis pinter saiki
 export interface DocsCategory {
     _id: string
     title: string
@@ -20,7 +25,6 @@ export interface DocsCategory {
     color: string
 }
 
-// Fetcher function
 export async function getDocsCategories(client: SanityClient): Promise<DocsCategory[]> {
     const query = groq`
         *[_type == "documentation"] {

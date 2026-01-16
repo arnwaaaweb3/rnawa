@@ -1,0 +1,87 @@
+/* src/app/projects/[[...slug]]/styles/ProjectCardSkeleton.module.css */
+
+.skeletonCard {
+  /* Ini pengganti styles.card lo */
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 400px; /* Samain sama tinggi ProjectCard asli lo biar grid-nya kaga loncat */
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Animasi Shimmer (Efek Cahaya Perak lewat) */
+.skeletonCard::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonImage {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Pastiin aspect ratio sama ama image asli */
+  background: #e0e0e0;
+}
+
+.skeletonInfo {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.skeletonTitle {
+  height: 1.5rem;
+  width: 80%;
+  background: #e0e0e0;
+  border-radius: 4px;
+}
+
+.skeletonCategory {
+  height: 1rem;
+  width: 40%;
+  background: #e0e0e0;
+  border-radius: 4px;
+}
+
+/* --- DARK MODE SUPPORT --- */
+/* Pake :global karena class ini nempel di main tag di page.tsx lo */
+:global(.darkModeActive) .skeletonCard {
+  background: #1a1a1a;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:global(.darkModeActive) .skeletonImage,
+:global(.darkModeActive) .skeletonTitle,
+:global(.darkModeActive) .skeletonCategory {
+  background: #2a2a2a;
+}
+
+:global(.darkModeActive) .skeletonCard::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
