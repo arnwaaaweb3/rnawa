@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2020", // Upgrade dari ES2017 ke ES2020 untuk dukungan fitur modern
     "lib": [
       "dom",
       "dom.iterable",
@@ -9,13 +9,14 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true, // Tambahkan untuk konsistensi nama file
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
+    "module": "ESNext", // Gunakan "ESNext" untuk dukungan module yang lebih baik
+    "moduleResolution": "bundler", // Pertahankan untuk kompatibilitas dengan bundler modern
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "preserve", // Pertahankan untuk dukungan JSX di Next.js
     "incremental": true,
     "plugins": [
       {
@@ -23,10 +24,13 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+      "@/*": ["./src/*"]
+    },
+    // Tambahkan pengaturan berikut untuk dukungan TypeScript yang lebih baik
+    "baseUrl": ".", // Atur baseUrl untuk path yang relatif
+    "noUnusedLocals": true, // Laporkan variabel lokal yang tidak digunakan
+    "noUnusedParameters": true, // Laporkan parameter yang tidak digunakan
+    "noFallthroughCasesInSwitch": true // Laporkan kesalahan fallthrough di switch
   },
   "include": [
     "next-env.d.ts",

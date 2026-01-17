@@ -1,4 +1,5 @@
 import { createClient, groq, type SanityClient } from 'next-sanity'
+// Panggil dari env.ts pusat, jangan manja ngetik ulang!
 import { apiVersion, dataset, projectId } from '../env'
 
 export const client: SanityClient = createClient({
@@ -6,14 +7,14 @@ export const client: SanityClient = createClient({
   dataset,
   apiVersion,
   useCdn: true, 
-  // Iki tambahané ben iso Visual Editing
   stega: {
     enabled: process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_VIEW_MODE === 'preview',
-    studioUrl: '/studio',
+    // Pake env var atau fallback ke path default studio lu
+    studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || '/studio',
   },
 })
 
-// Fungsi fetcher-mu tetep podo, tapi client-e wis pinter saiki
+// Interface & Fetcher tetep sama, udah bener itu.
 export interface DocsCategory {
     _id: string
     title: string

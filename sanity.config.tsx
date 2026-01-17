@@ -5,7 +5,7 @@ import { visionTool } from '@sanity/vision'
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { presentationTool } from 'sanity/presentation';
-import type { LayoutProps } from 'sanity' 
+import type { LayoutProps } from 'sanity'
 import { codeInput } from '@sanity/code-input'
 import { apiVersion, dataset, projectId } from './src/sanity/env'
 import { schema } from './src/sanity/schemaTypes'
@@ -48,12 +48,12 @@ export default defineConfig({
     visionTool({ defaultApiVersion: apiVersion }),
     codeInput(),
     presentationTool({
-    previewUrl: {
-      draftMode: {
-        enable: '/api/draft',
+      previewUrl: {
+        previewMode: {
+          enable: '/api/draft-mode/enable', // Harus match sama struktur folder baru lu!
+        },
       },
-    },
-  }),
+    }),
   ],
   studio: {
     components: {

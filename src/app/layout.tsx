@@ -5,7 +5,10 @@ import localFont from 'next/font/local';
 import MainLayout from '../components/layout/MainLayout';
 import './globals.css';
 import { ThemeProvider } from '@/context/ThemeContext';
-
+import { SanityLive } from '@/sanity/lib/live';
+import { draftMode } from 'next/headers';
+import { DisableDraftMode } from '@/components/DisableDraftMode';
+import VisualEditingComponent from '@/components/VisualEditing';
 const lexend = localFont({
   src: "../../public/fonts/Lexend.woff2",
   variable: '--font-lexend',
@@ -17,7 +20,13 @@ export const metadata: Metadata = {
   description: 'Personal knowledge, views, and professional portfolio.',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ 
+  children,
+ }: Readonly <{ 
+  children: React.ReactNode 
+ }> ) {
+  const { isEnabled: isDraftMode } = await draftMode();
+
   return (
     <html lang="en" className={lexend.variable} suppressHydrationWarning> 
       <head>
@@ -38,7 +47,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="antialiased"> 
         <ThemeProvider>
-          <MainLayout>{children}</MainLayout>
+          <MainLayout>
+            {children}
+            {isDraftMode && (
+              <>
+                <VisualEditingComponent /> {/* Ini manggil src/components/VisualEditing.tsx */}
+                <DisableDraftMode />
+              </>
+            )}
+            <SanityLive />
+            </MainLayout>
         </ThemeProvider>
       </body>
     </html>
