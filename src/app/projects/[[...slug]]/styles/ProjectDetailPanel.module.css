@@ -24,13 +24,15 @@
 /* =========================
    YOUTUBE VIDEO
 ========================= */
-
 .floatingVideoWrapper {
-  flex: 1; /* Ambil semua sisa ruang di sebelah kiri panel */
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
+  position: relative; 
+  min-height: 500px; 
+  width: 100%;
 }
 
 .videoFrame {
@@ -91,22 +93,24 @@
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   margin: 0 auto;
-  position: relative;
+  position: relative; 
   transition: all 0.4s ease-in-out;
-  border: 2px solid #ffffff; /* Default border */
+  border: 2px solid #ffffff;
 }
 
 /* Logic Portrait */
 .portraitMode {
   width: 100%;
-  max-width: 450px; /* Portrait jangan terlalu lebar */
+  max-width: 450px;
   aspect-ratio: 3 / 4; 
-  border-bottom: 6px solid #ff85e5; /* Border bawah tebel buat portrait */
+  height: auto;
+  min-height: 600px; /* Jaga biar gak gepeng di layar gede */
+  border-bottom: 6px solid #ff85e5;
 }
 
 /* Logic Landscape */
 .landscapeMode {
-  width: 90%;
+  width: 100%;
   max-width: 800px; /* Landscape butuh space lebar */
   aspect-ratio: 16 / 9;
   border-right: 6px solid #ff85e5; /* Pindahin aksen border ke kanan biar unik */

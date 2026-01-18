@@ -29,8 +29,8 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
          * Kita proses pdfUrl di sini karena di scope ini 'project' sudah pasti bukan null.
          * Kita handle tipe data string (dari API route) atau object (dari fetch langsung).
          */
-        const pdfUrl = typeof project.pdfFile === 'string' 
-          ? project.pdfFile 
+        const pdfUrl = typeof project.pdfFile === 'string'
+          ? project.pdfFile
           : project.pdfFile?.asset?.url;
 
         return (
@@ -76,7 +76,8 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className={styles.posterImageContent}
-                      priority
+                      priority // Ngilangin warning LCP di console lu
+                      style={{ objectFit: 'contain' }} // Biar gambar gak penyet
                     />
                   </div>
                 )}
