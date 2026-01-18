@@ -4,6 +4,7 @@
   50% { border-color: #ff85e5; }
   100% { border-color: #ffffff; }
 }
+
 .videoFrame {
   animation: borderGlow 3s infinite; /* Border berkelap-kelip */
 }
@@ -18,20 +19,24 @@
   backdrop-filter: blur(8px);
   z-index: 100;
   display: flex;
-  justify-content: flex-end;
+  /* KUNCI: Biar media di kiri/tengah dan panel di kanan rapi */
+  flex-direction: row; 
+  align-items: center;
+  justify-content: space-between; 
+  overflow: hidden;
 }
 
 /* =========================
-   YOUTUBE VIDEO
+   YOUTUBE VIDEO / MEDIA WRAPPER
 ========================= */
 .floatingVideoWrapper {
-  flex: 1;
+  flex: 1; /* Ambil sisa space di kiri secara adil */
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
   position: relative; 
-  min-height: 500px; 
+  height: 100%; /* Paksa tinggi penuh biar konten tengah */
   width: 100%;
 }
 
@@ -60,7 +65,7 @@
   box-shadow: inset 0 2px 10px rgba(255, 133, 229, 0.5); /* Efek "ditekan" */
 }
 
-/* --- EFEK GLARE (opsional, untuk membuat video frame lebih "pop") --- */
+/* --- EFEK GLARE --- */
 .videoFrame::before {
   content: '';
   position: absolute;
@@ -100,52 +105,51 @@
 
 /* Logic Portrait */
 .portraitMode {
-  width: 100%;
+  width: auto;
+  height: 85vh; /* Jangan sampe melebihi layar vertikal */
   max-width: 450px;
   aspect-ratio: 3 / 4; 
-  height: auto;
-  min-height: 600px; /* Jaga biar gak gepeng di layar gede */
   border-bottom: 6px solid #ff85e5;
 }
 
 /* Logic Landscape */
 .landscapeMode {
-  width: 100%;
+  width: 80%;
   max-width: 800px; /* Landscape butuh space lebar */
   aspect-ratio: 16 / 9;
   border-right: 6px solid #ff85e5; /* Pindahin aksen border ke kanan biar unik */
 }
 
+.squareMode {
+  width: auto;
+  height: 70vh;
+  max-width: 500px;
+  aspect-ratio: 1 / 1;
+  border-bottom: 6px solid #ff85e5;
+}
+
 .posterImageContent {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ganti ke cover biar container-nya penuh dan rapi */
+  object-fit: contain; /* Pake contain biar gambarnya gak kepotong/penyet */
   display: block;
 }
 
-/* Dark Mode adjustment kalo mau */
+/* Dark Mode adjustment */
 .darkModeActive .posterContainer {
   border-color: #ff85e5;
   box-shadow: 0 0 30px rgba(255, 133, 229, 0.2);
 }
 
 /* =========================
-   DETAIL PANEL
+   PDF Styling
 ========================= */
-/* PDF Styling */
 .pdfContainer {
   width: 90%;
-  height: 80vh;
+  height: 85vh;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-}
-
-.squareMode {
-  width: 100%;
-  max-width: 500px;
-  aspect-ratio: 1 / 1;
-  border-bottom: 6px solid #ff85e5;
 }
 
 .pdfFrame {
@@ -171,16 +175,17 @@
 }
 
 /* =========================
-   DETAIL PANEL
+   DETAIL PANEL (RIGHT SIDE)
 ========================= */
 .detailPanel {
-  width: clamp(300px, 50vw, 600px);
+  width: clamp(320px, 40vw, 500px); /* Disesuaikan biar konten media punya tempat */
   height: 100%;
   background: #ffffff;
   padding: 3rem;
   border-left: 5px solid #0f0f0f;
   overflow-y: auto;
   position: relative;
+  flex-shrink: 0; /* JANGAN BIARIN PANEL INI GEPENG */
 }
 
 .darkModeActive .detailPanel {
@@ -191,7 +196,6 @@
 /* =========================
    CLOSE BUTTON
 ========================= */
-
 .closePanel {
   position: absolute;
   top: 1.5rem;
@@ -209,55 +213,36 @@
   border-bottom: 4px solid #0a0a0a; /* Efek 3D */
   border-right: 3px solid #0a0a0a; /* Efek 3D */
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Bayangan ringan */
-  user-select: none; /* Mencegah text terpilih saat ditekan */
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  user-select: none;
+  z-index: 10;
 }
 
-/* --- HOVER STATE (LIGHT MODE) --- */
 .closePanel:hover {
   background: #0a0a0a;
   color: #ffffff;
-  border-color: #ff85e5; /* Border pink saat hover */
-  border-bottom: 4px solid #ff85e5; /* Sesuai dengan border-color */
-  border-right: 3px solid #ff85e5; /* Sesuai dengan border-color */
-  transform: translateY(-2px) scale(1.02); /* Sedikit naik + scale */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bayangan lebih tebal saat hover */
+  border-color: #ff85e5;
+  border-bottom: 4px solid #ff85e5;
+  border-right: 3px solid #ff85e5;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* --- ACTIVE STATE (saat ditekan) --- */
 .closePanel:active {
-  transform: translateY(0) scale(0.98); /* Kembali ke posisi awal + sedikit mengecil */
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Efek "ditekan" */
-  border-bottom: 2px solid #ff85e5; /* Border bottom mengecil saat ditekan */
-  border-right: 2px solid #ff85e5; /* Border right mengecil saat ditekan */
+  transform: translateY(0) scale(0.98);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid #ff85e5;
+  border-right: 2px solid #ff85e5;
 }
 
-/* --- DARK MODE STATE --- */
 .darkModeActive .closePanel {
   background: #0a0a0a;
   color: #ffffff;
-  border: 2px solid #ff85e5; /* Border pink di dark mode */
-  border-bottom: 4px solid #ff85e5; /* Efek 3D pink */
-  border-right: 3px solid #ff85e5; /* Efek 3D pink */
-  box-shadow: 0 2px 4px rgba(255, 133, 229, 0.3); /* Bayangan pink */
-}
-
-/* --- HOVER STATE (DARK MODE) --- */
-.darkModeActive .closePanel:hover {
-  background: #190b61; /* Warna ungu gelap saat hover */
-  border-color: #ffffff; /* Border putih saat hover */
-  border-bottom: 4px solid #ffffff; /* Sesuai dengan border-color */
-  border-right: 3px solid #ffffff; /* Sesuai dengan border-color */
-  box-shadow: 0 4px 12px rgba(255, 133, 229, 0.5); /* Bayangan pink lebih tebal */
-}
-
-/* --- ACTIVE STATE (DARK MODE) --- */
-.darkModeActive .closePanel:active {
-  transform: translateY(0) scale(0.98); /* Kembali ke posisi awal + sedikit mengecil */
-  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2); /* Efek "ditekan" dengan shadow putih */
-  border-bottom: 2px solid #ffffff; /* Border bottom mengecil saat ditekan */
-  border-right: 2px solid #ffffff; /* Border right mengecil saat ditekan */
+  border: 2px solid #ff85e5;
+  border-bottom: 4px solid #ff85e5;
+  border-right: 3px solid #ff85e5;
+  box-shadow: 0 2px 4px rgba(255, 133, 229, 0.3);
 }
 
 /* =========================
@@ -266,8 +251,8 @@
 .panelTitle {
   font-size: 3rem;
   margin-top: 2rem;
-  line-height: 1.2;    /* Pake unit relatif aja yang normal */
-  margin-bottom: 1rem; /* Kasih jarak bawah yang masuk akal */
+  line-height: 1.2;
+  margin-bottom: 1rem;
 }
 
 /* =========================
@@ -285,70 +270,41 @@
   background: #ff85e5;
   color: #0a0a0a;
   border: 2px solid #0a0a0a;
-  border-bottom: 5px solid #0a0a0a; /* Efek 3D */
-  border-right: 3px solid #0a0a0a; /* Efek 3D */
+  border-bottom: 5px solid #0a0a0a;
+  border-right: 3px solid #0a0a0a;
   border-radius: 12px;
   font-weight: 800;
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 1px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
-  box-shadow: 0 4px 8px rgba(255, 133, 229, 0.3); /* Bayangan pink */
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 8px rgba(255, 133, 229, 0.3);
   cursor: pointer;
-  user-select: none; /* Mencegah text terpilih saat ditekan */
+  user-select: none;
 }
 
-/* --- HOVER STATE (LIGHT MODE) --- */
 .ctaDetailLinkButton:hover {
   background: #0a0a0a;
   color: #ffffff;
-  border-color: #ff85e5; /* Border pink saat hover */
-  border-bottom: 5px solid #ff85e5; /* Sesuai dengan border-color */
-  border-right: 3px solid #ff85e5; /* Sesuai dengan border-color */
-  transform: translateY(-2px) scale(1.02); /* Sedikit naik + scale */
-  box-shadow: 0 6px 12px rgba(255, 133, 229, 0.5); /* Bayangan lebih tebal */
+  border-color: #ff85e5;
+  border-bottom: 5px solid #ff85e5;
+  border-right: 3px solid #ff85e5;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 12px rgba(255, 133, 229, 0.5);
 }
 
-/* --- ACTIVE STATE (saat ditekan) --- */
-.ctaDetailLinkButton:active {
-  transform: translateY(0) scale(0.98); /* Kembali ke posisi awal + sedikit mengecil */
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2); /* Efek "ditekan" */
-  border-bottom: 3px solid #ff85e5; /* Border bottom mengecil saat ditekan */
-  border-right: 2px solid #ff85e5; /* Border right mengecil saat ditekan */
-}
-
-/* --- DARK MODE STATE --- */
 .darkModeActive .ctaDetailLinkButton {
   background: #190b61;
   color: #ffffff;
-  border: 2px solid #ff85e5; /* Border pink di dark mode */
-  border-bottom: 5px solid #ff85e5; /* Efek 3D pink */
-  border-right: 3px solid #ffffff; /* Border right putih (kontras) */
-  box-shadow: 0 4px 8px rgba(255, 133, 229, 0.4); /* Bayangan pink */
-}
-
-/* --- HOVER STATE (DARK MODE) --- */
-.darkModeActive .ctaDetailLinkButton:hover {
-  background: #ffffff;
-  color: #0a0a0a;
-  border-color: #190b61; /* Border ungu saat hover */
-  border-bottom: 5px solid #190b61; /* Sesuai dengan border-color */
-  border-right: 3px solid #190b61; /* Sesuai dengan border-color */
-  box-shadow: 0 6px 12px rgba(255, 255, 255, 0.3); /* Bayangan putih */
-}
-
-/* --- ACTIVE STATE (DARK MODE) --- */
-.darkModeActive .ctaDetailLinkButton:active {
-  transform: translateY(0) scale(0.98); /* Kembali ke posisi awal + sedikit mengecil */
-  box-shadow: inset 0 2px 4px rgba(25, 11, 97, 0.5); /* Efek "ditekan" dengan shadow ungu */
-  border-bottom: 3px solid #190b61; /* Border bottom mengecil saat ditekan */
-  border-right: 2px solid #190b61; /* Border right mengecil saat ditekan */
+  border: 2px solid #ff85e5;
+  border-bottom: 5px solid #ff85e5;
+  border-right: 3px solid #ffffff;
+  box-shadow: 0 4px 8px rgba(255, 133, 229, 0.4);
 }
 
 /* =========================
    PROJECT BODY / CONTENT
 ========================= */
-
 .projectBody {
   margin-top: 1.5rem;
   line-height: 1.7;
@@ -358,7 +314,6 @@
 /* =========================
    CATEGORY SECTION
 ========================= */
-
 .panelCategoryWrapper {
   margin: 2rem 0;
 }
@@ -404,84 +359,26 @@
   border-right-color: #ffffff;
 }
 
-.darkModeActive .panelCategoryTag:hover {
-  background: #ffffff;
-  color: #0a0a0a;
-}
-
 /* =========================
    RESPONSIVENESS
 ========================= */
-
-/* --- SMART TV --- */
-@media (min-width: 1921px) {
-  .detailPanel {
-    width: 35vw;
-    padding: 4rem;
-  }
-  .panelTitle {
-    font-size: 4rem;
-    line-height: 1.1;
-  }
-}
-
-/* --- DESKTOP --- */
-@media (max-width: 1440px) {
-  .panelTitle {
-    font-size: 3rem;
-  }
-}
-
-/* --- LAPTOP --- */
-@media (max-width: 1200px) {
-  .detailPanel {
-    width: 60vw;
-    padding: 2.5rem;
+@media (max-width: 1024px) {
+  .overlayBackdrop {
+    flex-direction: column; /* Tumpuk vertikal kalau layar sempit */
+    overflow-y: auto;
   }
 
-  .panelTitle {
-    font-size: 2.5rem;
-    line-height: 7svh;
-  }
-}
-
-/* --- TABLET --- */
-@media (max-width: 768px) {
-  .detailPanel {
-    width: 80vw;
-    padding: 2rem;
-  }
-
-  .panelTitle {
-    font-size: 2.2rem;
-    line-height: 6svh;
-    margin-top: 3rem;
-  }
-}
-
-/* --- MOBILE --- */
-@media (max-width: 480px) {
   .detailPanel {
     width: 100%;
-    padding: 1.5rem;
+    height: auto;
     border-left: none;
     border-top: 5px solid #0f0f0f;
   }
+}
 
-  .darkModeActive .detailPanel {
-    border-top-color: #ff85e5;
-  }
-
-  .panelTitle {
-    font-size: 1.8rem;
-    line-height: 1.2;
-    margin-top: 4rem;
-  }
-
-  .closePanel {
-    top: 1rem;
-    right: 1rem;
-    padding: 6px 12px;
-    font-size: 0.65rem;
+@media (max-width: 480px) {
+  .floatingVideoWrapper {
+    padding: 10px;
+    min-height: 300px;
   }
 }
