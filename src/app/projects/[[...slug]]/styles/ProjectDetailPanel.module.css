@@ -33,10 +33,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
   position: relative; 
-  height: 100%; /* Paksa tinggi penuh biar konten tengah */
   width: 100%;
+  flex: 1;
+  min-width: 0; /* WAJIB ADA biar gak mengkerut jadi titik */
+  padding: 40px;
+  height: 100vh;
 }
 
 .videoFrame {
@@ -95,33 +97,40 @@
   align-items: center;
   overflow: hidden;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   margin: 0 auto;
   position: relative; 
   transition: all 0.4s ease-in-out;
-  border: 2px solid #ffffff;
+  border: 4px solid #ffffff;
+  min-height: 600px; 
+  min-width: 430px;
+}
+
+.posterContainer:hover {
+  box-shadow: 0 0 30px rgba(255, 133, 229, 0.315);
+  scale: 1.02;
 }
 
 /* Logic Portrait */
 .portraitMode {
   width: auto;
-  height: 85vh; /* Jangan sampe melebihi layar vertikal */
-  max-width: 450px;
   aspect-ratio: 3 / 4; 
+  height: 90vh; 
+  max-width: 600px; 
   border-bottom: 6px solid #ff85e5;
 }
 
 /* Logic Landscape */
 .landscapeMode {
   width: 80%;
-  max-width: 800px; /* Landscape butuh space lebar */
   aspect-ratio: 16 / 9;
-  border-right: 6px solid #ff85e5; /* Pindahin aksen border ke kanan biar unik */
+  border-right: 6px solid #ff85e5;
+  width: 95%;
+  max-width: 1200px; /* Kasih ruang lebih lega buat landscape */
+  aspect-ratio: 16 / 9;
 }
 
 .squareMode {
   width: auto;
-  height: 70vh;
   max-width: 500px;
   aspect-ratio: 1 / 1;
   border-bottom: 6px solid #ff85e5;
@@ -137,8 +146,13 @@
 /* Dark Mode adjustment */
 .darkModeActive .posterContainer {
   border-color: #ff85e5;
-  box-shadow: 0 0 30px rgba(255, 133, 229, 0.2);
 }
+
+.darkModeActive .posterContainer:hover {
+  box-shadow: 0 0 30px rgba(255, 133, 229, 0.315);
+  scale: 1.02;
+}
+
 
 /* =========================
    PDF Styling
@@ -178,13 +192,14 @@
 ========================= */
 .detailPanel {
   width: clamp(320px, 40vw, 500px); /* Disesuaikan biar konten media punya tempat */
-  height: 100%;
+  height: 100%; 
   background: #ffffff;
   padding: 3rem;
+  padding-top: 5.5rem;
   border-left: 5px solid #0f0f0f;
   overflow-y: auto;
   position: relative;
-  flex-shrink: 0; /* JANGAN BIARIN PANEL INI GEPENG */
+  flex-shrink: 0;
 }
 
 .darkModeActive .detailPanel {
@@ -196,10 +211,11 @@
    CLOSE BUTTON
 ========================= */
 .closePanel {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  padding: 8px 16px;
+  position: relative; /* ⬅️ penting */
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 22px;
   border-radius: 12px;
   font-family: 'Lexend', sans-serif;
   font-weight: 700;
@@ -209,13 +225,21 @@
   background: #ffffff;
   color: #0a0a0a;
   border: 2px solid #0a0a0a;
-  border-bottom: 4px solid #0a0a0a; /* Efek 3D */
-  border-right: 3px solid #0a0a0a; /* Efek 3D */
+  border-bottom: 4px solid #0a0a0a;
+  border-right: 3px solid #0a0a0a;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  user-select: none;
-  z-index: 10;
+}
+
+.closeIcon {
+  font-size: 0.9rem;
+  line-height: 1;             /* ⬅️ ini KRUSIAL */
+  display: inline-flex;
+  align-items: center;
+}
+
+.closeText {
+  line-height: 1;
 }
 
 .closePanel:hover {
@@ -242,6 +266,65 @@
   border-bottom: 4px solid #ff85e5;
   border-right: 3px solid #ff85e5;
   box-shadow: 0 2px 4px rgba(255, 133, 229, 0.3);
+}
+
+/* =========================
+   TOOLTIP — CLOSE PANEL
+========================= */
+.closePanelWrapper {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 20;
+}
+
+.closePanelTooltip {
+  position: absolute;
+  top: 0%;
+  right: calc(100% + 15px); /* ⬅️ jarak dari tombol */
+  transform: translateY(-50%);
+  background: linear-gradient(
+    90deg,
+    #ff85e5 65%,
+    #ffbff4 85%,
+    #ffffff 100%
+  );
+  color: #0a0a0a;
+  padding: 6px 12px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 2px solid #0a0a0a;
+  white-space: nowrap;
+  z-index: 20;
+}
+
+/* Arrow */
+.closePanelTooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent #0a0a0a;
+}
+
+/* Dark Mode */
+.darkModeActive .closePanelTooltip {
+  background: linear-gradient(
+    90deg,
+    #190b61 65%,
+    #140a49 85%,
+    #0a0a0a 100%
+  );
+  border-color: #ff85e5;
+  color: #ffffff;
+}
+
+.darkModeActive .closePanelTooltip::after {
+  border-color: transparent transparent transparent #ff85e5;
 }
 
 /* =========================

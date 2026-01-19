@@ -7,6 +7,7 @@ import styles from '@/app/projects/[[...slug]]/styles/ProjectDetailPanel.module.
 import { useTheme } from '@/context/ThemeContext';
 import { urlFor } from '@/sanity/lib/image';
 import Image from 'next/image';
+import { useState } from 'react';
 import clsx from 'clsx';
 
 interface PanelProps {
@@ -17,6 +18,7 @@ interface PanelProps {
 
 export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelProps) => {
   const { mounted, darkMode } = useTheme();
+  const [showCloseTooltip, setShowCloseTooltip] = useState(false);
 
   // Guard clause buat nunggu hydration selesai
   if (!mounted) return null;
@@ -112,7 +114,29 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
               className={styles.detailPanel}
               onClick={(e) => e.stopPropagation()}
             >
-              <button className={styles.closePanel} onClick={onClose}>✕ Close</button>
+              <div
+                className={styles.closePanelWrapper}
+                onMouseEnter={() => setShowCloseTooltip(true)}
+                onMouseLeave={() => setShowCloseTooltip(false)}
+              >
+                <button className={styles.closePanel} onClick={onClose}>
+                  <span className={styles.closeIcon}>✕</span>
+                  <span className={styles.closeText}>Close</span>
+                </button>
+
+                <AnimatePresence>
+                  {showCloseTooltip && (
+                    <motion.div
+                      initial={{ opacity: 0, x: 8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 8 }}
+                      className={styles.closePanelTooltip}
+                    >
+                      Close this panel
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
               <h2 className={styles.panelTitle}>{project.title}</h2>
 
               {project.projectUrl && (
