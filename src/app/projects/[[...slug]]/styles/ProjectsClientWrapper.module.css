@@ -1,5 +1,5 @@
 /* =========================
-   ROOT / PAGE LAYOUT
+   ROOT / PAGE
 ========================= */
 
 .mainBackground {
@@ -19,13 +19,13 @@
 
 .content {
   max-width: 1200px;
-  margin: 0 auto; 
+  margin: 0 auto;
   padding-top: 1.5rem;
   width: 100%;
 }
 
 /* =========================
-   FILTER NAVIGATION
+   FILTER
 ========================= */
 
 .filterContainer {
@@ -67,8 +67,18 @@
 }
 
 /* =========================
-   TOOLTIP - MODE TOGGLE
+   TOOLTIP — MODE TOGGLE
 ========================= */
+
+.tooltipArea {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 90px;
+  z-index: 30;
+  pointer-events: none;
+}
 
 .floatingTooltip {
   position: absolute;
@@ -87,7 +97,6 @@
   );
   z-index: 100;
   border: 2px solid #0a0a0a;
-  pointer-events: none;
   white-space: nowrap;
 }
 
@@ -110,7 +119,7 @@
   transform: translateY(-50%);
   border-width: 8px;
   border-style: solid;
-  border-color: transparent transparent transparent #0a0a0a; 
+  border-color: transparent transparent transparent #0a0a0a;
 }
 
 .darkModeActive .floatingTooltip::after {
@@ -118,13 +127,12 @@
 }
 
 /* =========================
-   TOOLTIP - CATEGORY DRAWER
+   TOOLTIP — CATEGORY
 ========================= */
 
 .drawerWrapper {
   position: relative;
   display: inline-flex;
-  vertical-align: middle;
   z-index: 50;
 }
 
@@ -145,10 +153,8 @@
   border-radius: 10px;
   font-size: 0.75rem;
   font-weight: 600;
-  z-index: 100;
   border: 2px solid #0f0f0f;
   white-space: nowrap;
-  pointer-events: none;
 }
 
 .categoryTooltip::after {
@@ -178,7 +184,7 @@
 }
 
 /* =========================
-   PROJECT GRID
+   GRID
 ========================= */
 
 .projectGrid {
@@ -188,7 +194,7 @@
 }
 
 /* =========================
-   GLOBAL ACTIONS (BACK BUTTON)
+   BACK BUTTON
 ========================= */
 
 .backButtonWrapper {
@@ -199,85 +205,24 @@
 }
 
 .backButton {
-  position: relative;
   border: 2px solid #0a0a0a;
   padding: 8px 20px;
   color: #0a0a0a;
-  font-family: 'Lexend', sans-serif;
   font-weight: 700;
   border-radius: 1rem;
   background: #ffffff;
   cursor: pointer;
-  overflow: hidden;
   transition: all 0.3s ease;
-  user-select: none;
-}
-
-.backButton::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 133, 229, 0.5),
-    transparent
-  );
-  transition: left 0.5s ease;
-  z-index: -1;
-}
-
-.backButton:hover {
-  box-shadow: 3px 4px #0a0a0a;
-  background: white;
-  color: #0a0a0a;
-  transform: translateY(-2px);
-}
-
-.backButton:hover::before {
-  left: 100%;
-}
-
-.backButton:active {
-  transform: translateY(0) scale(0.98);
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
-  background: #ff85e5;
-  color: #0a0a0a;
-  border-color: #0a0a0a;
 }
 
 .darkModeActive .backButton {
-  border: 2px solid #ffffff;
+  border-color: #ffffff;
   color: #ffffff;
   background: #0a0a0a;
-}
-
-.darkModeActive .backButton::before {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-}
-
-.darkModeActive .backButton:hover {
-  box-shadow: 3px 4px #ffffff;
-  background: #0a0a0a;
-  color: #ffffff;
-}
-
-.darkModeActive .backButton:active {
-  background: #ffffff;
-  color: #0a0a0a;
-  border-color: #0a0a0a;
 }
 
 /* =========================
-   RESPONSIVE LAYOUT
+   RESPONSIVE
 ========================= */
 
 @media (max-width: 768px) {

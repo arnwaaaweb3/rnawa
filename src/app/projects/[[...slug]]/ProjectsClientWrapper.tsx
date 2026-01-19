@@ -11,7 +11,7 @@ import { useProjectFilters } from '../hooks/useProjectFilters';
 import { useTheme } from '@/context/ThemeContext';
 import { fetchSingleProject } from '../actions';
 import { Project } from './types';
-import styles from './page.module.css';
+import styles from '../[[...slug]]/styles/ProjectsClientWrapper.module.css';
 
 interface WrapperProps {
   initialProjects: Project[];
@@ -19,25 +19,35 @@ interface WrapperProps {
   slug: string | null;
 }
 
-export default function ProjectsClientWrapper({ initialProjects, initialSelected, slug }: WrapperProps) {
+export default function ProjectsClientWrapper({
+  initialProjects,
+  initialSelected,
+  slug,
+}: WrapperProps) {
   const router = useRouter();
   const { theme, mounted, setIsSidebarOpen, setIsProjectDetailOpen } = useTheme();
-  
-  // Semua state di bawah ini murni dari kode lu sebelumnya
+
   const [projects] = useState<Project[]>(initialProjects);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(initialSelected);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(
+    initialSelected
+  );
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showCategoryTooltip, setShowCategoryTooltip] = useState(false);
 
-  const { 
-    filter, setFilter, 
-    categoryFilter, setCategoryFilter, 
-    availableCategories, filteredProjects 
+  const {
+    filter,
+    setFilter,
+    categoryFilter,
+    setCategoryFilter,
+    availableCategories,
+    filteredProjects,
   } = useProjectFilters(projects);
 
   const isDark = theme === 'dark';
-  const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
+  const containerClass = `${styles.mainBackground} ${
+    mounted && isDark ? styles.darkModeActive : ''
+  }`;
 
   const handleExplore = async (projectSlug: string) => {
     setIsDetailLoading(true);
@@ -65,7 +75,9 @@ export default function ProjectsClientWrapper({ initialProjects, initialSelected
     }
   }, [slug, setIsSidebarOpen, setIsProjectDetailOpen]);
 
-  if (!mounted) return <div className={styles.mainBackground} />;
+  if (!mounted) {
+    return <div className={styles.mainBackground} />;
+  }
 
   return (
     <main className={containerClass}>
@@ -73,11 +85,13 @@ export default function ProjectsClientWrapper({ initialProjects, initialSelected
         <Header onToggleHover={setShowTooltip} />
         <AnimatePresence>
           {showTooltip && (
-            <motion.div 
-              initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}
+            <motion.div
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
               className={styles.floatingTooltip}
             >
-              {isDark ? "Light Mode?" : "Dark Mode?"}
+              {isDark ? 'Light Mode?' : 'Dark Mode?'}
             </motion.div>
           )}
         </AnimatePresence>
@@ -88,15 +102,22 @@ export default function ProjectsClientWrapper({ initialProjects, initialSelected
           <button
             key={status}
             onClick={() => setFilter(status as any)}
-            className={`${styles.filterTab} ${filter === status ? styles.activeTab : ''}`}
+            className={`${styles.filterTab} ${
+              filter === status ? styles.activeTab : ''
+            }`}
           >
             {status.toUpperCase()}
-            {filter === status && <motion.div layoutId="underline" className={styles.activeUnderline} />}
+            {filter === status && (
+              <motion.div
+                layoutId="underline"
+                className={styles.activeUnderline}
+              />
+            )}
           </button>
         ))}
       </div>
 
-      <div 
+      <div
         className={styles.drawerWrapper}
         onMouseEnter={() => setShowCategoryTooltip(true)}
         onMouseLeave={() => setShowCategoryTooltip(false)}
@@ -108,7 +129,12 @@ export default function ProjectsClientWrapper({ initialProjects, initialSelected
         />
         <AnimatePresence>
           {showCategoryTooltip && (
-            <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className={styles.categoryTooltip}>
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              className={styles.categoryTooltip}
+            >
               Search by category
             </motion.div>
           )}
@@ -117,7 +143,7 @@ export default function ProjectsClientWrapper({ initialProjects, initialSelected
 
       <div className={styles.content}>
         <div className={styles.projectGrid}>
-          <AnimatePresence mode='popLayout'>
+          <AnimatePresence mode="popLayout">
             {filteredProjects.map((p, i) => (
               <ProjectCard
                 key={p._id}
@@ -142,7 +168,12 @@ export default function ProjectsClientWrapper({ initialProjects, initialSelected
       />
 
       <div className={styles.backButtonWrapper}>
-        <button className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`} onClick={() => router.push('/')}>
+        <button
+          className={`${styles.backButton} ${
+            isDark ? styles.darkModeButton : ''
+          }`}
+          onClick={() => router.push('/')}
+        >
           ← Back
         </button>
       </div>
