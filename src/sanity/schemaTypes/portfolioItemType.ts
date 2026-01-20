@@ -78,17 +78,18 @@ export default defineType({
         scheme: ['http', 'https'],
       }),
     }),
-
+    
     defineField({
       name: 'displayType',
       title: 'Media Display Type',
-      description: 'What is the media type for this project? (Video, Poster, etc).',
+      description: 'Pilih jenis media utama yang mau ditampilin di detail project.',
       type: 'string',
       options: {
         list: [
-          { title: 'YouTube Video', value: 'video' },
-          { title: 'Poster / Image', value: 'poster' },
-          { title: 'PDF Document', value: 'pdf' }, // Tambahin ini
+          { title: '📺 YouTube Video', value: 'video' },
+          { title: '🖼️ Poster / Image', value: 'poster' },
+          { title: '📄 PDF Document', value: 'pdf' },
+          { title: '💻 GitHub Repo', value: 'github' }, // TAMBAHIN INI, NAWA!
         ],
         layout: 'radio',
       },
@@ -109,8 +110,8 @@ export default defineType({
     defineField({
       name: 'posterImage',
       title: 'Poster Image',
-      description: 'Add your project poster image. (Poster)',
       type: 'image',
+      description: 'Add your project poster image. (Poster)',
       options: { hotspot: true },
       hidden: ({ document }) => document?.displayType !== 'poster',
       fields: [
@@ -144,8 +145,8 @@ export default defineType({
       name: 'youtubeId',
       title: 'YouTube Video ID',
       type: 'string',
-      hidden: ({ document }) => document?.displayType !== 'video',
       description: 'Paste your unique YouTube video ID here. (Example: sCssw_-MTZI)',
+      hidden: ({ document }) => document?.displayType !== 'video',
     }),
 
     defineField({
@@ -195,6 +196,22 @@ export default defineType({
       description: 'What is this project output? (Poster, Video, etc - Sub).',
       type: 'array',
       of: [{ type: 'reference', to: { type: 'category' } }],
+    }),
+
+    defineField({
+      name: 'githubRepo',
+      title: 'GitHub Repository Path',
+      description: 'If this a GitHub repository, paste the path here. (Example: rnawa/my-web3-project)',
+      type: 'string',
+    }),
+
+    defineField({
+      name: 'enableExplorer',
+      title: 'Enable File Explorer',
+      type: 'boolean',
+      description: 'If this project has a GitHub repository, enable the file explorer.',
+      initialValue: true, // Default true biar lu gak lupa nyalain
+      hidden: ({ document }) => document?.displayType !== 'github',
     }),
   ],
   

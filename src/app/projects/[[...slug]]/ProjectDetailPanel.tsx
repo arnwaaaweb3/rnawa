@@ -9,6 +9,7 @@ import { urlFor } from '@/sanity/lib/image';
 import Image from 'next/image';
 import { useState } from 'react';
 import clsx from 'clsx';
+import GitHubExplorer from '@/components/GitHubExplorer';
 
 interface PanelProps {
   project: Project | null;
@@ -153,6 +154,13 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
               <div className={styles.projectBody}>
                 {project.description && (
                   <PortableText value={project.description} components={portableTextComponents} />
+                )}
+
+                {project.enableExplorer && project.githubRepo && (
+                  <div className={styles.githubExplorerWrapper}>
+                    <h3 className={styles.sectionTitle}>Source Code Explorer</h3>
+                    <GitHubExplorer repoPath={project.githubRepo} />
+                  </div>
                 )}
               </div>
 

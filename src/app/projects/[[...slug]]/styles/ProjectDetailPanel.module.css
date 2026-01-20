@@ -5,10 +5,6 @@
   100% { border-color: #ffffff; }
 }
 
-.videoFrame {
-  animation: borderGlow 3s infinite; /* Border berkelap-kelip */
-}
-
 /* =========================
    OVERLAY / BACKDROP
 ========================= */
@@ -23,6 +19,10 @@
   align-items: center;
   justify-content: space-between; 
   overflow: hidden;
+}
+
+.darkModeActive.overlayBackdrop {
+  background: rgba(0, 0, 0, 0.9); /* Lebih pekat pas dark mode */
 }
 
 /* =========================
@@ -51,6 +51,12 @@
   position: relative;
   overflow: hidden; /* Untuk pseudo-element glare */
   z-index: 1; /* Agar efek hover tidak tertutup */
+  animation: borderGlow 3s infinite; /* Border berkelap-kelip */
+}
+
+.darkModeActive .videoFrame {
+  border-color: #ff85e5;
+  box-shadow: 0 0 40px rgba(255, 133, 229, 0.4), inset 0 0 20px rgba(255, 133, 229, 0.2);
 }
 
 /* --- HOVER STATE --- */
@@ -105,6 +111,17 @@
   min-width: 430px;
 }
 
+.darkModeActive .posterContainer {
+  border-color: #ff85e5;
+  background: #000;
+  box-shadow: 0 0 25px rgba(255, 133, 229, 0.2);
+}
+
+.darkModeActive .posterContainer:hover {
+  box-shadow: 0 0 30px rgba(255, 133, 229, 0.315);
+  scale: 1.02;
+}
+
 .posterContainer:hover {
   box-shadow: 0 0 30px rgba(255, 133, 229, 0.315);
   scale: 1.02;
@@ -143,17 +160,6 @@
   display: block;
 }
 
-/* Dark Mode adjustment */
-.darkModeActive .posterContainer {
-  border-color: #ff85e5;
-}
-
-.darkModeActive .posterContainer:hover {
-  box-shadow: 0 0 30px rgba(255, 133, 229, 0.315);
-  scale: 1.02;
-}
-
-
 /* =========================
    PDF Styling
 ========================= */
@@ -170,6 +176,11 @@
   flex: 1;
   border-radius: 12px;
   border: 2px solid #ffffff;
+}
+
+.darkModeActive .pdfFrame {
+  border-color: #ff85e5;
+  background: #0a0a0a;
 }
 
 .downloadPdfBtn {
@@ -205,6 +216,16 @@
 .darkModeActive .detailPanel {
   background: #0a0a0a;
   border-left: 5px solid #ff85e5;
+}
+
+.darkModeActive.detailPanel::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+.darkModeActive.detailPanel::-webkit-scrollbar-thumb {
+  background: #190b61;
+  border: 1px solid #ff85e5;
+  border-radius: 10px;
 }
 
 /* =========================
@@ -337,6 +358,11 @@
   margin-bottom: 1rem;
 }
 
+.darkModeActive .panelTitle {
+  color: #ffffff;
+  text-shadow: 0 0 15px rgba(255, 133, 229, 0.3);
+}
+
 /* =========================
    CTA BUTTON
 ========================= */
@@ -393,6 +419,10 @@
   font-size: 0.95rem;
 }
 
+.darkModeActive .projectBody {
+  color: rgba(255, 255, 255, 0.85);
+}
+
 /* =========================
    CATEGORY SECTION
 ========================= */
@@ -405,6 +435,11 @@
   font-weight: 700;
   text-transform: uppercase;
   margin-bottom: 0.5rem;
+}
+
+.darkModeActive .panelLabel {
+  color: #ff85e5;
+  text-shadow: 0 0 8px rgba(255, 133, 229, 0.2);
 }
 
 .panelCategoryList {
@@ -439,6 +474,38 @@
   border-color: #ff85e5;
   border-bottom-color: #ff85e5;
   border-right-color: #ffffff;
+}
+
+/* =========================
+    GITHUB EXPLORER
+    ========================= */
+.githubExplorerWrapper {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.darkModeActive .githubExplorerWrapper {
+  border-top: 1px solid rgba(255, 133, 229, 0.3);
+  position: relative;
+}
+
+.darkModeActive .githubExplorerWrapper::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background: #ff85e5;
+  box-shadow: 0 0 10px #ff85e5;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--highlight-color, #ff85e5); /* Pake warna pink andalan lu */
 }
 
 /* =========================

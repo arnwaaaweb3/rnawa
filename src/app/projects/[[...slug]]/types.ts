@@ -16,6 +16,8 @@ export interface Project {
   description?: PortableTextBlock[];
   gallery?: string[];
   youtubeId?: string;
+  githubRepo?: string;
+  enableExplorer?: boolean;
   displayType: 'video' | 'poster' | 'pdf';
   imageOrientation?: 'landscape' | 'portrait' | 'square'; 
   pdfFile?: {

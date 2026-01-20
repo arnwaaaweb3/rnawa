@@ -1,6 +1,6 @@
 // src/sanity/lib/queries.ts
 
-// 1. Ambil semua list project buat grid utama
+// 1. Ambil semua list project buat grid utama (Tetap sama, coverImage penting buat visual awal)
 export const PROJECTS_QUERY = `*[_type == "portfolioItem"] | order(publishedAt desc) {
   _id,
   title,
@@ -15,11 +15,13 @@ export const PROJECTS_QUERY = `*[_type == "portfolioItem"] | order(publishedAt d
   }
 }`;
 
-// 2. Ambil detail satu project buat panel (Explore)
+// 2. Ambil detail satu project buat panel (Update bagian GitHub Explorer)
 export const PROJECT_DETAIL_QUERY = `*[_type == "portfolioItem" && slug.current == $slug][0] {
   ...,
   youtubeId,
   displayType,
+  githubRepo,      // <--- Tarik path reponya
+  enableExplorer,  // <--- Tarik status filternya
   "imageUrl": coverImage.asset->url,
   "pdfFile": {
     "asset": { "url": pdfFile.asset->url }
@@ -35,7 +37,7 @@ export const PROJECT_DETAIL_QUERY = `*[_type == "portfolioItem" && slug.current 
   }
 }`;
 
-// 3. Query buat Docs (biar route API lo kaga berantakan)
+// 3. Query buat Docs (Tetap sama)
 export const DOCS_QUERY = `*[_type == "documentation"]{
   _id,
   title,

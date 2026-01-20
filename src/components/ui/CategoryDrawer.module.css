@@ -126,6 +126,16 @@
   transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
 }
 
+.categoryTab:hover {
+  background: #0a0a0a;
+  transition: left 0.5s ease;
+  color: #ffffff;
+}
+
+.categoryTab:active {
+  box-shadow: 2px 2px 10px  rgba(0, 0, 0, 0.356);
+}
+
 .categoryTab.activeCategory {
   background: #e7e56a;
   color: #0a0a0a;
@@ -173,4 +183,15 @@
 :global(html.dark) .categoryTab.activeCategory {
   background: #e7e56a;
   color: #0a0a0a;
+}
+
+:global(html.dark) .categoryTab:hover {
+  background: #ffffff;
+  transition: left 0.5s ease;
+  color: #0a0a0a;
+  border-color: #ffffff;
+}
+
+.categoryTab:active {
+  box-shadow: 2px 2px 10px  rgba(255, 255, 255, 0.356);
 }

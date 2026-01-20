@@ -11,6 +11,7 @@ import { useProjectFilters } from '../hooks/useProjectFilters';
 import { useTheme } from '@/context/ThemeContext';
 import { fetchSingleProject } from '../actions';
 import { Project } from './types';
+import { createPortal } from 'react-dom';
 import styles from '../[[...slug]]/styles/ProjectsClientWrapper.module.css';
 
 interface WrapperProps {
@@ -80,103 +81,116 @@ export default function ProjectsClientWrapper({
   }
 
   return (
-    <main className={containerClass}>
-      <div style={{ position: 'relative' }}>
-        <Header onToggleHover={setShowTooltip} />
-        <AnimatePresence>
-          {showTooltip && (
-            <motion.div
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              className={styles.floatingTooltip}
-            >
-              {isDark ? 'Light Mode?' : 'Dark Mode?'}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <div className={styles.filterContainer}>
-        {['all', 'completed', 'ongoing', 'concept'].map((status) => (
-          <button
-            key={status}
-            onClick={() => setFilter(status as any)}
-            className={`${styles.filterTab} ${
-              filter === status ? styles.activeTab : ''
-            }`}
-          >
-            {status.toUpperCase()}
-            {filter === status && (
+    <>
+      {/* =========================
+          MAIN CONTENT
+      ========================= */}
+      <main className={containerClass}>
+        <div style={{ position: 'relative' }}>
+          <Header onToggleHover={setShowTooltip} />
+          <AnimatePresence>
+            {showTooltip && (
               <motion.div
-                layoutId="underline"
-                className={styles.activeUnderline}
-              />
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className={styles.floatingTooltip}
+              >
+                {isDark ? 'Light Mode?' : 'Dark Mode?'}
+              </motion.div>
             )}
-          </button>
-        ))}
-      </div>
-
-      <div
-        className={styles.drawerWrapper}
-        onMouseEnter={() => setShowCategoryTooltip(true)}
-        onMouseLeave={() => setShowCategoryTooltip(false)}
-      >
-        <CategoryDrawer
-          categories={availableCategories}
-          activeCategory={categoryFilter}
-          onCategoryChange={setCategoryFilter}
-        />
-        <AnimatePresence>
-          {showCategoryTooltip && (
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
-              className={styles.categoryTooltip}
-            >
-              Search by category
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <div className={styles.content}>
-        <div className={styles.projectGrid}>
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((p, i) => (
-              <ProjectCard
-                key={p._id}
-                project={p}
-                index={i}
-                isDetailLoading={isDetailLoading}
-                isSelected={selectedProject?.slug === p.slug}
-                onExplore={handleExplore}
-              />
-            ))}
           </AnimatePresence>
         </div>
-      </div>
 
-      <ProjectDetailPanel
-        project={selectedProject}
-        onClose={closePanel}
-        onCategoryClick={(cat) => {
-          setCategoryFilter(cat);
-          closePanel();
-        }}
-      />
+        <div className={styles.filterContainer}>
+          {['all', 'completed', 'ongoing', 'concept'].map((status) => (
+            <button
+              key={status}
+              onClick={() => setFilter(status as any)}
+              className={`${styles.filterTab} ${
+                filter === status ? styles.activeTab : ''
+              }`}
+            >
+              {status.toUpperCase()}
+              {filter === status && (
+                <motion.div
+                  layoutId="underline"
+                  className={styles.activeUnderline}
+                />
+              )}
+            </button>
+          ))}
+        </div>
 
-      <div className={styles.backButtonWrapper}>
+        <div
+          className={styles.drawerWrapper}
+          onMouseEnter={() => setShowCategoryTooltip(true)}
+          onMouseLeave={() => setShowCategoryTooltip(false)}
+        >
+          <CategoryDrawer
+            categories={availableCategories}
+            activeCategory={categoryFilter}
+            onCategoryChange={setCategoryFilter}
+          />
+          <AnimatePresence>
+            {showCategoryTooltip && (
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                className={styles.categoryTooltip}
+              >
+                Search by category
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        <div className={styles.content}>
+          <div className={styles.projectGrid}>
+            <AnimatePresence mode="popLayout">
+              {filteredProjects.map((p, i) => (
+                <ProjectCard
+                  key={p._id}
+                  project={p}
+                  index={i}
+                  isDetailLoading={isDetailLoading}
+                  isSelected={selectedProject?.slug === p.slug}
+                  onExplore={handleExplore}
+                />
+              ))}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        <ProjectDetailPanel
+          project={selectedProject}
+          onClose={closePanel}
+          onCategoryClick={(cat) => {
+            setCategoryFilter(cat);
+            closePanel();
+          }}
+        />
+      </main>
+
+      {/* =========================
+          FIXED BACK BUTTON
+      ========================= */}
+      {mounted && createPortal(
+      <motion.div
+        className={styles.backButtonWrapper}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+      >
         <button
-          className={`${styles.backButton} ${
-            isDark ? styles.darkModeButton : ''
-          }`}
+          className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`}
           onClick={() => router.push('/')}
         >
           ← Back
         </button>
-      </div>
-    </main>
+      </motion.div>,
+      document.body
+    )}
+    </>
   );
 }

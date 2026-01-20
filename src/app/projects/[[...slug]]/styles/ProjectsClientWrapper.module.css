@@ -1,7 +1,6 @@
 /* =========================
    ROOT / PAGE
 ========================= */
-
 .mainBackground {
   min-height: 100vh;
   width: 100%;
@@ -196,29 +195,95 @@
 /* =========================
    BACK BUTTON
 ========================= */
-
 .backButtonWrapper {
   position: fixed;
   bottom: 0;
-  right: 0;
+  right: 1.5rem;
   padding: 20px;
 }
 
 .backButton {
-  border: 2px solid #0a0a0a;
-  padding: 8px 20px;
-  color: #0a0a0a;
-  font-weight: 700;
-  border-radius: 1rem;
+  position: relative;
   background: #ffffff;
+  border: 2px solid #0f0f0f;
+  padding: 8px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-family: 'Lexend', sans-serif;
   cursor: pointer;
-  transition: all 0.3s ease;
+  color: #0f0f0f;
+  transition: all 0.25s ease;
+  overflow: hidden;
+  margin-top: auto; 
+  width: 100%; 
+  user-select: none;
 }
 
-.darkModeActive .backButton {
-  border-color: #ffffff;
-  color: #ffffff;
+/* Pseudo-element untuk efek glare */
+.backButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 133, 229, 0.4), /* Pink neon transparan */
+    transparent
+  );
+  transition: left 0.5s ease;
+  z-index: 1;
+}
+
+/* --- HOVER STATE --- */
+.backButton:hover {
   background: #0a0a0a;
+  color: #ffffff;
+  border-color: #0a0a0a;
+}
+
+.backButton:hover::before {
+  left: 100%; /* Geser glare saat hover */
+}
+
+/* --- ACTIVE STATE (saat ditekan) --- */
+.backButton:active {
+  transform: scale(0.98); /* Sedikit mengecil */
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2); /* Efek "ditekan" */
+  background: #ff85e5; /* Pink neon */
+  color: #0a0a0a;
+  border-color: #0a0a0a;
+}
+
+/* --- DARK MODE SUPPORT --- */
+:global(html.dark) .backButton {
+  background: #0f0f0f;
+  border-color: #ff85e5;
+  color: #ffffff;
+}
+
+:global(html.dark) .backButton::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3), /* Glare putih di dark mode */
+    transparent
+  );
+}
+
+:global(html.dark) .backButton:hover {
+  background: #ff85e5;
+  color: #0f0f0f;
+  border-color: #0a0a0a;
+}
+
+/* --- DARK MODE ACTIVE --- */
+:global(html.dark) .backButton:active {
+  background: #ffffff; /* Putih */
+  color: #0a0a0a;
+  border-color: #0a0a0a;
 }
 
 /* =========================
