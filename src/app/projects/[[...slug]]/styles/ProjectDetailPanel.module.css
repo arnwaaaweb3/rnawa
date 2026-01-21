@@ -483,6 +483,23 @@
 }
 
 /* =========================
+   FULL GITHUB CONTAINER (EXPLORER)
+   ========================= */
+
+.fullExplorerContainer {
+  width: 100%;
+  height: 90vh; /* Kasih margin dikit biar nggak nempel banget atas bawah */
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.fullExplorerContainer > div {
+  height: 100% !important;
+  margin-top: 0 !important;
+}
+
+/* =========================
     GITHUB EXPLORER
     ========================= */
 .githubExplorerWrapper {

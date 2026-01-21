@@ -1,12 +1,13 @@
 .explorerContainer {
   display: flex;
-  height: 500px;
-  background: rgba(10, 10, 10, 0.8);
-  border: 1px solid rgba(255, 133, 229, 0.2);
-  border-radius: 12px;
+  height: 100%; /* Ubah dari 500px jadi 100% */
+  min-height: 500px; /* Jaga-jaga kalau kontennya dikit */
+  background: rgba(10, 10, 10, 0.9);
+  border: 1px solid rgba(255, 133, 229, 0.3);
+  border-radius: 16px; /* Lebih smooth */
   overflow: hidden;
-  font-family: 'Fira Code', 'Courier New', monospace;
-  margin-top: 1rem;
+  font-family: 'Fira Code', monospace;
+  width: 100%;
 }
 
 /* Sidebar: File Manager */
