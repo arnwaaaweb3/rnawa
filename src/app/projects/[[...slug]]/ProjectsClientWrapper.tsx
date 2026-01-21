@@ -46,9 +46,8 @@ export default function ProjectsClientWrapper({
   } = useProjectFilters(projects);
 
   const isDark = theme === 'dark';
-  const containerClass = `${styles.mainBackground} ${
-    mounted && isDark ? styles.darkModeActive : ''
-  }`;
+  const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''
+    }`;
 
   const handleExplore = async (projectSlug: string) => {
     setIsDetailLoading(true);
@@ -107,9 +106,8 @@ export default function ProjectsClientWrapper({
             <button
               key={status}
               onClick={() => setFilter(status as any)}
-              className={`${styles.filterTab} ${
-                filter === status ? styles.activeTab : ''
-              }`}
+              className={`${styles.filterTab} ${filter === status ? styles.activeTab : ''
+                }`}
             >
               {status.toUpperCase()}
               {filter === status && (
@@ -151,7 +149,7 @@ export default function ProjectsClientWrapper({
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((p, i) => (
                 <ProjectCard
-                  key={p._id}
+                  key={p._id} // Pastiin Key-nya unik (ID dari Sanity)
                   project={p}
                   index={i}
                   isDetailLoading={isDetailLoading}
@@ -177,20 +175,20 @@ export default function ProjectsClientWrapper({
           FIXED BACK BUTTON
       ========================= */}
       {mounted && createPortal(
-      <motion.div
-        className={styles.backButtonWrapper}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-      >
-        <button
-          className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`}
-          onClick={() => router.push('/')}
+        <motion.div
+          className={styles.backButtonWrapper}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
         >
-          ← Back
-        </button>
-      </motion.div>,
-      document.body
-    )}
+          <button
+            className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`}
+            onClick={() => router.push('/')}
+          >
+            ← Back
+          </button>
+        </motion.div>,
+        document.body
+      )}
     </>
   );
 }

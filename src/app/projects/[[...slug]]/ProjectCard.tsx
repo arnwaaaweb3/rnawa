@@ -26,11 +26,15 @@ export const ProjectCard = ({
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.3, delay: index * 0.05 }}
+      layout // KUNCINYA DI SINI: Biar Framer Motion ngitung transisi posisi otomatis
+      initial={{ opacity: 0, scale: 0.9, y: 10 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
+      transition={{ 
+        duration: 0.4, 
+        delay: index * 0.05, // Stagger effect biar munculnya satu-satu
+        ease: "easeOut" 
+      }}
       className={styles.projectCard}
     >
       {/* Visual effect mung mlaku animasine nek wis bener-bener mounted */}

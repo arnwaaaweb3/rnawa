@@ -476,6 +476,12 @@
   border-right-color: #ffffff;
 }
 
+.darkModeActive .panelCategoryTag:hover {
+  background: #ffffff;
+  color: #0a0a0a;
+  border-color: #ffffff;
+}
+
 /* =========================
     GITHUB EXPLORER
     ========================= */
