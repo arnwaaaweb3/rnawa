@@ -1,6 +1,27 @@
+// src/utils/github.ts
+
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-export async function getRepoTree(repoPath: string, branch = 'main') {
+// Cache sederhana untuk menyimpan default branch per repoPath (Fix Point #3 Neo)
+const branchCache = new Map<string, string>();
+
+async function getDefaultBranch(repoPath: string): Promise<string> {
+  if (branchCache.has(repoPath)) return branchCache.get(repoPath)!;
+
+  const res = await fetch(`https://api.github.com/repos/${repoPath}`, {
+    headers: { Authorization: `token ${GITHUB_TOKEN}` },
+    next: { revalidate: 3600 } // Cache info repo 1 jam (Next.js Data Cache)
+  });
+  
+  const data = await res.json();
+  const branch = data.default_branch || 'main';
+  branchCache.set(repoPath, branch);
+  return branch;
+}
+
+export async function getRepoTree(repoPath: string) {
+  const branch = await getDefaultBranch(repoPath);
+
   const res = await fetch(
     `https://api.github.com/repos/${repoPath}/git/trees/${branch}?recursive=1`,
     {
@@ -11,13 +32,59 @@ export async function getRepoTree(repoPath: string, branch = 'main') {
       next: { revalidate: 3600 }
     }
   );
-  return res.json();
+  
+  const data = await res.json();
+
+  if (data.tree) {
+    // Filtering yang lebih presisi (Fix Point #5 Neo)
+    data.tree = data.tree.filter((item: any) => {
+      const parts = item.path.split('/');
+      const isBlacklisted = 
+        parts.includes('node_modules') || 
+        parts.includes('.git') ||
+        item.path.endsWith('.lock') ||
+        item.path.endsWith('-lock.json');
+      return !isBlacklisted;
+    });
+  }
+
+  return {
+    tree: data.tree.map((item: any) => ({
+      path: item.path,
+      type: item.type
+    })),
+  }
 }
 
 export async function getFileContent(repoPath: string, filePath: string) {
-  const res = await fetch(
-    `https://raw.githubusercontent.com/${repoPath}/main/${filePath}`,
-    { headers: { Authorization: `token ${GITHUB_TOKEN}` } }
-  );
-  return res.text();
+  // 1. Ambil data langsung dari API Contents (Fix Point #1 & #2 Neo)
+  // Ini otomatis dapet metadata (size) dan konten sekaligus dalam 1 request!
+  const res = await fetch(`https://api.github.com/repos/${repoPath}/contents/${filePath}`, {
+    headers: { Authorization: `token ${GITHUB_TOKEN}` },
+    next: { revalidate: 3600 }
+  });
+
+  if (!res.ok) {
+    throw { code: 'FETCH_FAILED', status: res.status }; // Fix Point #4 Neo
+  }
+
+  const data = await res.json();
+
+  if (Array.isArray(data)) {
+    throw { code: 'IS_DIRECTORY', status: 400 }
+  }
+
+  // 2. Validasi Size (Fix Point #4 Neo)
+  if (data.size > 200000) {
+    throw { code: 'FILE_TOO_LARGE', status: 413 };
+  }
+
+  // 3. Decode Base64 (Jauh lebih cepet daripada nembak raw.github lagi!)
+  if (data.encoding === 'base64' && data.content) {
+    // Hilangkan karakter newline yang kadang muncul di base64 GitHub
+    const cleanContent = data.content.replace(/\n/g, '');
+    return Buffer.from(cleanContent, 'base64').toString('utf-8');
+  }
+
+  return 'No content available.';
 }
