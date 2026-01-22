@@ -20,10 +20,15 @@ async function getDefaultBranch(repoPath: string): Promise<string> {
 }
 
 export async function getRepoTree(repoPath: string) {
-  const branch = await getDefaultBranch(repoPath);
+  const cleanPath = repoPath
+    .replace('https://github.com/', '')
+    .replace('http://github.com/', '')
+    .replace(/\/$/, '');
+  
+  const branch = await getDefaultBranch(cleanPath);
 
   const res = await fetch(
-    `https://api.github.com/repos/${repoPath}/git/trees/${branch}?recursive=1`,
+    `https://api.github.com/repos/${cleanPath}/git/trees/${branch}?recursive=1`,
     {
       headers: {
         Authorization: `token ${GITHUB_TOKEN}`,
