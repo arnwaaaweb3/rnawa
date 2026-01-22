@@ -35,25 +35,32 @@ export async function getRepoTree(repoPath: string) {
   
   const data = await res.json();
 
-  if (data.tree) {
-    // Filtering yang lebih presisi (Fix Point #5 Neo)
-    data.tree = data.tree.filter((item: any) => {
-      const parts = item.path.split('/');
-      const isBlacklisted = 
-        parts.includes('node_modules') || 
-        parts.includes('.git') ||
-        item.path.endsWith('.lock') ||
-        item.path.endsWith('-lock.json');
-      return !isBlacklisted;
-    });
+  // Guard Clause: Kalau GitHub balikin error (message), langsung lempar error
+  if (data.message && data.message === 'Not Found') {
+    throw { code: 'NOT_FOUND', status: 404 };
   }
 
-  return {
-    tree: data.tree.map((item: any) => ({
-      path: item.path,
-      type: item.type
-    })),
+  if (!data.tree) {
+    return { tree: [] };
   }
+
+  // Filtering
+  const filteredTree = data.tree.filter((item: any) => {
+    const parts = item.path.split('/');
+    return !(
+      parts.includes('node_modules') || 
+      parts.includes('.git') ||
+      item.path.endsWith('.lock') ||
+      item.path.endsWith('-lock.json')
+    );
+  });
+
+  return {
+    tree: filteredTree.map((item: any) => ({
+      path: item.path,
+      type: item.type === 'tree' ? 'tree' : 'blob' // Normalisasi type
+    })),
+  };
 }
 
 export async function getFileContent(repoPath: string, filePath: string) {
