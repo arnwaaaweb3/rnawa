@@ -200,3 +200,17 @@
 :global(.darkModeActive) .emptyState {
   color: rgba(255, 133, 229, 0.3);
 }
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  min-width: 20px;
+}
+
+.fileItem, .folderHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Jeda antara icon dan teks */
+}
