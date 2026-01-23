@@ -95,7 +95,8 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   const [nestedTree, setNestedTree] = useState<TreeNode[]>([]);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Ini variabel loading lu
+  const [codeError, setCodeError] = useState<string | null>(null); // Tambahin ini!
   const repoName = repoPath.split('/').pop();
 
   console.log("DEBUG: repoPath yang masuk ke komponen:", repoPath);
@@ -133,18 +134,31 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
     if (repoPath) loadTree();
   }, [repoPath]);
 
-  const handleFileClick = async (path: string) => {
-    setLoading(true);
-    setSelectedFile(path);
+  const handleFileClick = async (filePath: string) => {
+    setSelectedFile(filePath);
+    setLoading(true); // Pake setLoading, bukan setLoadingCode!
+    setCodeError(null);
+    setFileContent(''); // Kosongin dulu biar nggak nampilin kode lama
+
+    // BERSIHIN SAMPAHNYA LAGI (Double guard!)
+    const sanitizedRepo = repoPath.replace(/[^\x20-\x7E]/g, '').trim();
+
     try {
-      const res = await fetch(`/api/github/content?repoPath=${repoPath}&filePath=${path}`);
+      const res = await fetch(`/api/github/content?repoPath=${sanitizedRepo}&filePath=${filePath}`);
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Gagal ambil kode');
+      }
+
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
       setFileContent(data.content);
     } catch (err: any) {
-      setFileContent(`Error: ${err.message || 'Gagal load file'}`);
+      console.error('Fetch code error:', err);
+      setCodeError(err.message);
+    } finally {
+      setLoading(false); // Sinkronin lagi di sini
     }
-    setLoading(false);
   };
 
   const getLanguage = (filename: string) => {
@@ -181,6 +195,8 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
             <div className={styles.codeHeader}>📍 {selectedFile}</div>
             {loading ? (
               <div className={styles.loader}>Fetching code from server...</div>
+            ) : codeError ? (
+              <div className={styles.emptyState} style={{ color: '#ff4d4d' }}>❌ Error: {codeError}</div>
             ) : (
               <SyntaxHighlighter
                 language={getLanguage(selectedFile)}
@@ -188,7 +204,7 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
                 showLineNumbers
                 customStyle={{ margin: 0, height: '100%', background: 'transparent', fontSize: '0.85rem' }}
               >
-                {fileContent}
+                {fileContent || "// No content available"}
               </SyntaxHighlighter>
             )}
           </>
