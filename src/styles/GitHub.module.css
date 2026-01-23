@@ -128,10 +128,29 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 0.85rem;
   text-align: center;
   padding: 20px;
+  text-align: center;
+  position: relative;
+  background-image: url('/codeye.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+.emptyState::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.863); /* dark overlay biar teks kebaca */
+  z-index: 1;
+}
+
+.emptyStateContent {
+  position: relative;
+  z-index: 2;
+  color: #e7e56a;
+  font-size: 0.9rem;
 }
 
 /* Custom Scrollbar buat Code */

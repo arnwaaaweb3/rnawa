@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styles from '../styles/GitHub.module.css';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub } from 'react-icons/fa';
 import {
   SiPython, SiTypescript, SiJavascript, SiReact,
@@ -166,6 +167,17 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   }, [repoPath]);
 
   const handleFileClick = async (filePath: string) => {
+    // Cek Ekstensi File
+    const binaryExtensions = ['pyc', 'png', 'jpg', 'jpeg', 'gif', 'pdf', 'exe', 'bin'];
+    const ext = filePath.split('.').pop()?.toLowerCase() || '';
+
+    if (binaryExtensions.includes(ext)) {
+      setSelectedFile(filePath);
+      setFileContent(""); // Kosongin content
+      setCodeError(`Preview not available for binary files (.${ext}). Please download it from GitHub.`);
+      return;
+    }
+
     setSelectedFile(filePath);
     setCodeError(null);
 
@@ -237,27 +249,64 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
       </div>
 
       <div className={styles.codeViewer}>
-        {selectedFile ? (
-          <>
-            <div className={styles.codeHeader}>📍 {selectedFile}</div>
-            {loading ? (
-              <div className={styles.loader}>Fetching code from server...</div>
-            ) : codeError ? (
-              <div className={styles.emptyState} style={{ color: '#ff4d4d' }}>❌ Error: {codeError}</div>
-            ) : (
-              <SyntaxHighlighter
-                language={getLanguage(selectedFile)}
-                style={vscDarkPlus}
-                showLineNumbers
-                customStyle={{ margin: 0, height: '100%', background: 'transparent', fontSize: '0.85rem' }}
-              >
-                {fileContent || "// No content available"}
-              </SyntaxHighlighter>
-            )}
-          </>
-        ) : (
-          <div className={styles.emptyState}>Select a file to explore the code.</div>
-        )}
+        <AnimatePresence mode="wait">
+          {selectedFile ? (
+            <motion.div
+              key={selectedFile}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -10 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className={styles.motionWrapper} // Pastikan ini flex: 1 di CSS kalau perlu
+              style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+            >
+              <div className={styles.codeHeader}>📍 {selectedFile}</div>
+
+              {loading ? (
+                <div className={styles.loader}>
+                  <motion.span
+                    animate={{ opacity: [0.4, 1, 0.4] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                  >
+                    Fetching code from server...
+                  </motion.span>
+                </div>
+              ) : codeError ? (
+                <div className={styles.emptyState} style={{ color: '#ff4d4d' }}>
+                  ❌ Error: {codeError}
+                </div>
+              ) : (
+                <div style={{ flex: 1, overflow: 'auto' }}>
+                  <SyntaxHighlighter
+                    language={getLanguage(selectedFile)}
+                    style={vscDarkPlus}
+                    showLineNumbers
+                    customStyle={{
+                      margin: 0,
+                      minHeight: '100%',
+                      background: 'transparent',
+                      fontSize: '0.85rem',
+                      padding: '20px'
+                    }}
+                  >
+                    {fileContent || "// No content available"}
+                  </SyntaxHighlighter>
+                </div>
+              )}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className={styles.emptyState}
+            >
+              <div className={styles.emptyStateContent}>
+                Select a file to explore the code.
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
