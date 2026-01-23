@@ -1,7 +1,7 @@
 .explorerContainer {
   display: flex;
-  height: 100%; /* Ubah dari 500px jadi 100% */
-  min-height: 500px; /* Jaga-jaga kalau kontennya dikit */
+  height: 100%;
+  min-height: 500px;
   background: rgba(10, 10, 10, 0.9);
   border: 1px solid rgba(255, 133, 229, 0.3);
   border-radius: 16px; /* Lebih smooth */

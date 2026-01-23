@@ -47,12 +47,12 @@ function buildTree(items: any[]): TreeNode[] {
 }
 
 // 3. Sub-Komponen Recursive: TreeNodeView
-function TreeNodeView({ 
-  node, 
-  onFileClick, 
-  selectedFile 
-}: { 
-  node: TreeNode; 
+function TreeNodeView({
+  node,
+  onFileClick,
+  selectedFile
+}: {
+  node: TreeNode;
   onFileClick: (path: string) => void;
   selectedFile: string | null;
 }) {
@@ -60,7 +60,7 @@ function TreeNodeView({
 
   if (node.type === 'blob') {
     return (
-      <div 
+      <div
         className={`${styles.fileItem} ${selectedFile === node.path ? styles.active : ''}`}
         onClick={() => onFileClick(node.path)}
       >
@@ -77,9 +77,9 @@ function TreeNodeView({
       {isOpen && (
         <div className={styles.folderChildren}>
           {node.children?.map((child) => (
-            <TreeNodeView 
-              key={child.path} 
-              node={child} 
+            <TreeNodeView
+              key={child.path}
+              node={child}
               onFileClick={onFileClick}
               selectedFile={selectedFile}
             />
@@ -98,20 +98,38 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   const [loading, setLoading] = useState(false);
   const repoName = repoPath.split('/').pop();
 
+  console.log("DEBUG: repoPath yang masuk ke komponen:", repoPath);
+
   useEffect(() => {
     async function loadTree() {
+      // 1. MANDIIN STRING-NYA (Buang karakter non-ASCII/hantu)
+      const sanitizedPath = repoPath
+        ? repoPath.replace(/[^\x20-\x7E]/g, '').trim()
+        : '';
+
+      console.log("DEBUG: Path yang sudah dimandiin:", sanitizedPath);
+
+      if (!sanitizedPath) {
+        console.error("DEBUG: Path kosong setelah dibersihin!");
+        return;
+      }
+
       try {
-        const res = await fetch(`/api/github/tree?repoPath=${repoPath}`);
-        if (!res.ok) throw new Error('Failed to fetch tree');
+        // 2. TEMBAK API PAKE PATH YANG BERSIH
+        const res = await fetch(`/api/github/tree?repoPath=${sanitizedPath}`);
         const data = await res.json();
-        
-        // TRANSFORMASI DATA DI SINI
+
+        console.log("DEBUG: Data mentah dari API:", data);
+
         const nested = buildTree(data.tree || []);
+        console.log("DEBUG: Hasil buildTree:", nested);
+
         setNestedTree(nested);
       } catch (err) {
-        console.error('Error loading tree:', err);
+        console.error('Fetch error:', err);
       }
     }
+
     if (repoPath) loadTree();
   }, [repoPath]);
 
@@ -143,10 +161,13 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
       <div className={styles.sidebar}>
         <h4 className={styles.sidebarTitle}>📦 {repoName}</h4>
         <div className={styles.fileList}>
+          {/* TULISAN TESTING INI MUNCUL GAK? */}
+          <p style={{ color: 'white', fontSize: '10px' }}>Jumlah Node: {nestedTree.length}</p>
+
           {nestedTree.map((node) => (
-            <TreeNodeView 
-              key={node.path} 
-              node={node} 
+            <TreeNodeView
+              key={node.path}
+              node={node}
               onFileClick={handleFileClick}
               selectedFile={selectedFile}
             />
@@ -161,8 +182,8 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
             {loading ? (
               <div className={styles.loader}>Fetching code from server...</div>
             ) : (
-              <SyntaxHighlighter 
-                language={getLanguage(selectedFile)} 
+              <SyntaxHighlighter
+                language={getLanguage(selectedFile)}
                 style={vscDarkPlus}
                 showLineNumbers
                 customStyle={{ margin: 0, height: '100%', background: 'transparent', fontSize: '0.85rem' }}
