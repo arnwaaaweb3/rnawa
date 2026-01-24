@@ -1,47 +1,24 @@
+/* =========================
+   LIGHT MODE (DEFAULT)
+========================= */
+
 .explorerContainer {
-  background: rgba(10, 10, 10, 0.9);
-  border: 1px solid rgba(255, 133, 229, 0.3);
+  background: #f4f5f7;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   display: flex;
-  height: 100%; /* WAJIB 100% biar nurut sama parent (95vh) tadi */
-  min-height: 600px; /* Batas minimum biar nggak ciut di layar kecil */
+  height: 100%;
+  min-height: 600px;
   border-radius: 16px;
   overflow: hidden;
   font-family: 'Fira Code', monospace;
   width: 100%;
 }
 
-.folderWrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.folderHeader {
-  padding: 6px 16px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.8);
-  transition: background 0.2s;
-}
-
-.folderHeader:hover {
-  background: rgba(255, 133, 229, 0.1);
-  color: #ff85e5;
-}
-
-.folderChildren {
-  padding-left: 16px; /* INI KUNCINYA HIRARKI */
-  border-left: 1px solid rgba(255, 133, 229, 0.1);
-  margin-left: 12px;
-}
-
-/* Sidebar: File Manager */
+/* Sidebar */
 .sidebar {
   width: 30%;
-  border-right: 1px solid rgba(255, 133, 229, 0.1);
-  background: rgba(20, 20, 20, 0.5);
+  background: #f0f1f3;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
 }
@@ -50,43 +27,62 @@
   padding: 12px 16px;
   font-size: 0.85rem;
   text-transform: uppercase;
+  color: #1a1a1a;
   letter-spacing: 1px;
-  color: #ff85e5; /* Pink andalan lu */
-  border-bottom: 1px solid rgba(255, 133, 229, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   margin: 0;
 }
 
-.fileList {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px 0;
+/* Folder */
+.folderHeader {
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(20, 20, 20, 0.7);
+  transition: background 0.2s, color 0.2s;
 }
 
-.fileList::-webkit-scrollbar {
-  width: 4px;
+.folderHeader:hover {
+  background: rgba(255, 133, 229, 0.08);
+  color: #ff85e5;
 }
 
-.fileList::-webkit-scrollbar-thumb {
-  background: rgba(255, 133, 229, 0.3);
+.folderChildren {
+  padding-left: 16px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  margin-left: 12px;
 }
 
+.nodeCount {
+  font-size: 11px;
+  margin-left: 10px;
+  margin-top: 6px;
+  color: rgba(5, 5, 5, 0.45); /* soft dark */
+  font-style: italic;
+  user-select: none;
+}
+
+/* File List */
 .fileItem {
   padding: 6px 16px;
   font-size: 0.8rem;
   cursor: pointer;
+  color: rgba(20, 20, 20, 0.65);
   transition: all 0.2s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: rgba(255, 255, 255, 0.7);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .fileItem:hover {
-  background: rgba(255, 133, 229, 0.1);
-  color: #fff;
+  background: rgba(255, 133, 229, 0.08);
+  color: #0a0a0a;
 }
 
 .active {
@@ -96,23 +92,24 @@
   font-weight: bold;
 }
 
-/* Main Code Viewer */
+/* Code Viewer */
 .codeViewer {
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: #1e1e1e; /* Warna VS Code Dark */
   overflow: hidden;
+  background: #f6f7f9;
 }
 
 .codeHeader {
+  background: #eceef1;
   padding: 8px 16px;
-  background: rgba(0, 0, 0, 0.3);
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
+/* Loader */
 .loader {
   display: flex;
   align-items: center;
@@ -123,6 +120,7 @@
   font-style: italic;
 }
 
+/* Empty State */
 .emptyState {
   display: flex;
   align-items: center;
@@ -130,7 +128,6 @@
   height: 100%;
   text-align: center;
   padding: 20px;
-  text-align: center;
   position: relative;
   background-image: url('/codeye.svg');
   background-size: cover;
@@ -142,106 +139,22 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.863); /* dark overlay biar teks kebaca */
+  background: rgba(244, 245, 247, 0.9);
   z-index: 1;
 }
 
 .emptyStateContent {
   position: relative;
   z-index: 2;
-  color: #e7e56a;
+  color:  #1a1a1a;
   font-size: 0.9rem;
 }
 
-/* Custom Scrollbar buat Code */
-.codeViewer pre {
-  scrollbar-width: thin;
-  scrollbar-color: #ff85e54d transparent;
-}
-
-/* =========================
-   DARK MODE FOR GITHUB EXPLORER
-   ========================= */
-
-/* Parent Wrapper pas Dark Mode aktif */
-:global(.darkModeActive) .explorerContainer {
-  background: rgba(5, 5, 5, 0.9);
-  border-color: rgba(255, 133, 229, 0.4);
-  box-shadow: 0 0 20px rgba(255, 133, 229, 0.1);
-}
-
-/* Sidebar Dark Mode */
-:global(.darkModeActive) .sidebar {
-  background: rgba(10, 10, 10, 0.8);
-  border-right-color: rgba(255, 133, 229, 0.2);
-}
-
-/* Sidebar Title Glow */
-:global(.darkModeActive) .sidebarTitle {
-  color: #ff85e5;
-  text-shadow: 0 0 10px rgba(255, 133, 229, 0.5);
-  border-bottom-color: rgba(255, 133, 229, 0.2);
-}
-
-/* File Items pas Dark Mode */
-:global(.darkModeActive) .fileItem {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-:global(.darkModeActive) .fileItem:hover {
-  background: rgba(255, 133, 229, 0.1);
-  color: #ff85e5;
-}
-
-/* Active File Glow */
-:global(.darkModeActive) .active {
-  background: rgba(255, 133, 229, 0.2) !important;
-  box-shadow: inset 4px 0 10px rgba(255, 133, 229, 0.2);
-}
-
-/* Code Viewer Area */
-:global(.darkModeActive) .codeViewer {
-  background: #0d0d0d; /* Lebih item biar code-nya kontras */
-}
-
-:global(.darkModeActive) .codeHeader {
-  background: rgba(255, 133, 229, 0.05);
-  color: #ff85e5;
-  border-bottom-color: rgba(255, 133, 229, 0.2);
-}
-
-/* Loader & Empty State */
-:global(.darkModeActive) .loader {
-  color: #ff85e5;
-  text-shadow: 0 0 8px rgba(255, 133, 229, 0.4);
-}
-
-:global(.darkModeActive) .emptyState {
-  color: rgba(255, 133, 229, 0.3);
-}
-
-.icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  min-width: 20px;
-}
-
-.fileItem, .folderHeader {
-  display: flex;
-  align-items: center;
-  gap: 10px; /* Jeda antara icon dan teks */
-}
-
-/* =========================
-   METADATA FOR GITHUB EXPLORER
-   ========================= */
-
+/* Metadata */
 .metaContainer {
   padding: 15px;
-  background: rgba(255, 133, 229, 0.05);
-  border-bottom: 1px solid rgba(255, 133, 229, 0.1);
+  background: rgba(255, 133, 229, 0.04);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   font-size: 0.75rem;
 }
 
@@ -250,26 +163,247 @@
   justify-content: space-around;
   margin-bottom: 10px;
   font-weight: bold;
-  color: #ff85e5;
+  color: #0a0a0a;
 }
 
 .metaDetail p {
   margin: 4px 0;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(20, 20, 20, 0.6);
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Ini biar label di kiri, value di kanan */
+  justify-content: space-between;
   width: 100%;
 }
 
 .metaDetail span {
-  color: #fff;
-  float: right;
+  color: #1a1a1a;
 }
 
-.metaIcon {
-  margin-right: 8px;
-  color: #ff85e5; /* Pink signature lu */
-  vertical-align: middle;
-  font-size: 0.9rem;
+/* =========================
+   DARK MODE
+========================= */
+
+:global(.darkModeActive) .explorerContainer {
+  background: rgba(5, 5, 5, 0.95);
+  border-color: rgba(255, 133, 229, 0.4);
+  box-shadow: 0 0 20px rgba(255, 133, 229, 0.15);
+}
+
+/* Sidebar */
+:global(.darkModeActive) .sidebar {
+  background: rgba(10, 10, 10, 0.85);
+  border-right-color: rgba(255, 133, 229, 0.2);
+}
+
+:global(.darkModeActive) .sidebarTitle {
+  color: #ff85e5;
+  text-shadow: 0 0 10px rgba(255, 133, 229, 0.5);
+  border-bottom-color: rgba(255, 133, 229, 0.2);
+}
+
+/* Folder */
+:global(.darkModeActive) .folderHeader {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+:global(.darkModeActive) .folderHeader:hover {
+  background: rgba(255, 133, 229, 0.1);
+  color: #ff85e5;
+}
+
+:global(.darkModeActive) .folderChildren {
+  border-left-color: rgba(255, 133, 229, 0.15);
+}
+
+:global(.darkModeActive) .nodeCount {
+  color: rgba(255, 133, 229, 0.6); /* neon soft */
+  text-shadow: 0 0 6px rgba(255, 133, 229, 0.3);
+}
+
+/* File */
+:global(.darkModeActive) .fileItem {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+:global(.darkModeActive) .fileItem:hover {
+  background: rgba(255, 133, 229, 0.12);
+  color: #ff85e5;
+}
+
+:global(.darkModeActive) .active {
+  background: rgba(255, 133, 229, 0.2) !important;
+  color: #ff85e5 !important;
+  border-left: 3px solid #ff85e5;
+  box-shadow: inset 4px 0 10px rgba(255, 133, 229, 0.25);
+}
+
+/* Code Viewer */
+:global(.darkModeActive) .codeViewer {
+  background: #0d0d0d;
+}
+
+:global(.darkModeActive) .codeHeader {
+  background: rgba(255, 133, 229, 0.05);
+  color: #ff85e5;
+  border-bottom-color: rgba(255, 133, 229, 0.2);
+}
+
+/* Loader */
+:global(.darkModeActive) .loader {
+  color: #ff85e5;
+  text-shadow: 0 0 8px rgba(255, 133, 229, 0.4);
+}
+
+/* Empty */
+:global(.darkModeActive) .emptyState::after {
+  background: rgba(0, 0, 0, 0.88);
+}
+
+:global(.darkModeActive) .emptyStateContent {
+  color: #ff85e5;
+}
+
+/* Metadata */
+:global(.darkModeActive) .metaContainer {
+  background: rgba(255, 133, 229, 0.06);
+  border-bottom-color: rgba(255, 133, 229, 0.15);
+}
+
+:global(.darkModeActive) .metaRow {
+  color: #ff85e5;
+  text-shadow: 0 0 6px rgba(255, 133, 229, 0.3);
+}
+
+:global(.darkModeActive) .metaDetail p {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+:global(.darkModeActive) .metaDetail span {
+  color: #ffffff;
+}
+
+/* =========================
+   📱 PHONE (<= 600px)
+========================= */
+@media (max-width: 600px) {
+  .explorerContainer {
+    flex-direction: column;
+    height: 85vh;
+    min-height: 500px;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: 40%;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  :global(.darkModeActive) .sidebar {
+    border-bottom-color: rgba(255, 133, 229, 0.2);
+  }
+
+  .codeViewer {
+    height: 60%;
+  }
+
+  .fileItem,
+  .folderHeader {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
+
+  .sidebarTitle {
+    font-size: 0.75rem;
+  }
+
+  .metaContainer {
+    font-size: 0.7rem;
+  }
+}
+
+/* =========================
+   📱 BIG PHONE / SMALL TAB (601px–900px)
+========================= */
+@media (min-width: 601px) and (max-width: 900px) {
+  .explorerContainer {
+    flex-direction: column;
+    height: 90vh;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: 45%;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  :global(.darkModeActive) .sidebar {
+    border-bottom-color: rgba(255, 133, 229, 0.2);
+  }
+
+  .codeViewer {
+    height: 55%;
+  }
+
+  .fileItem,
+  .folderHeader {
+    font-size: 0.85rem;
+  }
+}
+
+/* =========================
+   💻 TABLET / SMALL LAPTOP (901px–1200px)
+========================= */
+@media (min-width: 901px) and (max-width: 1200px) {
+  .sidebar {
+    width: 35%;
+  }
+
+  .codeViewer {
+    width: 65%;
+  }
+
+  .fileItem,
+  .folderHeader {
+    font-size: 0.8rem;
+  }
+}
+
+/* =========================
+   🖥️ DESKTOP / LAPTOP (1201px–1800px)
+========================= */
+/* Default layout = udah optimal */
+
+/* =========================
+   📺 ULTRA WIDE / TV (>1800px)
+========================= */
+@media (min-width: 1800px) {
+  .explorerContainer {
+    max-width: 1600px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+  }
+
+  .sidebar {
+    width: 28%;
+  }
+
+  .codeViewer {
+    width: 72%;
+  }
+
+  .fileItem,
+  .folderHeader {
+    font-size: 1rem;
+    padding: 14px 22px;
+  }
+
+  .sidebarTitle {
+    font-size: 1rem;
+  }
+
+  .metaContainer {
+    font-size: 0.85rem;
+  }
 }

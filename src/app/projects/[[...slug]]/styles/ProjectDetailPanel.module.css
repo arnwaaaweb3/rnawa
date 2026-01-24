@@ -17,8 +17,9 @@
   display: flex;
   flex-direction: row; 
   align-items: center;
-  justify-content: space-between; 
   overflow: hidden;
+  justify-content: center;
+  gap: 20px;
 }
 
 .darkModeActive.overlayBackdrop {
@@ -557,5 +558,42 @@
   .floatingVideoWrapper {
     padding: 10px;
     min-height: 300px;
+  }
+}
+
+/* 1. SMARTPHONE & PORTRAIT TAB */
+@media (max-width: 900px) {
+  .overlayBackdrop {
+    flex-direction: column; /* Tumpuk Media di atas, Detail di bawah */
+    overflow-y: auto; /* Biar bisa di-scroll kalau kepanjangan */
+    padding: 10px;
+    justify-content: flex-start;
+  }
+
+  .floatingVideoWrapper {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 400px;
+    position: relative;
+    margin-top: 50px; /* Kasih ruang buat tombol close */
+  }
+
+  .detailPanel {
+    width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+    right: 0 !important;
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+/* 2. TV / BIG SCREEN */
+@media (min-width: 2500px) {
+  .detailPanel {
+    width: 30vw; /* Jangan terlalu lebar di TV */
+    padding: 60px;
+  }
+  .panelTitle {
+    font-size: 3rem;
   }
 }

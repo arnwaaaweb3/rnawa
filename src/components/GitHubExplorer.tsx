@@ -281,7 +281,9 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
           <FaGithub /> {repoName}
         </h4>
         <div className={styles.fileList}>
-          <p style={{ color: 'white', fontSize: '10px', marginLeft: '10px' }}>Node Count: {nestedTree.length}</p>
+          <p className={styles.nodeCount}>
+            Node Count: {nestedTree.length}
+          </p>
 
           {nestedTree.map((node) => (
             <TreeNodeView
