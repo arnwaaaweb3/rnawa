@@ -10,6 +10,11 @@ import {
   SiPython, SiTypescript, SiJavascript, SiReact,
   SiMarkdown, SiJson, SiCss3, SiHtml5, SiSolidity
 } from 'react-icons/si';
+import {
+  FaStar, FaCodeBranch, FaEye,
+  FaUser, FaBalanceScale, FaBoxOpen
+} from 'react-icons/fa';
+import { GoClock } from 'react-icons/go';
 import { VscFile, VscFolder, VscFolderOpened } from 'react-icons/vsc';
 
 // 1. Interface Definition according to Neo standard
@@ -130,6 +135,7 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   const [codeError, setCodeError] = useState<string | null>(null); // Added this!
   const repoName = repoPath.split('/').pop();
   const [codeCache, setCodeCache] = useState<Record<string, string>>({});
+  const [metadata, setMetadata] = useState<any>(null);
 
   console.log("DEBUG: repoPath received by component:", repoPath);
 
@@ -151,6 +157,8 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
         // 2. HIT THE API USING THE CLEAN PATH
         const res = await fetch(`/api/github/tree?repoPath=${sanitizedPath}`);
         const data = await res.json();
+        setMetadata(data.metadata);
+        setNestedTree(buildTree(data.tree || []));
 
         console.log("DEBUG: Raw data from API:", data);
 
@@ -231,6 +239,44 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   return (
     <div className={styles.explorerContainer}>
       <div className={styles.sidebar}>
+        {metadata && (
+          <div className={styles.metaContainer}>
+            <div className={styles.metaRow}>
+              <span title="Stars">
+                <FaStar style={{ color: '#ffb700', marginRight: '4px' }} /> {metadata.stars}
+              </span>
+              <span title="Forks">
+                <FaCodeBranch style={{ color: '#8b949e', marginRight: '4px' }} /> {metadata.forks}
+              </span>
+              <span title="Watchers">
+                <FaEye style={{ color: '#58a6ff', marginRight: '4px' }} /> {metadata.watchers}
+              </span>
+            </div>
+
+            <div className={styles.metaDetail}>
+              <p>
+                <FaUser className={styles.metaIcon} /> Owner:
+                <span>{metadata.owner}</span>
+              </p>
+              <p>
+                <FaCodeBranch className={styles.metaIcon} /> Branch:
+                <span>{metadata.branch}</span>
+              </p>
+              <p>
+                <FaBoxOpen className={styles.metaIcon} /> Size:
+                <span>{(metadata.size / 1024).toFixed(2)} MB</span>
+              </p>
+              <p>
+                <GoClock className={styles.metaIcon} /> Updated:
+                <span>{new Date(metadata.updatedAt).toLocaleDateString()}</span>
+              </p>
+              <p>
+                <FaBalanceScale className={styles.metaIcon} /> License:
+                <span>{metadata.license}</span>
+              </p>
+            </div>
+          </div>
+        )}
         <h4 className={styles.sidebarTitle} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <FaGithub /> {repoName}
         </h4>
