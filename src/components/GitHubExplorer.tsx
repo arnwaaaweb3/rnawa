@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { vscDarkPlus, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styles from '../styles/GitHub.module.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub } from 'react-icons/fa';
@@ -16,7 +16,9 @@ import {
   FaUser, FaBalanceScale, FaBoxOpen
 } from 'react-icons/fa';
 import { GoClock } from 'react-icons/go';
-import { VscFile, VscFolder, VscFolderOpened } from 'react-icons/vsc';
+import { VscFile, VscFolder, VscFolderOpened, VscSearch } from 'react-icons/vsc';
+import { FiCopy, FiCheck } from 'react-icons/fi';
+import { GoFileCode } from 'react-icons/go';
 
 // 1. Interface Definition according to Neo standard
 interface TreeNode {
@@ -138,6 +140,9 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   const [codeCache, setCodeCache] = useState<Record<string, string>>({});
   const [metadata, setMetadata] = useState<any>(null);
   const { darkMode } = useTheme();
+  const [copied, setCopied] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   console.log("DEBUG: repoPath received by component:", repoPath);
 
@@ -238,9 +243,29 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
     return map[ext] || 'javascript';
   };
 
+  const handleCopy = async () => {
+    if (!fileContent) return;
+    try {
+      await navigator.clipboard.writeText(fileContent);
+      setCopied(true);
+      // Balikin iconnya setelah 2 detik
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy the code:', err);
+    }
+  };
+
+  const filteredNodes = nestedTree.filter(node =>
+    node.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className={`${styles.explorerContainer} ${darkMode ? 'darkModeActive' : ''}`}>
+
+      {/* ===================== SIDEBAR ===================== */}
       <div className={styles.sidebar}>
+
+        {/* ===== METADATA ===== */}
         {metadata && (
           <div className={styles.metaContainer}>
             <div className={styles.metaRow}>
@@ -279,25 +304,105 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
             </div>
           </div>
         )}
-        <h4 className={styles.sidebarTitle} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <FaGithub /> {repoName}
-        </h4>
-        <div className={styles.fileList}>
-          <p className={styles.nodeCount}>
-            Node Count: {nestedTree.length}
-          </p>
 
-          {nestedTree.map((node) => (
-            <TreeNodeView
-              key={node.path}
-              node={node}
-              onFileClick={handleFileClick}
-              selectedFile={selectedFile}
-            />
-          ))}
+        {/* ===== SIDEBAR HEADER ===== */}
+        <div className={styles.sidebarHeader}>
+          <div className={styles.sidebarHeaderRow}>
+            <h4
+              className={styles.sidebarTitle}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', border: 'none', margin: 0 }}
+            >
+              <FaGithub /> {repoName}
+            </h4>
+
+            <button
+              className={styles.searchToggleButton}
+              onClick={() => {
+                setIsSearchOpen(!isSearchOpen);
+                if (isSearchOpen) setSearchQuery('');
+              }}
+            >
+              <VscSearch />
+            </button>
+          </div>
+        </div>
+
+        {/* ===== SEARCH SECTION ===== */}
+        <AnimatePresence>
+          {isSearchOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className={styles.searchSection}
+            >
+              <input
+                type="text"
+                placeholder="Type to search files..."
+                className={styles.searchInput}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ===== FILE LIST ===== */}
+        <div className={styles.fileList}>
+          {searchQuery ? (
+            <div className={styles.searchResults}>
+              <p className={styles.nodeCount}>
+                Found {filteredNodes.length} files
+              </p>
+
+              {filteredNodes.length > 0 ? (
+                filteredNodes.map((node) => (
+                  <div
+                    key={node.path}
+                    className={`${styles.fileItem} ${selectedFile === node.path ? styles.active : ''
+                      }`}
+                    onClick={() => handleFileClick(node.path)}
+                  >
+                    <span className={styles.icon}>
+                      {getFileIcon(node.name)}
+                    </span>
+
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span className={styles.fileNameText}>{node.name}</span>
+                      <span style={{ fontSize: '0.65rem', opacity: 0.5 }}>
+                        {node.path}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p
+                  style={{
+                    padding: '20px',
+                    fontSize: '0.8rem',
+                    textAlign: 'center',
+                    opacity: 0.5
+                  }}
+                >
+                  No files match your search.
+                </p>
+              )}
+            </div>
+          ) : (
+            nestedTree.map((node) => (
+              <TreeNodeView
+                key={node.path}
+                node={node}
+                onFileClick={handleFileClick}
+                selectedFile={selectedFile}
+              />
+            ))
+          )}
         </div>
       </div>
 
+      {/* ===================== CODE VIEWER ===================== */}
       <div className={styles.codeViewer}>
         <AnimatePresence mode="wait">
           {selectedFile ? (
@@ -307,11 +412,30 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className={styles.motionWrapper} // Pastikan ini flex: 1 di CSS kalau perlu
+              className={styles.motionWrapper}
               style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
             >
-              <div className={styles.codeHeader}>📍 {selectedFile}</div>
 
+              {/* ===== CODE HEADER ===== */}
+              <div className={styles.codeHeader}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <GoFileCode /> {selectedFile}
+                </span>
+
+                <motion.button
+                  className={styles.copyButton}
+                  onClick={handleCopy}
+                  title="Copy code"
+                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.03 }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  {copied ? <FiCheck /> : <FiCopy />}
+                  {copied ? 'Copied' : 'Copy'}
+                </motion.button>
+              </div>
+
+              {/* ===== CONTENT ===== */}
               {loading ? (
                 <div className={styles.loader}>
                   <motion.span
@@ -322,14 +446,14 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
                   </motion.span>
                 </div>
               ) : codeError ? (
-                <div className={styles.emptyState} style={{ color: '#ff4d4d' }}>
+                <div className={`${styles.emptyState} ${styles.errorState}`}>
                   ❌ Error: {codeError}
                 </div>
               ) : (
                 <div style={{ flex: 1, overflow: 'auto' }}>
                   <SyntaxHighlighter
                     language={getLanguage(selectedFile)}
-                    style={vscDarkPlus}
+                    style={darkMode ? vscDarkPlus : oneLight}
                     showLineNumbers
                     customStyle={{
                       margin: 0,
