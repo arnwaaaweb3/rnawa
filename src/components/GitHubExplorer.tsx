@@ -6,6 +6,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styles from '../styles/GitHub.module.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub } from 'react-icons/fa';
+import { useTheme } from '@/context/ThemeContext';
 import {
   SiPython, SiTypescript, SiJavascript, SiReact,
   SiMarkdown, SiJson, SiCss3, SiHtml5, SiSolidity
@@ -136,6 +137,7 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   const repoName = repoPath.split('/').pop();
   const [codeCache, setCodeCache] = useState<Record<string, string>>({});
   const [metadata, setMetadata] = useState<any>(null);
+  const { darkMode } = useTheme();
 
   console.log("DEBUG: repoPath received by component:", repoPath);
 
@@ -237,7 +239,7 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   };
 
   return (
-    <div className={styles.explorerContainer}>
+    <div className={`${styles.explorerContainer} ${darkMode ? 'darkModeActive' : ''}`}>
       <div className={styles.sidebar}>
         {metadata && (
           <div className={styles.metaContainer}>
