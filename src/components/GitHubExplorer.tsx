@@ -6,9 +6,10 @@ import { vscDarkPlus, oneLight } from 'react-syntax-highlighter/dist/esm/styles/
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 import { getFromLocal, saveToLocal, initDB } from '@/utils/storage';
-
+import { TreeNodeView } from '@/utils/github/TreeNodeView';
+import { buildTree, flattenTree } from '@/utils/github/treeUtils';
+import { TreeNode } from '@/types/TreeNode';
 import styles from '../styles/GitHub.module.css';
-
 import { FaGithub } from 'react-icons/fa';
 import {
   FaStar,
@@ -20,187 +21,18 @@ import {
 } from 'react-icons/fa';
 import { GoClock, GoFileCode } from 'react-icons/go';
 import {
-  VscFile,
-  VscFolder,
   VscFolderOpened,
   VscSearch,
 } from 'react-icons/vsc';
 import { FiCopy, FiCheck } from 'react-icons/fi';
-
-import {
-  SiPython,
-  SiTypescript,
-  SiJavascript,
-  SiReact,
-  SiMarkdown,
-  SiJson,
-  SiCss3,
-  SiHtml5,
-  SiSolidity,
-} from 'react-icons/si';
-
-/* ===================== INTERFACES ===================== */
-
-interface TreeNode {
-  name: string;
-  path: string;
-  type: 'tree' | 'blob';
-  children?: TreeNode[];
-}
-
-interface GitHubExplorerProps {
-  repoPath: string;
-}
-
-/* ===================== ICON RESOLVER ===================== */
-
-const getFileIcon = (
-  filename: string,
-  isOpen?: boolean,
-  isFolder?: boolean
-) => {
-  if (isFolder) {
-    return isOpen ? (
-      <VscFolderOpened style={{ color: '#ff85e5' }} />
-    ) : (
-      <VscFolder style={{ color: '#ff85e5' }} />
-    );
-  }
-
-  const ext = filename.split('.').pop()?.toLowerCase() || '';
-
-  switch (ext) {
-    case 'tsx':
-    case 'jsx':
-      return <SiReact style={{ color: '#61dafb' }} />;
-    case 'py':
-      return <SiPython style={{ color: '#3776ab' }} />;
-    case 'ts':
-      return <SiTypescript style={{ color: '#3178c6' }} />;
-    case 'js':
-      return <SiJavascript style={{ color: '#f7df1e' }} />;
-    case 'md':
-      return <SiMarkdown style={{ color: '#ffffff' }} />;
-    case 'json':
-      return <SiJson style={{ color: '#fdd835' }} />;
-    case 'css':
-      return <SiCss3 style={{ color: '#1572b6' }} />;
-    case 'html':
-      return <SiHtml5 style={{ color: '#e34f26' }} />;
-    case 'sol':
-      return <SiSolidity style={{ color: '#363636' }} />;
-    default:
-      return <VscFile style={{ color: '#858585' }} />;
-  }
-};
-
-/* ===================== TREE BUILDERS ===================== */
-
-function buildTree(items: any[]): TreeNode[] {
-  const root: TreeNode[] = [];
-
-  for (const item of items) {
-    const parts = item.path.split('/');
-    let currentLevel = root;
-
-    parts.forEach((part: string, index: number) => {
-      let existingNode = currentLevel.find((n) => n.name === part);
-
-      if (!existingNode) {
-        existingNode = {
-          name: part,
-          path: parts.slice(0, index + 1).join('/'),
-          type: index === parts.length - 1 ? item.type : 'tree',
-          children: [],
-        };
-
-        currentLevel.push(existingNode);
-      }
-
-      if (existingNode.children) {
-        currentLevel = existingNode.children;
-      }
-    });
-  }
-
-  return root;
-}
-
-function flattenTree(nodes: TreeNode[]): TreeNode[] {
-  let flat: TreeNode[] = [];
-
-  nodes.forEach((node) => {
-    if (node.type === 'blob') {
-      flat.push(node);
-    }
-
-    if (node.children && node.children.length > 0) {
-      flat = [...flat, ...flattenTree(node.children)];
-    }
-  });
-
-  return flat;
-}
-
-/* ===================== TREE VIEW COMPONENT ===================== */
-
-function TreeNodeView({
-  node,
-  onFileClick,
-  selectedFile,
-}: {
-  node: TreeNode;
-  onFileClick: (path: string) => void;
-  selectedFile: string | null;
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  if (node.type === 'blob') {
-    return (
-      <div
-        className={`${styles.fileItem} ${selectedFile === node.path ? styles.active : ''
-          }`}
-        onClick={() => onFileClick(node.path)}
-      >
-        <span className={styles.icon}>{getFileIcon(node.name)}</span>
-        <span className={styles.fileNameText}>{node.name}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className={styles.folderWrapper}>
-      <div
-        className={styles.folderHeader}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <span className={styles.icon}>
-          {getFileIcon(node.name, isOpen, true)}
-        </span>
-        <span className={styles.folderNameText}>{node.name}</span>
-      </div>
-
-      {isOpen && (
-        <div className={styles.folderChildren}>
-          {node.children?.map((child) => (
-            <TreeNodeView
-              key={child.path}
-              node={child}
-              onFileClick={onFileClick}
-              selectedFile={selectedFile}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+import { getFileIcon } from '@/utils/github/getFileIcon';
+import GitHubExplorerProps from '@/types/githubExplorerProps';
+import { getLanguage } from '@/utils/github/getLanguage';
 
 /* ===================== MAIN COMPONENT ===================== */
 
 export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   const { darkMode } = useTheme();
-
   const [nestedTree, setNestedTree] = useState<TreeNode[]>([]);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>('');
@@ -214,7 +46,6 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   const [fileCommits, setFileCommits] = useState<any[]>([]);
   const [commitsLoading, setCommitsLoading] = useState(false);
   const [isCommitsOpen, setIsCommitsOpen] = useState(false);
-
   const repoName = repoPath.split('/').pop();
 
   console.log('DEBUG: repoPath received by component:', repoPath);
@@ -374,24 +205,6 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   };
 
   /* ===================== UTILITIES ===================== */
-
-  const getLanguage = (filename: string) => {
-    const ext = filename.split('.').pop()?.toLowerCase() || '';
-
-    const map: Record<string, string> = {
-      ts: 'typescript',
-      tsx: 'typescript',
-      js: 'javascript',
-      jsx: 'javascript',
-      sol: 'solidity',
-      md: 'markdown',
-      json: 'json',
-      css: 'css',
-      html: 'html',
-    };
-
-    return map[ext] || 'javascript';
-  };
 
   const handleCopy = async () => {
     if (!fileContent) return;
