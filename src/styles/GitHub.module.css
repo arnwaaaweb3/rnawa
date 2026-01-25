@@ -128,6 +128,105 @@
   opacity: 0.3;
 }
 
+/* =========================
+   STALKER MODE (COMMITS)
+========================= */
+/* Wrapper Utama */
+.commitHistoryWrapper {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.01);
+}
+
+/* Tombol Toggle */
+.commitHeaderButton {
+  width: 100%;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-lexend), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(20, 20, 20, 0.5);
+  transition: all 0.2s ease;
+}
+
+.commitHeaderButton:hover {
+  background: rgba(255, 133, 229, 0.05);
+  color: #ff85e5;
+}
+
+/* Badge Jumlah Commit */
+.commitBadge {
+  background: rgba(255, 133, 229, 0.15);
+  color: #ff85e5;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.65rem;
+}
+
+/* Konten yang Nyusut */
+.commitContent {
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.commitList {
+  padding: 0 16px 16px 16px; /* Kasih padding bawah biar nggak mepet */
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.commitItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.commitItem:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.avatarMini {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 133, 229, 0.3);
+  background: #fff;
+}
+
+.commitInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.commitMessage {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #1a1a1a;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.commitMeta {
+  font-size: 0.7rem;
+  color: rgba(20, 20, 20, 0.45);
+  font-style: italic;
+}
+
 .codeHeader {
   background: #eceef1;
   padding: 8px 16px;
@@ -335,6 +434,16 @@
   font-style: italic;
 }
 
+/* Loader & Empty State */
+.loaderSmall, 
+.emptyCommits {
+  padding: 16px;
+  font-size: 0.75rem;
+  font-style: italic;
+  text-align: center;
+  opacity: 0.6;
+}
+
 /* =========================
    DARK MODE
 ========================= */
@@ -403,6 +512,35 @@
   border-bottom-color: rgba(255, 255, 255, 0.05);
 }
 
+/* Dark Mode Support */
+:global(.darkModeActive) .commitHistoryWrapper {
+  border-top-color: rgba(255, 133, 229, 0.2);
+}
+
+:global(.darkModeActive) .commitHeaderButton {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+:global(.darkModeActive) .commitHeaderButton:hover {
+  color: #ff85e5;
+}
+
+:global(.darkModeActive) .commitContent {
+  background: rgba(255, 133, 229, 0.02);
+}
+
+:global(.darkModeActive) .commitItem {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+:global(.darkModeActive) .commitMessage {
+  color: #ffffff;
+}
+
+:global(.darkModeActive) .commitMeta {
+  color: rgba(255, 133, 229, 0.6);
+}
+
 :global(.darkModeActive) .codeHeader {
   background: rgba(255, 133, 229, 0.05);
   color: #ff85e5;
@@ -465,6 +603,24 @@
   background: rgba(255, 77, 77, 0.747);
   color: #ffffff;
   padding: 12px;
+}
+
+/* Custom Scrollbar biar nggak ngerusak estetika */
+.commitHistory::-webkit-scrollbar {
+  width: 4px;
+}
+
+.commitHistory::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.commitHistory::-webkit-scrollbar-thumb {
+  background: rgba(255, 133, 229, 0.2);
+  border-radius: 10px;
+}
+
+.commitHistory::-webkit-scrollbar-thumb:hover {
+  background: #ff85e5;
 }
 
 /* =========================
