@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import gsap from 'gsap';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import styles from '../styles/RealTimeClock.module.css';
 
-// Format waktu + tanggal
 const formatDateTime = (date: Date): { time: string; date: string } => {
   const timeFormatter = new Intl.DateTimeFormat('en-GB', {
     hour: '2-digit',
@@ -28,22 +27,9 @@ const formatDateTime = (date: Date): { time: string; date: string } => {
 
 const RealTimeClock: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
-  const clockRef = useRef<HTMLDivElement>(null);
 
-  // ✅ GSAP hanya jalan di client
-  useLayoutEffect(() => {
-    if (!clockRef.current) return;
-
-    gsap.from(clockRef.current, {
-      opacity: 0,
-      y: 20,
-      duration: 0.6,
-      ease: 'power3.out',
-    });
-  }, []);
-
-  // ✅ Set waktu hanya setelah mount (ANTI SSR MISMATCH)
   useEffect(() => {
+    setCurrentDate(new Date()); // Init pertama kali
     const timerId = setInterval(() => {
       setCurrentDate(new Date());
     }, 1000);
@@ -51,16 +37,20 @@ const RealTimeClock: React.FC = () => {
     return () => clearInterval(timerId);
   }, []);
 
-  // ✅ Cegah render saat masih null (PENTING)
   if (!currentDate) return null;
 
   const { time, date } = formatDateTime(currentDate);
 
   return (
-    <div ref={clockRef} className={styles["realtime-clock"]}>
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      className={styles["realtime-clock"]}
+    >
       <span className={styles["clock-time"]}>{time}</span>
       <span className={styles["clock-date"]}>{date}</span>
-    </div>
+    </motion.div>
   );
 };
 
