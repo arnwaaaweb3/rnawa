@@ -11,7 +11,7 @@ import { urlFor } from '@/sanity/lib/image';
 import Image from 'next/image';
 import { useState } from 'react';
 import clsx from 'clsx';
-import GitHubExplorer from '@/components/GitHubExplorer';
+import GitHubExplorer from '@/components/github/GitHubExplorer';
 
 interface PanelProps {
   project: Project | null;
