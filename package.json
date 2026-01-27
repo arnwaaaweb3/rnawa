@@ -9,6 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@elizaos/plugin-bootstrap": "^1.7.2",
+    "@elizaos/plugin-ollama": "^1.2.4",
+    "@elizaos/plugin-sql": "^1.7.2",
     "@portabletext/react": "^3.1.0",
     "@sanity/client": "^6.27.1",
     "@sanity/code-input": "^7.0.4",
@@ -16,7 +19,6 @@
     "@sanity/image-url": "^1.1.0",
     "@sanity/preview-url-secret": "^4.0.2",
     "@sanity/react-loader": "^2.0.5",
-    "@sanity/vision": "^3.68.0",
     "@sanity/visual-editing": "^5.1.0",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
@@ -24,25 +26,22 @@
     "next": "15.1.0",
     "next-sanity": "^9.8.38",
     "ogl": "^1.0.11",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
-    "react-is": "rc",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^16.1.0",
     "sanity": "^3.68.0"
   },
   "devDependencies": {
+    "@elizaos/cli": "^1.7.2",
+    "@sanity/vision": "^3.68.0",
     "@types/node": "^20",
-    "@types/react": "npm:types-react@rc",
-    "@types/react-dom": "npm:types-react-dom@rc",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "eslint": "^9",
     "eslint-config-next": "15.1.0",
     "typescript": "^5.7.2"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@rc",
-    "@types/react-dom": "npm:types-react-dom@rc"
   }
 }
