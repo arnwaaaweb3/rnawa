@@ -89,7 +89,7 @@ export default defineType({
           { title: '📺 YouTube Video', value: 'video' },
           { title: '🖼️ Poster / Image', value: 'poster' },
           { title: '📄 PDF Document', value: 'pdf' },
-          { title: '💻 GitHub Repo', value: 'github' }, // TAMBAHIN INI, NAWA!
+          { title: '💻 GitHub Repo', value: 'github' },
         ],
         layout: 'radio',
       },
@@ -203,6 +203,7 @@ export default defineType({
       title: 'GitHub Repository Path',
       description: 'If this a GitHub repository, paste the path here. (Example: rnawa/my-web3-project)',
       type: 'string',
+      hidden: ({ document }) => document?.displayType !== 'github',
     }),
 
     defineField({
@@ -210,7 +211,7 @@ export default defineType({
       title: 'Enable File Explorer',
       type: 'boolean',
       description: 'If this project has a GitHub repository, enable the file explorer.',
-      initialValue: true, // Default true biar lu gak lupa nyalain
+      initialValue: true,
       hidden: ({ document }) => document?.displayType !== 'github',
     }),
   ],

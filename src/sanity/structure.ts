@@ -52,17 +52,47 @@ export const structure: StructureResolver = (S) =>
 
       // 4. Portfolio - The Proof of Work
       S.listItem()
-        .title('Project Portfolio')
-        .icon(CaseIcon)
-        .child(
-          S.documentTypeList('portfolioItem')
-            .title('My Projects')
-        ),
+  .title('Project Portfolio')
+  .icon(CaseIcon)
+  .child(
+    S.list()
+      .title('Portfolio Management')
+      .items([
+        // Tampilkan semua project tanpa filter
+        S.listItem()
+          .title('All Projects')
+          .icon(CaseIcon)
+          .child(S.documentTypeList('portfolioItem').title('All Projects')),
 
-      S.divider(),
+        S.divider(),
 
-      // Filter otomatis buat tipe dokumen yang mungkin lo tambah di masa depan tapi lupa lo susun
-      ...S.documentTypeListItems().filter(
-        (item) => item.getId() && !['post', 'category', 'author', 'journal', 'documentation', 'portfolioItem'].includes(item.getId()!),
+        // 1. Filter berdasarkan Category (Parent)
+        S.listItem()
+          .title('Projects by Main Category')
+          .child(
+            S.documentTypeList('category')
+              .title('Main Categories')
+              .child(categoryId =>
+                S.documentTypeList('portfolioItem')
+                  .title('Projects')
+                  .filter('_type == "portfolioItem" && category._ref == $categoryId')
+                  .params({ categoryId })
+              )
+          ),
+
+        // 2. Filter berdasarkan Categories (Sub/Array)
+        S.listItem()
+          .title('Projects by Output (Sub)')
+          .child(
+            S.documentTypeList('category')
+              .title('Output Types')
+              .child(categoryId =>
+                S.documentTypeList('portfolioItem')
+                  .title('Projects')
+                  .filter('_type == "portfolioItem" && $categoryId in categories[]._ref')
+                  .params({ categoryId })
+              )
+          ),
+        ])
       ),
     ])

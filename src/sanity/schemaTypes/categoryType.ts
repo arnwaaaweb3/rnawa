@@ -3,39 +3,56 @@ import {defineField, defineType} from 'sanity'
 
 export const categoryType = defineType({
   name: 'category',
-  title: 'Category',
+  title: 'Category & Output',
   type: 'document',
   icon: TagIcon,
   fields: [
     defineField({
       name: 'title',
-      title: 'Category Title',
+      title: 'Title',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
-
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {
         source: 'title',
-        isUnique: () => true,
       },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'classification',
+      title: 'Classification',
+      type: 'string',
+      description: 'Bedain mana yang Kategori Utama (Dev, Marketing) mana yang Output (Video, Poster).',
+      options: {
+        list: [
+          { title: 'Main Category (Parent)', value: 'parent' },
+          { title: 'Project Output (Sub)', value: 'sub' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'parent',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
-      description: 'Describe this category briefly.',
-    }),
-    
-    defineField({
-      name: 'parent',
-      title: 'Parent Category',
-      type: 'reference',
-      to: [{ type: 'category' }], // Merujuk ke dirinya sendiri buat hierarchy
     }),
   ],
+  preview: {
+    select: {
+      title: 'title',
+      type: 'classification',
+    },
+    prepare({ title, type }) {
+      return {
+        title: title,
+        subtitle: type === 'parent' ? '🏢 Main Category' : '📦 Project Output',
+      }
+    },
+  },
 })
