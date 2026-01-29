@@ -2,37 +2,27 @@
 import { useMemo, useState } from 'react';
 import { Category, Project } from '../[[...slug]]/types';
 
-export const useProjectFilters = (projects: Project[]) => {
+export function useProjectFilters(projects: Project[]) {
   const [filter, setFilter] = useState<'all' | 'completed' | 'ongoing' | 'concept'>('all');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [mediaFilter, setMediaFilter] = useState<
+    'all' | 'video' | 'poster' | 'pdf' | 'github' | 'feeds'
+  >('all');
 
-    const availableCategories = useMemo(() => {
-      return [
-        'all',
-        ...new Set(
-          projects.flatMap((p) => p.categories?.map((c: Category) => c.title) || [])
-        ),
-      ];
-    }, [projects]);
-  
-    const filteredProjects = useMemo(() => {
-      return projects.filter((project) => {
-        const matchStatus = filter === 'all' || project.projectStatus === filter;
-        const matchCategory =
-          categoryFilter === 'all' ||
-          project.categories?.some(
-            (c) => c.title === categoryFilter || c.parent === categoryFilter
-          );
-        return matchStatus && matchCategory;
-      });
-    }, [projects, filter, categoryFilter]);
+  const filteredProjects = useMemo(() => {
+    return projects.filter(p => {
+      const statusMatch = filter === 'all' || p.projectStatus === filter;
+      const mediaMatch =
+        mediaFilter === 'all' || p.displayType === mediaFilter;
+
+      return statusMatch && mediaMatch;
+    });
+  }, [projects, filter, mediaFilter]);
 
   return {
     filter,
     setFilter,
-    categoryFilter,
-    setCategoryFilter,
-    availableCategories,
-    filteredProjects
+    mediaFilter,
+    setMediaFilter,
+    filteredProjects,
   };
-};
+}

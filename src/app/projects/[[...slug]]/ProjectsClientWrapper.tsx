@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from '../../../components/layout/HeaderProjects';
-import { CategoryDrawer } from '../../../components/ui/CategoryDrawer';
+import { MediaTypeDrawer } from '../../../components/ui/MediaTypeDrawer';
 import { ProjectCard } from './ProjectCard';
 import { ProjectDetailPanel } from './ProjectDetailPanel';
 import { useProjectFilters } from '../hooks/useProjectFilters';
@@ -34,20 +34,29 @@ export default function ProjectsClientWrapper({
   );
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [showCategoryTooltip, setShowCategoryTooltip] = useState(false);
+  const [showMediaTooltip, setShowMediaTooltip] = useState(false);
 
+  /**
+   * Filters Hook
+   * filter        = project status (completed / ongoing / concept / all)
+   * mediaFilter   = displayType (video / poster / pdf / github / feeds)
+   */
   const {
     filter,
     setFilter,
-    categoryFilter,
-    setCategoryFilter,
-    availableCategories,
+    mediaFilter,
+    setMediaFilter,
     filteredProjects,
   } = useProjectFilters(projects);
 
   const isDark = theme === 'dark';
-  const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''
-    }`;
+  const containerClass = `${styles.mainBackground} ${
+    mounted && isDark ? styles.darkModeActive : ''
+  }`;
+
+  // =========================
+  // Actions
+  // =========================
 
   const handleExplore = async (projectSlug: string) => {
     setIsDetailLoading(true);
@@ -64,6 +73,10 @@ export default function ProjectsClientWrapper({
     setSelectedProject(null);
     window.history.pushState(null, '', '/projects');
   };
+
+  // =========================
+  // Side Effects
+  // =========================
 
   useEffect(() => {
     if (slug) {
@@ -85,6 +98,7 @@ export default function ProjectsClientWrapper({
           MAIN CONTENT
       ========================= */}
       <main className={containerClass}>
+        {/* Header */}
         <div style={{ position: 'relative' }}>
           <Header onToggleHover={setShowTooltip} />
           <AnimatePresence>
@@ -101,13 +115,15 @@ export default function ProjectsClientWrapper({
           </AnimatePresence>
         </div>
 
+        {/* Status Filter */}
         <div className={styles.filterContainer}>
           {['all', 'completed', 'ongoing', 'concept'].map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status as any)}
-              className={`${styles.filterTab} ${filter === status ? styles.activeTab : ''
-                }`}
+              className={`${styles.filterTab} ${
+                filter === status ? styles.activeTab : ''
+              }`}
             >
               {status.toUpperCase()}
               {filter === status && (
@@ -120,36 +136,38 @@ export default function ProjectsClientWrapper({
           ))}
         </div>
 
+        {/* Media Type Drawer */}
         <div
           className={styles.drawerWrapper}
-          onMouseEnter={() => setShowCategoryTooltip(true)}
-          onMouseLeave={() => setShowCategoryTooltip(false)}
+          onMouseEnter={() => setShowMediaTooltip(true)}
+          onMouseLeave={() => setShowMediaTooltip(false)}
         >
-          <CategoryDrawer
-            categories={availableCategories}
-            activeCategory={categoryFilter}
-            onCategoryChange={setCategoryFilter}
+          <MediaTypeDrawer
+            activeMediaType={mediaFilter}
+            onMediaTypeChange={setMediaFilter}
           />
+
           <AnimatePresence>
-            {showCategoryTooltip && (
+            {showMediaTooltip && (
               <motion.div
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 className={styles.categoryTooltip}
               >
-                Search by category
+                Filter by media type
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
+        {/* Content */}
         <div className={styles.content}>
           <div className={styles.projectGrid}>
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((p, i) => (
                 <ProjectCard
-                  key={p._id} // Pastiin Key-nya unik (ID dari Sanity)
+                  key={p._id}
                   project={p}
                   index={i}
                   isDetailLoading={isDetailLoading}
@@ -161,11 +179,12 @@ export default function ProjectsClientWrapper({
           </div>
         </div>
 
+        {/* Detail Panel */}
         <ProjectDetailPanel
           project={selectedProject}
           onClose={closePanel}
-          onCategoryClick={(cat) => {
-            setCategoryFilter(cat);
+          onMediaTypeClick={(mediaType) => {
+            setMediaFilter(mediaType);
             closePanel();
           }}
         />
@@ -174,21 +193,24 @@ export default function ProjectsClientWrapper({
       {/* =========================
           FIXED BACK BUTTON
       ========================= */}
-      {mounted && createPortal(
-        <motion.div
-          className={styles.backButtonWrapper}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          <button
-            className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`}
-            onClick={() => router.push('/')}
+      {mounted &&
+        createPortal(
+          <motion.div
+            className={styles.backButtonWrapper}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
           >
-            ← Back
-          </button>
-        </motion.div>,
-        document.body
-      )}
+            <button
+              className={`${styles.backButton} ${
+                isDark ? styles.darkModeButton : ''
+              }`}
+              onClick={() => router.push('/')}
+            >
+              ← Back
+            </button>
+          </motion.div>,
+          document.body
+        )}
     </>
   );
 }

@@ -1,18 +1,24 @@
-import type {StructureResolver} from 'sanity/structure'
-import { 
-  BookIcon, 
-  EditIcon, 
-  DocumentIcon, 
-  CaseIcon, 
-  UsersIcon, 
-  TagsIcon 
+// src/sanity/structure.ts
+import type { StructureResolver } from 'sanity/structure'
+import {
+  BookIcon,
+  EditIcon,
+  DocumentIcon,
+  CaseIcon,
+  UsersIcon,
+  TagsIcon,
+  ArchiveIcon,
+  FolderIcon,
 } from '@sanity/icons'
 
 export const structure: StructureResolver = (S) =>
   S.list()
     .title('Webrnawa Studio')
     .items([
-      // 1. Journaling - The Personal Space
+
+      /* ===============================
+         1. JOURNALING
+         =============================== */
       S.listItem()
         .title('Personal Journal')
         .icon(EditIcon)
@@ -23,7 +29,9 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
-      // 2. Documentation - The Learning Hub
+      /* ===============================
+         2. LEARNING DOCS
+         =============================== */
       S.listItem()
         .title('Learning Docs')
         .icon(BookIcon)
@@ -34,7 +42,9 @@ export const structure: StructureResolver = (S) =>
 
       S.divider(),
 
-      // 3. Views & Opinions - The Public Voice
+      /* ===============================
+         3. ARTICLES
+         =============================== */
       S.listItem()
         .title('Articles & Opinions')
         .icon(DocumentIcon)
@@ -42,57 +52,152 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title('Content Management')
             .items([
-              S.documentTypeListItem('post').title('Published Posts').icon(DocumentIcon),
-              S.documentTypeListItem('category').title('Categories').icon(TagsIcon),
-              S.documentTypeListItem('author').title('Authors/Profile').icon(UsersIcon),
+              S.documentTypeListItem('post')
+                .title('Published Posts')
+                .icon(DocumentIcon),
+
+              S.documentTypeListItem('author')
+                .title('Authors / Profile')
+                .icon(UsersIcon),
             ])
         ),
 
       S.divider(),
 
-      // 4. Portfolio - The Proof of Work
+      /* ===============================
+         4. PORTFOLIO SYSTEM
+         =============================== */
       S.listItem()
-  .title('Project Portfolio')
-  .icon(CaseIcon)
-  .child(
-    S.list()
-      .title('Portfolio Management')
-      .items([
-        // Tampilkan semua project tanpa filter
-        S.listItem()
-          .title('All Projects')
-          .icon(CaseIcon)
-          .child(S.documentTypeList('portfolioItem').title('All Projects')),
+        .title('Project Portfolio')
+        .icon(CaseIcon)
+        .child(
+          S.list()
+            .title('Portfolio Engine')
+            .items([
 
-        S.divider(),
+              /* ---------- All Projects ---------- */
+              S.listItem()
+                .title('All Projects')
+                .icon(ArchiveIcon)
+                .child(
+                  S.documentTypeList('portfolioItem')
+                    .title('All Projects')
+                ),
 
-        // 1. Filter berdasarkan Category (Parent)
-        S.listItem()
-          .title('Projects by Main Category')
-          .child(
-            S.documentTypeList('category')
-              .title('Main Categories')
-              .child(categoryId =>
-                S.documentTypeList('portfolioItem')
-                  .title('Projects')
-                  .filter('_type == "portfolioItem" && category._ref == $categoryId')
-                  .params({ categoryId })
-              )
-          ),
+              S.divider(),
 
-        // 2. Filter berdasarkan Categories (Sub/Array)
-        S.listItem()
-          .title('Projects by Output (Sub)')
-          .child(
-            S.documentTypeList('category')
-              .title('Output Types')
-              .child(categoryId =>
-                S.documentTypeList('portfolioItem')
-                  .title('Projects')
-                  .filter('_type == "portfolioItem" && $categoryId in categories[]._ref')
-                  .params({ categoryId })
-              )
-          ),
-        ])
-      ),
+              /* ---------- By Main Category (Domain) ---------- */
+              S.listItem()
+                .title('By Main Category (Domain)')
+                .icon(FolderIcon)
+                .child(
+                  S.documentTypeList('category')
+                    .title('Main Categories (Domain)')
+                    .filter('_type == "category" && type == "domain"')
+                    .child(domainId =>
+                      S.documentTypeList('portfolioItem')
+                        .title('Projects')
+                        .filter('_type == "portfolioItem" && mainCategory._ref == $domainId')
+                        .params({ domainId })
+                    )
+                ),
+
+              S.divider(),
+
+              /* ---------- By Output Category (Sub / Output) ---------- */
+              S.listItem()
+                .title('By Output Category')
+                .icon(TagsIcon)
+                .child(
+                  S.documentTypeList('category')
+                    .title('Output Categories')
+                    .filter('_type == "category" && type == "output"')
+                    .child(outputId =>
+                      S.documentTypeList('portfolioItem')
+                        .title('Projects')
+                        .filter('_type == "portfolioItem" && outputCategory._ref == $outputId')
+                        .params({ outputId })
+                    )
+                ),
+
+              S.divider(),
+
+              /* ---------- By Media Type ---------- */
+              S.listItem()
+                .title('By Media Type')
+                .icon(DocumentIcon)
+                .child(
+                  S.list()
+                    .title('Media Filters')
+                    .items([
+
+                      S.listItem()
+                        .title('YouTube Videos')
+                        .child(
+                          S.documentTypeList('portfolioItem')
+                            .title('Video Projects')
+                            .filter('_type == "portfolioItem" && displayType == "video"')
+                        ),
+
+                      S.listItem()
+                        .title('PDF Documents')
+                        .child(
+                          S.documentTypeList('portfolioItem')
+                            .title('PDF Projects')
+                            .filter('_type == "portfolioItem" && displayType == "pdf"')
+                        ),
+
+                      S.listItem()
+                        .title('GitHub Repositories')
+                        .child(
+                          S.documentTypeList('portfolioItem')
+                            .title('GitHub Projects')
+                            .filter('_type == "portfolioItem" && displayType == "github"')
+                        ),
+
+                      S.listItem()
+                        .title('Poster / Images')
+                        .child(
+                          S.documentTypeList('portfolioItem')
+                            .title('Poster Projects')
+                            .filter('_type == "portfolioItem" && displayType == "poster"')
+                        ),
+                    ])
+                ),
+
+            ])
+        ),
+
+      S.divider(),
+
+      /* ===============================
+         5. TAXONOMY MANAGEMENT
+         =============================== */
+      S.listItem()
+        .title('Taxonomy System')
+        .icon(TagsIcon)
+        .child(
+          S.list()
+            .title('System Categories')
+            .items([
+
+              S.listItem()
+                .title('Main Categories (Domain)')
+                .icon(FolderIcon)
+                .child(
+                  S.documentTypeList('category')
+                    .title('Main Categories (Domain)')
+                    .filter('_type == "category" && type == "domain"')
+                ),
+
+              S.listItem()
+                .title('Output Categories')
+                .icon(TagsIcon)
+                .child(
+                  S.documentTypeList('category')
+                    .title('Output Categories')
+                    .filter('_type == "category" && type == "output"')
+                ),
+            ])
+        ),
     ])

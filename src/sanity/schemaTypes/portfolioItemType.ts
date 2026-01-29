@@ -23,14 +23,15 @@ export default defineType({
       options: {
         source: 'title',
         maxLength: 96,
-        slugify: (input) => input
-          .toLowerCase()
-          .replace(/\b(for|the|a|with|and|in|on|at|to|of|by|di|ke|dari|dan|untuk|yang|pada|dengan|buat)\b/g, '') // Bantai stop words English & Indo
-          .trim()
-          .replace(/[^\w\s-]/g, '') // Hapus karakter aneh biar gak error
-          .replace(/\s+/g, '-')     // Spasi jadi dash
-          .replace(/-+/g, '-')      // Bersihin kalau ada double dash (--) gara-gara kata yang dihapus
-          .slice(0, 96)
+        slugify: (input) =>
+          input
+            .toLowerCase()
+            .replace(/\b(for|the|with|and|of|by|dari|dan|untuk|yang|pada|dengan|buat)\b/g, '')
+            .trim()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .slice(0, 96),
       },
       validation: (Rule) => Rule.required(),
     }),
@@ -52,11 +53,14 @@ export default defineType({
     }),
 
     defineField({
-      name: 'category',
-      title: 'Category (Parent)',
+      name: 'mainCategory',
+      title: 'Main Category (Domain)',
       type: 'reference',
       to: [{ type: 'category' }],
-      description: 'Place this project under a relevant category! (PubRel, Marketing, Dev, etc)',
+      options: {
+        filter: 'type == "domain"',
+      },
+      description: 'Select the main domain category (Marketing, Dev, PR, AI, etc)',
       validation: (Rule) => Rule.required(),
     }),
 
@@ -66,34 +70,46 @@ export default defineType({
       type: 'array',
       of: [{ type: 'string' }],
       options: { layout: 'tags' },
-      description: 'Add  skill or tech stack that you use in this project. (React, Next.js, Digital Marketing, etc.)',
+      description: 'Add skill or tech stack that you use in this project. (React, Next.js, Digital Marketing, etc.)',
     }),
 
     defineField({
       name: 'projectUrl',
       title: 'Link / URL Address',
-      description: 'Add a link address for this project. (URL)',
       type: 'url',
-      validation: (Rule) => Rule.uri({
-        scheme: ['http', 'https'],
-      }),
+      description: 'Add a link address for this project. (URL)',
+      validation: (Rule) =>
+        Rule.uri({
+          scheme: ['http', 'https'],
+        }),
     }),
-    
+
     defineField({
       name: 'displayType',
       title: 'Media Display Type',
-      description: 'Pilih jenis media utama yang mau ditampilin di detail project.',
       type: 'string',
+      description: 'Pilih jenis media utama yang mau ditampilin di detail project.',
       options: {
         list: [
-          { title: '📺 YouTube Video', value: 'video' },
-          { title: '🖼️ Poster / Image', value: 'poster' },
-          { title: '📄 PDF Document', value: 'pdf' },
-          { title: '💻 GitHub Repo', value: 'github' },
+          { title: 'Video', value: 'video' },
+          { title: 'Poster', value: 'poster' },
+          { title: 'PDF', value: 'pdf' },
+          { title: 'Repo', value: 'github' },
+          { title: 'Feeds', value: 'feeds'},
         ],
         layout: 'radio',
       },
       initialValue: 'video',
+    }),
+
+    // 🔹 Mirror Field (for schema logic, not UI)
+    defineField({
+      name: 'outputType',
+      title: 'Output Type (Mirror)',
+      type: 'string',
+      hidden: true,
+      readOnly: true,
+      description: 'Mirror of output category slug for schema logic',
     }),
 
     defineField({
@@ -101,10 +117,19 @@ export default defineType({
       title: 'PDF File',
       type: 'file',
       description: 'Upload your project PDF documentation here.',
-      options: {
-        accept: '.pdf', // Biar gak ada yang upload file aneh-aneh
-      },
-      hidden: ({ document }) => document?.displayType !== 'pdf',
+      options: { accept: '.pdf' },
+      hidden: ({ document }) => document?.outputType !== 'pdf',
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (
+            (context.document?.outputType === 'pdf' ||
+              context.document?.displayType === 'pdf') &&
+            !value
+          ) {
+            return 'PDF file is required when display type is PDF'
+          }
+          return true
+        }),
     }),
 
     defineField({
@@ -113,15 +138,27 @@ export default defineType({
       type: 'image',
       description: 'Add your project poster image. (Poster)',
       options: { hotspot: true },
-      hidden: ({ document }) => document?.displayType !== 'poster',
+      hidden: ({ document }) =>
+        !(document?.displayType === 'poster' || document?.outputType === 'poster'),
       fields: [
         {
           name: 'alt',
+          title: 'Alt Text',
           type: 'string',
           description: 'Alt text for your poster image. (Alt Text)',
-          title: 'Alt Text',
-        }
+        },
       ],
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (
+            (context.document?.displayType === 'poster' ||
+              context.document?.outputType === 'poster') &&
+            !value
+          ) {
+            return 'Poster image is required when display type is Poster'
+          }
+          return true
+        }),
     }),
 
     defineField({
@@ -133,12 +170,13 @@ export default defineType({
         list: [
           { title: 'Landscape (Horizontal)', value: 'landscape' },
           { title: 'Portrait (Vertical)', value: 'portrait' },
-          { title: 'Square (1:1)', value: 'square' }, // Tambahin ini
+          { title: 'Square (1:1)', value: 'square' },
         ],
         layout: 'radio',
       },
       initialValue: 'portrait',
-      hidden: ({ document }) => document?.displayType !== 'poster', // Sama kayak posterImage
+      hidden: ({ document }) =>
+        !(document?.displayType === 'poster' || document?.outputType === 'poster'),
     }),
 
     defineField({
@@ -146,7 +184,19 @@ export default defineType({
       title: 'YouTube Video ID',
       type: 'string',
       description: 'Paste your unique YouTube video ID here. (Example: sCssw_-MTZI)',
-      hidden: ({ document }) => document?.displayType !== 'video',
+      hidden: ({ document }) =>
+        !(document?.displayType === 'video' || document?.outputType === 'video'),
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (
+            (context.document?.displayType === 'video' ||
+              context.document?.outputType === 'video') &&
+            !value
+          ) {
+            return 'YouTube ID is required when display type is Video'
+          }
+          return true
+        }),
     }),
 
     defineField({
@@ -158,11 +208,11 @@ export default defineType({
       fields: [
         {
           name: 'alt',
-          type: 'string',
           title: 'Alternative Text',
+          type: 'string',
           description: 'Alt text for your cover image. (Alt Text).',
           validation: (Rule) => Rule.required(),
-        }
+        },
       ],
       validation: (Rule) => Rule.required(),
     }),
@@ -173,7 +223,7 @@ export default defineType({
       type: 'blockContent',
       description: 'Describe your problem and the solution within this project.',
     }),
-    
+
     defineField({
       name: 'relatedDocs',
       title: 'Notes & Documentation',
@@ -191,19 +241,35 @@ export default defineType({
     }),
 
     defineField({
-      name: 'categories',
-      title: 'Categories (Sub)',
-      description: 'What is this project output? (Poster, Video, etc - Sub).',
-      type: 'array',
-      of: [{ type: 'reference', to: { type: 'category' } }],
+      name: 'outputCategory',
+      title: 'Output Category',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      options: {
+        filter: 'type == "output"',
+      },
+      description: 'Select output type (Video, PDF, Repo, Website, App, etc)',
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
       name: 'githubRepo',
       title: 'GitHub Repository Path',
-      description: 'If this a GitHub repository, paste the path here. (Example: rnawa/my-web3-project)',
       type: 'string',
-      hidden: ({ document }) => document?.displayType !== 'github',
+      description: 'If this a GitHub repository, paste the path here. (Example: rnawa/my-web3-project)',
+      hidden: ({ document }) =>
+        !(document?.displayType === 'github' || document?.outputType === 'github'),
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          if (
+            (context.document?.displayType === 'github' ||
+              context.document?.outputType === 'github') &&
+            !value
+          ) {
+            return 'GitHub repository path is required when display type is GitHub'
+          }
+          return true
+        }),
     }),
 
     defineField({
@@ -212,14 +278,15 @@ export default defineType({
       type: 'boolean',
       description: 'If this project has a GitHub repository, enable the file explorer.',
       initialValue: true,
-      hidden: ({ document }) => document?.displayType !== 'github',
+      hidden: ({ document }) =>
+        !(document?.displayType === 'github' || document?.outputType === 'github'),
     }),
   ],
-  
+
   preview: {
     select: {
       title: 'title',
-      category: 'category.title',
+      category: 'mainCategory.title',
       media: 'coverImage',
     },
     prepare({ title, category, media }) {

@@ -52,9 +52,15 @@ a:hover {
   opacity: 0.8;
 }
 
-img, picture, video, canvas, svg {
+img, picture, video, canvas {
   display: block;
   max-width: 100%;
+}
+
+main svg,
+.app-content svg {
+  max-width: 100%;
+  display: block;
 }
 
 .antialiased {
@@ -66,4 +72,10 @@ img, picture, video, canvas, svg {
   html {
     color-scheme: dark;
   }
+}
+
+#sanity,
+.sanity-studio,
+[data-ui="Root"] svg {
+  max-width: none !important;
 }

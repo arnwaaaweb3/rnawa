@@ -1,57 +1,93 @@
-import {TagIcon} from '@sanity/icons'
-import {defineField, defineType} from 'sanity'
+// schemas/categoryType.ts
+import { TagIcon, FolderIcon, DocumentIcon } from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
 
 export const categoryType = defineType({
   name: 'category',
-  title: 'Category & Output',
+  title: 'Taxonomy',
   type: 'document',
   icon: TagIcon,
+
   fields: [
+
+    // ======================
+    // BASIC IDENTITY
+    // ======================
     defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      validation: Rule => Rule.required(),
     }),
+
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: {
-        source: 'title',
-      },
-      validation: (Rule) => Rule.required(),
+      options: { source: 'title' },
+      validation: Rule => Rule.required(),
     }),
+
+    // ======================
+    // TAXONOMY TYPE
+    // ======================
     defineField({
-      name: 'classification',
-      title: 'Classification',
+      name: 'type',
+      title: 'Taxonomy Type',
       type: 'string',
-      description: 'Bedain mana yang Kategori Utama (Dev, Marketing) mana yang Output (Video, Poster).',
       options: {
         list: [
-          { title: 'Main Category (Parent)', value: 'parent' },
-          { title: 'Project Output (Sub)', value: 'sub' },
+          { title: 'Main Category (Domain)', value: 'domain' },
+          { title: 'Sub Category (Output)', value: 'output' },
         ],
         layout: 'radio',
       },
-      initialValue: 'parent',
-      validation: (Rule) => Rule.required(),
+      validation: Rule => Rule.required(),
+      description: 'Domain = knowledge/work field | Output = project deliverable type',
     }),
+
+    // ======================
+    // DOMAIN CONTEXT (OPTIONAL)
+    // ======================
+    defineField({
+      name: 'domainContext',
+      title: 'Domain Context (Optional)',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      description: 'Optional domain relation for output context (not structural)',
+      hidden: ({ document }) => document?.type !== 'output',
+      options: {
+        filter: 'type == "domain"',
+      },
+    }),
+
+    // ======================
+    // DESCRIPTION
+    // ======================
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
     }),
+
   ],
+
   preview: {
     select: {
       title: 'title',
-      type: 'classification',
+      type: 'type',
+      domain: 'domainContext.title',
     },
-    prepare({ title, type }) {
+    prepare({ title, type, domain }) {
       return {
-        title: title,
-        subtitle: type === 'parent' ? '🏢 Main Category' : '📦 Project Output',
+        title,
+        subtitle:
+          type === 'domain'
+            ? '🏢 Domain (Main Category)'
+            : domain
+              ? `📦 Output → ${domain}`
+              : '📦 Output (Global)',
+        media: type === 'domain' ? FolderIcon : DocumentIcon,
       }
     },
   },
