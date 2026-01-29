@@ -20,41 +20,40 @@ export const ProjectCard = ({
   isSelected,
   onExplore,
 }: ProjectCardProps) => {
-  // Ambil mounted sisan nggo jaga-jaga hydration mismatch
   const { theme, mounted } = useTheme(); 
   const isDark = theme === 'dark';
 
   return (
     <motion.div
-      layout // KUNCINYA DI SINI: Biar Framer Motion ngitung transisi posisi otomatis
+      layout 
       initial={{ opacity: 0, scale: 0.9, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
       transition={{ 
         duration: 0.4, 
-        delay: index * 0.05, // Stagger effect biar munculnya satu-satu
+        delay: index * 0.05, 
         ease: "easeOut" 
       }}
       className={styles.projectCard}
     >
-      {/* Visual effect mung mlaku animasine nek wis bener-bener mounted */}
       <motion.div
         className={styles.visualEffect}
         animate={mounted ? {
           backgroundColor: isDark ? '#190b61' : '#ff85e5',
           scale: isDark ? 0.85 : 1,
           x: isDark ? 120 : -60,
-        } : {}} // Nek durung mounted, jarke kosong (ikut CSS default)
+        } : {}} 
         transition={{ duration: 0.8 }}
       />
 
-      {project.imageUrl && (
+      {/* Sekarang TS bakal senyum liat ini karena coverImage.asset.url udah divalidasi di types.ts */}
+      {project.coverImage?.asset?.url && (
         <div className={styles.imageWrapper}>
           <Image
-            src={project.imageUrl}
-            alt={project.title}
+            src={project.coverImage.asset.url} 
+            alt={project.coverImage.alt || project.title} 
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Tambah iki ben Next.js gak rewel
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className={styles.cardImage}
           />
         </div>
@@ -63,10 +62,16 @@ export const ProjectCard = ({
       <div className={styles.cardInfo}>
         <div className={styles.cardHeader}>
           <span className={styles.statusBadge}>
-            {project.projectStatus}
+            {project.projectStatus.toUpperCase()}
           </span>
 
           <div className={styles.cardCategoryList}>
+            {project.mainCategory && (
+              <span className={styles.miniTag}>
+                #{project.mainCategory.title}
+              </span>
+            )}
+            
             {project.categories?.map((cat) => (
               <span key={cat.slug} className={styles.miniTag}>
                 #{cat.title}
@@ -80,7 +85,7 @@ export const ProjectCard = ({
         <button
           className={styles.detailButton}
           onClick={() => onExplore(project.slug)}
-          disabled={isDetailLoading && isSelected} // Tambah disabled ben gak diklik ping pindho
+          disabled={isDetailLoading && isSelected}
         >
           {isDetailLoading && isSelected
             ? 'Opening...'

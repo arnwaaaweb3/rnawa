@@ -141,6 +141,17 @@
   color: #0a0a0a;
 }
 
+.categoryTabText {
+  display: flex;
+  align-items: center; /* Ini yang bikin sejajar secara vertikal */
+  justify-content: center;
+  gap: 8px; /* Kasih jarak biar nggak dempetan kayak angkot */
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
 /* ===============================
    DARK MODE (GLOBAL)
    =============================== */

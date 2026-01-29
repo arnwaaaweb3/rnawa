@@ -132,7 +132,7 @@ export const structure: StructureResolver = (S) =>
                     .items([
 
                       S.listItem()
-                        .title('YouTube Videos')
+                        .title('Video')
                         .child(
                           S.documentTypeList('portfolioItem')
                             .title('Video Projects')

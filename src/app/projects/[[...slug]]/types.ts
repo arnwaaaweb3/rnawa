@@ -1,35 +1,35 @@
+// src/app/projects/[[...slug]]/types.ts
 import { PortableTextBlock } from '@portabletext/types';
 
 export interface Category {
   title: string;
   slug: string;
-  type: 'domain' | 'output'; // Biar sinkron sama taxonomy kamu
+  type: 'domain' | 'output';
 }
 
 export interface Project {
   _id: string;
   title: string;
-  projectStatus: 'completed' | 'ongoing' | 'concept'; // Biar nggak asal string
+  projectStatus: 'completed' | 'ongoing' | 'concept';
   slug: string;
+  
+  // Struktur yang bener buat nampung dereferenced asset dari GROQ
   coverImage: {
     asset: {
-      _ref: string;
-      _type: string;
+      _id?: string;
+      url: string;
     };
-    alt: string; // Kamu kasih validation: Rule.required() kan? Jadi wajib ada.
+    alt: string;
   };
   
-  // Update ini! Sesuaikan dengan schema portfolioItemType.ts
   mainCategory?: Category; 
   outputCategory?: Category;
-  categories?: Category[]; // Jaga-jaga kalau query GROQ kamu nge-map ke sini
+  categories?: Category[]; 
   
   description?: PortableTextBlock[];
   youtubeId?: string;
   githubRepo?: string;
   enableExplorer?: boolean;
-  
-  // DOSA 1: Tambahin github dan feeds di sini!
   displayType: 'video' | 'poster' | 'pdf' | 'github' | 'feeds';
   
   imageOrientation?: 'landscape' | 'portrait' | 'square'; 
