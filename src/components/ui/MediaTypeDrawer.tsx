@@ -10,11 +10,11 @@ import { useTheme } from '@/context/ThemeContext'
 // Types
 // =========================
 
-export type MediaType = 'video' | 'poster' | 'pdf' | 'github' | 'feeds'
+export type MediaType = 'all' | 'video' | 'poster' | 'pdf' | 'github' | 'feeds'
 
 interface MediaTypeDrawerProps {
-  activeMediaType: MediaType | null
-  onMediaTypeChange: (type: MediaType | null) => void
+  activeMediaType: MediaType // Hapus null, ganti jadi MediaType
+  onMediaTypeChange: (type: MediaType) => void // Hapus null
 }
 
 // =========================
@@ -26,12 +26,12 @@ const MEDIA_TYPES: {
   value: MediaType
   icon: React.ReactNode
 }[] = [
-  { label: 'Video', value: 'video', icon: <MdVideoLibrary size={18} /> },
-  { label: 'PDF', value: 'pdf', icon: <MdPictureAsPdf size={18} /> },
-  { label: 'Poster', value: 'poster', icon: <MdImage size={18} /> },
-  { label: 'Repo', value: 'github', icon: <MdCode size={18} /> },
-  { label: 'Feeds', value: 'feeds', icon: <MdViewCarousel size={18} /> },
-]
+    { label: 'Video', value: 'video', icon: <MdVideoLibrary size={18} /> },
+    { label: 'PDF', value: 'pdf', icon: <MdPictureAsPdf size={18} /> },
+    { label: 'Poster', value: 'poster', icon: <MdImage size={18} /> },
+    { label: 'Repo', value: 'github', icon: <MdCode size={18} /> },
+    { label: 'Feeds', value: 'feeds', icon: <MdViewCarousel size={18} /> },
+  ]
 
 // =========================
 // Component
@@ -48,9 +48,8 @@ export const MediaTypeDrawer = ({
   // Styles
   // =========================
 
-  const drawerClass = `${styles.drawerWrapper} ${
-    mounted && darkMode ? styles.darkModeActive : ''
-  }`
+  const drawerClass = `${styles.drawerWrapper} ${mounted && darkMode ? styles.darkModeActive : ''
+    }`
 
   // =========================
   // Render
@@ -60,9 +59,8 @@ export const MediaTypeDrawer = ({
     <div className={drawerClass}>
       {/* Trigger Button */}
       <motion.button
-        className={`${styles.drawerTrigger} ${
-          isDrawerOpen ? styles.triggerActive : ''
-        }`}
+        className={`${styles.drawerTrigger} ${isDrawerOpen ? styles.triggerActive : ''
+          }`}
         onClick={() => setIsDrawerOpen(!isDrawerOpen)}
         whileHover={{ scale: 1 }}
         whileTap={{ scale: 0.95 }}
@@ -85,12 +83,9 @@ export const MediaTypeDrawer = ({
             <div className={styles.drawerContent}>
               {/* Reset Filter */}
               <motion.button
-                onClick={() => onMediaTypeChange(null)}
-                className={`${styles.categoryTab} ${
-                  activeMediaType === null ? styles.activeCategory : ''
-                }`}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.95 }}
+                onClick={() => onMediaTypeChange('all')} // Kirim 'all'
+                className={`${styles.categoryTab} ${activeMediaType === 'all' ? styles.activeCategory : ''
+                  }`}
               >
                 <span className={styles.categoryTabText}>ALL</span>
               </motion.button>
@@ -100,9 +95,8 @@ export const MediaTypeDrawer = ({
                 <motion.button
                   key={media.value}
                   onClick={() => onMediaTypeChange(media.value)}
-                  className={`${styles.categoryTab} ${
-                    activeMediaType === media.value ? styles.activeCategory : ''
-                  }`}
+                  className={`${styles.categoryTab} ${activeMediaType === media.value ? styles.activeCategory : ''
+                    }`}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >

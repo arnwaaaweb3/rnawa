@@ -1,3 +1,4 @@
+// src/app/projects/[[...slug]]/ProjectsClientWrapper.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -29,18 +30,12 @@ export default function ProjectsClientWrapper({
   const { theme, mounted, setIsSidebarOpen, setIsProjectDetailOpen } = useTheme();
 
   const [projects] = useState<Project[]>(initialProjects);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(
-    initialSelected
-  );
+  const [selectedProject, setSelectedProject] = useState<Project | null>(initialSelected);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showMediaTooltip, setShowMediaTooltip] = useState(false);
 
-  /**
-   * Filters Hook
-   * filter        = project status (completed / ongoing / concept / all)
-   * mediaFilter   = displayType (video / poster / pdf / github / feeds)
-   */
+  // Filter Hook: status (completed/ongoing/concept) & media type (video/pdf/github/etc)
   const {
     filter,
     setFilter,
@@ -50,9 +45,7 @@ export default function ProjectsClientWrapper({
   } = useProjectFilters(projects);
 
   const isDark = theme === 'dark';
-  const containerClass = `${styles.mainBackground} ${
-    mounted && isDark ? styles.darkModeActive : ''
-  }`;
+  const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
 
   // =========================
   // Actions
@@ -63,7 +56,10 @@ export default function ProjectsClientWrapper({
     try {
       const data = await fetchSingleProject(projectSlug);
       setSelectedProject(data);
+      // Update URL tanpa reload full page
       window.history.pushState(null, '', `/projects/${projectSlug}`);
+    } catch (err) {
+      console.error("Morta says: Gagal ambil data project! Cek koneksi atau GROQ-mu.", err);
     } finally {
       setIsDetailLoading(false);
     }
@@ -88,17 +84,12 @@ export default function ProjectsClientWrapper({
     }
   }, [slug, setIsSidebarOpen, setIsProjectDetailOpen]);
 
-  if (!mounted) {
-    return <div className={styles.mainBackground} />;
-  }
+  if (!mounted) return <div className={styles.mainBackground} />;
 
   return (
     <>
-      {/* =========================
-          MAIN CONTENT
-      ========================= */}
       <main className={containerClass}>
-        {/* Header */}
+        {/* Header Section */}
         <div style={{ position: 'relative' }}>
           <Header onToggleHover={setShowTooltip} />
           <AnimatePresence>
@@ -115,15 +106,13 @@ export default function ProjectsClientWrapper({
           </AnimatePresence>
         </div>
 
-        {/* Status Filter */}
+        {/* Status Filter Tabs */}
         <div className={styles.filterContainer}>
           {['all', 'completed', 'ongoing', 'concept'].map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status as any)}
-              className={`${styles.filterTab} ${
-                filter === status ? styles.activeTab : ''
-              }`}
+              className={`${styles.filterTab} ${filter === status ? styles.activeTab : ''}`}
             >
               {status.toUpperCase()}
               {filter === status && (
@@ -136,7 +125,7 @@ export default function ProjectsClientWrapper({
           ))}
         </div>
 
-        {/* Media Type Drawer */}
+        {/* Media Type Filter (Drawer) */}
         <div
           className={styles.drawerWrapper}
           onMouseEnter={() => setShowMediaTooltip(true)}
@@ -161,7 +150,7 @@ export default function ProjectsClientWrapper({
           </AnimatePresence>
         </div>
 
-        {/* Content */}
+        {/* Project Grid */}
         <div className={styles.content}>
           <div className={styles.projectGrid}>
             <AnimatePresence mode="popLayout">
@@ -179,7 +168,7 @@ export default function ProjectsClientWrapper({
           </div>
         </div>
 
-        {/* Detail Panel */}
+        {/* Project Detail Overlay */}
         <ProjectDetailPanel
           project={selectedProject}
           onClose={closePanel}
@@ -190,9 +179,7 @@ export default function ProjectsClientWrapper({
         />
       </main>
 
-      {/* =========================
-          FIXED BACK BUTTON
-      ========================= */}
+      {/* Portal for Floating Back Button */}
       {mounted &&
         createPortal(
           <motion.div
@@ -201,9 +188,7 @@ export default function ProjectsClientWrapper({
             animate={{ opacity: 1, scale: 1 }}
           >
             <button
-              className={`${styles.backButton} ${
-                isDark ? styles.darkModeButton : ''
-              }`}
+              className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`}
               onClick={() => router.push('/')}
             >
               ← Back

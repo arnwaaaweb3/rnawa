@@ -3,39 +3,41 @@ import { PortableTextBlock } from '@portabletext/types';
 export interface Category {
   title: string;
   slug: string;
-  parent?: string;
+  type: 'domain' | 'output'; // Biar sinkron sama taxonomy kamu
 }
 
 export interface Project {
   _id: string;
   title: string;
-  projectStatus: string;
+  projectStatus: 'completed' | 'ongoing' | 'concept'; // Biar nggak asal string
   slug: string;
-  imageUrl: string;
-  categories?: Category[];
+  coverImage: {
+    asset: {
+      _ref: string;
+      _type: string;
+    };
+    alt: string; // Kamu kasih validation: Rule.required() kan? Jadi wajib ada.
+  };
+  
+  // Update ini! Sesuaikan dengan schema portfolioItemType.ts
+  mainCategory?: Category; 
+  outputCategory?: Category;
+  categories?: Category[]; // Jaga-jaga kalau query GROQ kamu nge-map ke sini
+  
   description?: PortableTextBlock[];
-  gallery?: string[];
   youtubeId?: string;
   githubRepo?: string;
   enableExplorer?: boolean;
-  displayType: 'video' | 'poster' | 'pdf';
+  
+  // DOSA 1: Tambahin github dan feeds di sini!
+  displayType: 'video' | 'poster' | 'pdf' | 'github' | 'feeds';
+  
   imageOrientation?: 'landscape' | 'portrait' | 'square'; 
-  pdfFile?: {
-    asset: {
-      url: string;
-    };
-  };
+  pdfFile?: any; 
   posterImage?: {
     asset: {
       _id: string;
       url: string;
-      metadata: {
-        dimensions: {
-          width: number;
-          height: number;
-          aspectRatio: number;
-        };
-      };
     };
     alt?: string;
   };

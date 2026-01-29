@@ -16,12 +16,15 @@ import GitHubExplorer from '@/components/github/GitHubExplorer';
 interface PanelProps {
   project: Project | null;
   onClose: () => void;
-  onCategoryClick: (cat: string) => void;
+  // Type-safe media filters sesuai hook useProjectFilters
+  onMediaTypeClick: (mediaType: 'all' | 'video' | 'poster' | 'pdf' | 'github' | 'feeds') => void;
 }
 
-export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelProps) => {
-  const { mounted, darkMode } = useTheme();
+export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: PanelProps) => {
+  const { mounted, theme } = useTheme(); // Gunakan theme dari context
   const [showCloseTooltip, setShowCloseTooltip] = useState(false);
+
+  const darkMode = theme === 'dark';
 
   // Guard clause buat nunggu hydration & mastiin project ada
   if (!mounted || !project) return null;
@@ -32,7 +35,7 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
     : project.pdfFile?.asset?.url;
 
   // Flag buat mode FULL VIEW GITHUB (KIRI)
-  const isGithubFullView = !!(project.enableExplorer && project.githubRepo);
+  const isGithubFullView = !!(project.enableExplorer && project.githubRepo && project.displayType === 'github');
 
   return (
     <AnimatePresence mode="wait">
@@ -165,17 +168,17 @@ export const ProjectDetailPanel = ({ project, onClose, onCategoryClick }: PanelP
           </div>
 
           <div className={styles.panelCategoryWrapper}>
-            <p className={styles.panelLabel}>Classified Under:</p>
+            <p className={styles.panelLabel}>Classified Under Media:</p>
             <div className={styles.panelCategoryList}>
-              {project.categories?.map((cat) => (
+                {/* Gunakan displayType sebagai tag karena kamu sudah 
+                   menghilangkan sub-category filter demi media filter
+                */}
                 <button
-                  key={cat.slug}
                   className={styles.panelCategoryTag}
-                  onClick={() => onCategoryClick(cat.title)}
+                  onClick={() => onMediaTypeClick(project.displayType as any)}
                 >
-                  # {cat.title.toUpperCase()}
+                  # {project.displayType?.toUpperCase() || 'GENERAL'}
                 </button>
-              ))}
             </div>
           </div>
         </motion.div>
