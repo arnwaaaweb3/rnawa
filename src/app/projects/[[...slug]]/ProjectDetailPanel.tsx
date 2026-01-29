@@ -48,7 +48,7 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
         onClick={onClose}
       >
         {/* 1. CONTAINER MEDIA / GITHUB EXPLORER (KIRI) */}
-        {(project.youtubeId || project.posterImage || pdfUrl || isGithubFullView) && (
+        {(project.youtubeId || project.posterImage || pdfUrl || isGithubFullView || project.displayType === 'feeds') && (
           <motion.div
             key={isGithubFullView ? "github-view" : "media-view"}
             initial={{ opacity: 0, scale: 0.95 }}

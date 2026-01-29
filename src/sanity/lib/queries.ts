@@ -15,6 +15,10 @@ export const PROJECTS_QUERY = `*[_type == "portfolioItem"] | order(publishedAt d
   "mainCategory": mainCategory->{
     title,
     "slug": slug.current
+  },
+  "categories": categories[]->{
+    title,
+    "slug": slug.current
   }
 }`;
 

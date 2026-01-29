@@ -163,9 +163,9 @@ export default defineType({
 
     defineField({
       name: 'imageOrientation',
-      title: 'Poster Orientation',
+      title: 'Image Orientation', // <--- Dah tak ganti jenenge dadi Image Orientation
       type: 'string',
-      description: 'Select the orientation for your poster.',
+      description: 'Select the orientation for your media (Poster/Feeds).',
       options: {
         list: [
           { title: 'Landscape (Horizontal)', value: 'landscape' },
@@ -175,8 +175,13 @@ export default defineType({
         layout: 'radio',
       },
       initialValue: 'portrait',
+      // Proteksi hidden harus menyertakan 'feeds' sisan!
       hidden: ({ document }) =>
-        !(document?.displayType === 'poster' || document?.outputType === 'poster'),
+        !(
+          document?.displayType === 'poster' || 
+          document?.outputType === 'poster' ||
+          document?.displayType === 'feeds'
+        ),
     }),
 
     defineField({
