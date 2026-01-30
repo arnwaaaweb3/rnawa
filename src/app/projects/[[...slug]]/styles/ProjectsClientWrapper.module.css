@@ -24,48 +24,6 @@
 }
 
 /* =========================
-   FILTER
-========================= */
-
-.filterContainer {
-  display: flex;
-  gap: 1rem;
-}
-
-.filterTab {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 1px;
-  color: #ff85e5;
-  position: relative;
-}
-
-.darkModeActive .filterTab {
-  color: #ffffff;
-}
-
-.activeTab {
-  color: #0f0f0f;
-}
-
-.darkModeActive .activeTab {
-  color: #ff85e5;
-}
-
-.activeUnderline {
-  position: absolute;
-  bottom: -0.6rem;
-  left: 0;
-  right: 0;
-  height: 4px;
-  border-radius: 10px;
-  background: #ff85e5;
-}
-
-/* =========================
    TOOLTIP — MODE TOGGLE
 ========================= */
 

@@ -21,7 +21,7 @@ interface PanelProps {
 }
 
 export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: PanelProps) => {
-  const { mounted, theme } = useTheme(); // Gunakan theme dari context
+  const { mounted, theme } = useTheme(); 
   const [showCloseTooltip, setShowCloseTooltip] = useState(false);
 
   const darkMode = theme === 'dark';
@@ -59,13 +59,12 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
             onClick={(e) => e.stopPropagation()}
           >
             {isGithubFullView ? (
-              /* SHOWCASE GITHUB FULL VIEW */
               <div className={styles.fullExplorerContainer}>
                 <GitHubExplorer repoPath={project.githubRepo!} />
               </div>
             ) : (
-              /* REGULAR MEDIA (VIDEO/POSTER/PDF) */
               <>
+                {/* VIDEO HANDLER */}
                 {project.displayType === 'video' && project.youtubeId && (
                   <iframe
                     src={`https://www.youtube.com/embed/${project.youtubeId}`}
@@ -75,15 +74,16 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
                   />
                 )}
 
-                {project.displayType === 'poster' && project.posterImage && (
+                {/* POSTER & FEEDS HANDLER (IMAGE BASED) */}
+                {(project.displayType === 'poster' || project.displayType === 'feeds') && project.posterImage && (
                   <div className={clsx(styles.posterContainer, {
                     [styles.portraitMode]: project.imageOrientation === 'portrait',
                     [styles.landscapeMode]: project.imageOrientation === 'landscape',
-                    [styles.squareMode]: project.imageOrientation === 'square',
+                    [styles.squareMode]: project.imageOrientation === 'square' || project.displayType === 'feeds',
                   })}>
                     <Image
                       src={urlFor(project.posterImage).format('webp').quality(80).url()}
-                      alt={project.posterImage.alt || 'Project Poster'}
+                      alt={project.posterImage.alt || 'Project Media'}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className={styles.posterImageContent}
@@ -93,6 +93,7 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
                   </div>
                 )}
 
+                {/* PDF HANDLER */}
                 {project.displayType === 'pdf' && pdfUrl && (
                   <div className={styles.pdfContainer}>
                     <iframe src={`${pdfUrl}#toolbar=0`} className={styles.pdfFrame} title="Project PDF" />
@@ -115,7 +116,6 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
           className={styles.detailPanel}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Close Button & Tooltip */}
           <div
             className={styles.closePanelWrapper}
             onMouseEnter={() => setShowCloseTooltip(true)}
@@ -158,7 +158,6 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
               <PortableText value={project.description} components={portableTextComponents} />
             )}
 
-            {/* Fallback GitHub Explorer (kalau tidak tampil di kiri/media) */}
             {!isGithubFullView && project.enableExplorer && project.githubRepo && (
               <div className={styles.githubExplorerWrapper}>
                 <h3 className={styles.sectionTitle}>Source Code Explorer</h3>
@@ -170,15 +169,12 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
           <div className={styles.panelCategoryWrapper}>
             <p className={styles.panelLabel}>Classified Under Media:</p>
             <div className={styles.panelCategoryList}>
-                {/* Gunakan displayType sebagai tag karena kamu sudah 
-                   menghilangkan sub-category filter demi media filter
-                */}
-                <button
-                  className={styles.panelCategoryTag}
-                  onClick={() => onMediaTypeClick(project.displayType as any)}
-                >
-                  # {project.displayType?.toUpperCase() || 'GENERAL'}
-                </button>
+              <button
+                className={styles.panelCategoryTag}
+                onClick={() => onMediaTypeClick(project.displayType as any)}
+              >
+                # {project.displayType?.toUpperCase() || 'GENERAL'}
+              </button>
             </div>
           </div>
         </motion.div>

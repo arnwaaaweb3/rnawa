@@ -13,6 +13,7 @@ import { useTheme } from '@/context/ThemeContext';
 import { fetchSingleProject } from '../actions';
 import { Project } from './types';
 import { createPortal } from 'react-dom';
+import { StatusFilter } from '@/components/StatusFilter';
 import styles from '../[[...slug]]/styles/ProjectsClientWrapper.module.css';
 
 interface WrapperProps {
@@ -106,24 +107,11 @@ export default function ProjectsClientWrapper({
           </AnimatePresence>
         </div>
 
-        {/* Status Filter Tabs */}
-        <div className={styles.filterContainer}>
-          {['all', 'completed', 'ongoing', 'concept'].map((status) => (
-            <button
-              key={status}
-              onClick={() => setFilter(status as any)}
-              className={`${styles.filterTab} ${filter === status ? styles.activeTab : ''}`}
-            >
-              {status.toUpperCase()}
-              {filter === status && (
-                <motion.div
-                  layoutId="underline"
-                  className={styles.activeUnderline}
-                />
-              )}
-            </button>
-          ))}
-        </div>
+        {/* Status Filter Tabs - Clean & Modular */}
+        <StatusFilter 
+          currentFilter={filter} 
+          onFilterChange={setFilter} 
+        />
 
         {/* Media Type Filter (Drawer) */}
         <div
