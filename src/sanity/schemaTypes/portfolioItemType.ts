@@ -99,6 +99,7 @@ export default defineType({
         ],
         layout: 'radio',
       },
+      validation: (Rule) => Rule.required(),
       initialValue: 'video',
     }),
 
@@ -118,7 +119,7 @@ export default defineType({
       type: 'file',
       description: 'Upload your project PDF documentation here.',
       options: { accept: '.pdf' },
-      hidden: ({ document }) => document?.outputType !== 'pdf',
+      hidden: ({ document }) => !(document?.displayType === 'pdf'),
       validation: (Rule) =>
         Rule.custom((value, context) => {
           if (

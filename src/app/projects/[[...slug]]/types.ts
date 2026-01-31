@@ -12,6 +12,7 @@ export interface Project {
   title: string;
   projectStatus: 'completed' | 'ongoing' | 'concept';
   slug: string;
+
   
   // Struktur yang bener buat nampung dereferenced asset dari GROQ
   coverImage: {
@@ -21,7 +22,7 @@ export interface Project {
     };
     alt: string;
   };
-  
+  imageUrl?: string;
   mainCategory?: Category; 
   outputCategory?: Category;
   categories?: Category[]; 
