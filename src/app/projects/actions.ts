@@ -19,7 +19,10 @@ export interface DocsCategory {
 
 // Ambil semua project buat grid
 export const fetchAllProjects = async (): Promise<Project[]> => {
-  return await client.fetch(PROJECTS_QUERY);
+  // Tambahin revalidate 0 atau tags buat force refresh
+  return await client.fetch(PROJECTS_QUERY, {}, {
+    next: { revalidate: 0 } 
+  });
 };
 
 // Ambil detail satu project

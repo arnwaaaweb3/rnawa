@@ -13,7 +13,6 @@ import { useTheme } from '@/context/ThemeContext';
 import { fetchSingleProject } from '../actions';
 import { Project } from './types';
 import { createPortal } from 'react-dom';
-import { StatusFilter } from '@/components/StatusFilter';
 import styles from '../[[...slug]]/styles/ProjectsClientWrapper.module.css';
 
 interface WrapperProps {
@@ -38,8 +37,6 @@ export default function ProjectsClientWrapper({
 
   // Filter Hook: status (completed/ongoing/concept) & media type (video/pdf/github/etc)
   const {
-    filter,
-    setFilter,
     mediaFilter,
     setMediaFilter,
     filteredProjects,
@@ -107,12 +104,6 @@ export default function ProjectsClientWrapper({
           </AnimatePresence>
         </div>
 
-        {/* Status Filter Tabs - Clean & Modular */}
-        <StatusFilter 
-          currentFilter={filter} 
-          onFilterChange={setFilter} 
-        />
-
         {/* Media Type Filter (Drawer) */}
         <div
           className={styles.drawerWrapper}
@@ -120,7 +111,7 @@ export default function ProjectsClientWrapper({
           onMouseLeave={() => setShowMediaTooltip(false)}
         >
           <MediaTypeDrawer
-            activeMediaType={mediaFilter}
+            activeMediaType={mediaFilter as any}
             onMediaTypeChange={setMediaFilter}
           />
 

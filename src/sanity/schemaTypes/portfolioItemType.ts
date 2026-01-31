@@ -40,15 +40,15 @@ export default defineType({
       name: 'projectStatus',
       title: 'Project Status',
       type: 'string',
-      description: 'How is it going with this project? (Progress)',
       options: {
         list: [
           { title: '🚀 Ongoing', value: 'ongoing' },
           { title: '✅ Completed', value: 'completed' },
-          { title: '💡 Idea/Concept', value: 'concept' },
+          { title: '💡 Idea', value: 'concept' },
         ],
         layout: 'radio',
       },
+      validation: (Rule) => Rule.required(),
       initialValue: 'completed',
     }),
 

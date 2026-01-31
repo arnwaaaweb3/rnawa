@@ -10,7 +10,6 @@ export interface Category {
 export interface Project {
   _id: string;
   title: string;
-  projectStatus: 'completed' | 'ongoing' | 'concept';
   slug: string;
 
   

@@ -15,9 +15,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (slug) {
     const project = await fetchSingleProject(slug);
     if (project) {
-      // HANDLE DESCRIPTION: 
-      // Kalo description itu Portable Text, kita harus pastiin jadi string.
-      // Di sini gue asumsikan project.description bisa string atau array.
       const seoDescription = typeof project.description === 'string' 
         ? project.description 
         : `Explore details about ${project.title} on Nawa Portfolio.`;

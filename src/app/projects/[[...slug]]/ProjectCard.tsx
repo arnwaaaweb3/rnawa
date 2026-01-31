@@ -62,7 +62,6 @@ export const ProjectCard = ({
       <div className={styles.cardInfo}>
         <div className={styles.cardHeader}>
           <span className={styles.statusBadge}>
-            {project.projectStatus.toUpperCase()}
           </span>
 
           <div className={styles.cardCategoryList}>
