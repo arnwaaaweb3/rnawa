@@ -162,32 +162,45 @@
    FILTER TOGGLE BUTTON
    Neo-Brutalism Variant
 ========================= */
+.filterSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Tetap rata kiri biar nggak kaku */
+}
 
 .filterToggleBtn {
   position: relative;
-  background: #ff85e5; /* Pink neon sebagai primary */
+  background: #ff85e5;
   border: 2px solid #0f0f0f;
   border-bottom: 4px solid #0f0f0f;
   border-right: 3px solid #0f0f0f;
-
   padding: 6px 16px;
+  color: #0a0a0a;
   border-radius: 12px;
-
-  font-family: 'Lexend', sans-serif;
-  font-size: 0.85rem;
   font-weight: 600;
-
-  color: #0f0f0f;
   cursor: pointer;
-  user-select: none;
+  transition: all 0.2s ease;
+  
+  /* INI PENYELAMATNYA! */
+  overflow: hidden; 
+  
+  /* Pastikan teks tetap di atas glare */
+  z-index: 1; 
+}
 
-  transition: 
-    background-color 0.25s ease,
-    color 0.25s ease,
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+/* Pastikan konten di dalam tombol (teks/icon) punya z-index lebih tinggi */
+.filterToggleBtn > * {
+  position: relative;
+  z-index: 2;
+}
 
-  overflow: hidden;
+/* CLICK EFFECT - Cuma jalan kalau BELUM terbuka (.isOpen) */
+.filterToggleBtn:not(.isOpen):active {
+  transform: translate(2px, 2px);
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  background: #ffbff4;
 }
 
 /* Glare effect (lebih subtle dari BackButton) */
@@ -233,18 +246,16 @@
    OPEN / ACTIVE STATE
    (ketika filter terbuka)
 ========================= */
-
-.filterToggleBtnActive {
+.filterToggleBtn.isOpen {
   background: #0a0a0a;
   color: #ffffff;
-  border-color: #0a0a0a;
-}
-
-.filterToggleBtnAttached {
+  /* Bikin nempel sempurna ke bar bawah */
   border-bottom: none;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  transform: none; /* Anti goyang pas sudah buka */
 }
+
 
 /* =========================
    DARK MODE SUPPORT
@@ -258,21 +269,30 @@
   border-right-color: #ffffff;
 }
 
+:global(html.dark) .filterToggleBtn.isOpen {
+  background: #ffffff;
+  color: #190b61;
+  border-color: #ffffff;
+}
+
 :global(html.dark) .filterToggleBtn::before {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.25),
+    rgba(255, 133, 229, 0.2), 
+    rgba(255, 255, 255, 0.15),
     transparent
   );
 }
 
 :global(html.dark) .filterToggleBtn:hover {
-  color: #ffffff;
+  color: #190b61;
+  border-color: #ffffff;
+  background: #ffffff;
 }
 
 :global(html.dark) .filterToggleBtn:active {
-  background: #ffffff;
+  background: #f1f1f1;
   color: #190b61;
 }
 

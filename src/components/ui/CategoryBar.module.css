@@ -2,7 +2,7 @@
 .barContainer {
   width: 100%;
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 0 20px  20px 20px;
   border: 2px solid #0f0f0f;
   border-bottom: 6px solid #0f0f0f;
   border-right: 4px solid #0f0f0f;

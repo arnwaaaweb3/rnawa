@@ -10,7 +10,6 @@ import { useProjectFilters } from '../hooks/useProjectFilters';
 import { useTheme } from '@/context/ThemeContext';
 import { fetchSingleProject } from '../actions';
 import { Project } from './types';
-import clsx from 'clsx';
 import CategoryBar from '@/components/ui/CategoryBar';
 import { type MediaType } from '@/components/ui/MediaTypeDrawer';
 import { createPortal } from 'react-dom';
@@ -47,24 +46,26 @@ export default function ProjectsClientWrapper({
   // =========================
   // Actions
   // =========================
-
+  // Ganti handleExplore lo yang kuno itu jadi begini:
   const handleExplore = async (projectSlug: string) => {
     setIsDetailLoading(true);
     try {
       const data = await fetchSingleProject(projectSlug);
       setSelectedProject(data);
-      // Update URL tanpa reload full page
-      window.history.pushState(null, '', `/projects/${projectSlug}`);
+
+      // Pakai router Next.js, jangan manual pushState kayak amatiran
+      router.push(`/projects/${projectSlug}`, { scroll: false });
     } catch (err) {
-      console.error("Morta says: Gagal ambil data project! Cek koneksi atau GROQ-mu.", err);
+      console.error("Morta: Otakmu atau GROQ yang error?", err);
     } finally {
       setIsDetailLoading(false);
     }
   };
 
+  // Ganti closePanel juga:
   const closePanel = () => {
     setSelectedProject(null);
-    window.history.pushState(null, '', '/projects');
+    router.push('/projects', { scroll: false });
   };
 
   // =========================
@@ -102,14 +103,12 @@ export default function ProjectsClientWrapper({
         <div className={styles.filterSection}>
           <button
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className={clsx(
-              styles.filterToggleBtn,
-              isFilterOpen && styles.filterToggleBtnActive,
-              isFilterOpen && styles.filterToggleBtnAttached
-            )}
+            className={`${styles.filterToggleBtn} ${isFilterOpen ? styles.isOpen : ''}`}
           >
             {isFilterOpen ? (
-              <>✕ Close</>
+              <>
+                ✕ Close
+              </>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <BiSortAlt2 size={16} />
