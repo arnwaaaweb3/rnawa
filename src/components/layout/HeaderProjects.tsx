@@ -10,9 +10,10 @@ interface HeaderProps {
 
 export const Header = ({ onToggleHover }: HeaderProps) => { // Tambah prop ini
   const { toggleDarkMode, mounted, darkMode } = useTheme();
+  const headerWrapper = `${styles.headerContainer} ${mounted && darkMode ? styles.darkMode : ''}`;
 
   return (
-    <header className={`${styles.headerContainer} ${mounted && darkMode ? styles.darkMode : ''}`}>
+    <header className={headerWrapper}>
       {/* Visual effect mung metu nek wis mounted biar transition-e gak kacau */}
       <AnimatePresence>
         {mounted && (

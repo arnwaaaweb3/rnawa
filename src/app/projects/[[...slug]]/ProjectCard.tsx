@@ -20,8 +20,14 @@ export const ProjectCard = ({
   isSelected,
   onExplore,
 }: ProjectCardProps) => {
+  
   const { theme, mounted } = useTheme(); 
   const isDark = theme === 'dark';
+  const statusLabels = {
+    ongoing: 'Ongoing',
+    completed: 'Completed',
+    concept: 'Idea',
+  };
 
   return (
     <motion.div
@@ -61,8 +67,9 @@ export const ProjectCard = ({
 
       <div className={styles.cardInfo}>
         <div className={styles.cardHeader}>
-          <span className={styles.statusBadge}>
-          </span>
+        <span className={styles.statusBadge}>
+          {statusLabels[project.projectStatus as keyof typeof statusLabels] || project.projectStatus}
+        </span>
 
           <div className={styles.cardCategoryList}>
             {project.mainCategory && (

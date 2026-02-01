@@ -5,6 +5,7 @@ export const PROJECTS_QUERY = `*[_type == "portfolioItem"] | order(publishedAt d
   _id,
   title,
   displayType,
+  projectStatus,
   "slug": slug.current,
   "projectUrl": projectUrl,
   "coverImage": {

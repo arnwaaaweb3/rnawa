@@ -56,23 +56,46 @@
 
 .categoryTooltip {
   position: absolute;
-  top: 130%;
-  left: 0;
-  background: #0f0f0f;
-  color: #ffffff;
+  top: 15%;
+  left: calc(100% + 15px);
+  color: #0a0a0a;
   padding: 6px 12px;
   border-radius: 10px;
   font-size: 0.75rem;
   font-weight: 600;
+  background: linear-gradient(
+    90deg,
+    #ff85e5 65%,
+    #ffbff4 85%,
+    #ffffff 100%
+  );
+  z-index: 10;
+  border: 2px solid #0a0a0a;
   white-space: nowrap;
-  border: 2px solid #ff85e5;
-  box-shadow: 4px 4px 0px #ff85e5;
-  z-index: 100;
+}
+
+.categoryTooltip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  transform: translateY(-50%);
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent #0a0a0a transparent transparent;
 }
 
 .darkMode .categoryTooltip {
-  background: #ffffff;
-  color: #0f0f0f;
-  border-color: #0f0f0f;
-  box-shadow: 4px 4px 0px #0f0f0f;
+  background: linear-gradient(
+    90deg,
+    #190b61 65%,
+    #140a49 85%,
+    #0a0a0a 100%
+  );
+  border-color: #ff85e5;
+  color: #ffffff;
+}
+
+.darkMode .categoryTooltip::after {
+    border-color: transparent #ff85e5 transparent transparent;
 }

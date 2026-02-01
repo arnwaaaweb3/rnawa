@@ -11,9 +11,7 @@ export interface Project {
   _id: string;
   title: string;
   slug: string;
-
-  
-  // Struktur yang bener buat nampung dereferenced asset dari GROQ
+  projectStatus: 'ongoing' | 'completed' | 'concept';
   coverImage: {
     asset: {
       _id?: string;
