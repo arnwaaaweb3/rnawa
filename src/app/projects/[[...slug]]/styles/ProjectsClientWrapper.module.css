@@ -84,63 +84,6 @@
 }
 
 /* =========================
-   TOOLTIP — CATEGORY
-========================= */
-
-.drawerWrapper {
-  position: relative;
-  display: inline-flex;
-  z-index: 50;
-}
-
-.categoryTooltip {
-  position: absolute;
-  top: 40%;
-  left: 100%;
-  margin-left: 15px;
-  transform: translateY(-50%);
-  background: linear-gradient(
-    90deg,
-    #ff85e5 65%,
-    #ffbff4 85%,
-    #ffffff 100%
-  );
-  color: #0a0a0a;
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: 2px solid #0f0f0f;
-  white-space: nowrap;
-}
-
-.categoryTooltip::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: 100%;
-  transform: translateY(-50%);
-  border-width: 8px;
-  border-style: solid;
-  border-color: transparent #0f0f0f transparent transparent;
-}
-
-.darkModeActive .categoryTooltip {
-  background: linear-gradient(
-    90deg,
-    #190b61 65%,
-    #140a49 85%,
-    #0a0a0a 100%
-  );
-  border-color: #ff85e5;
-  color: #ffffff;
-}
-
-.darkModeActive .categoryTooltip::after {
-  border-color: transparent #ff85e5 transparent transparent;
-}
-
-/* =========================
    GRID
 ========================= */
 
@@ -213,6 +156,124 @@
   background: #ff85e5; /* Pink neon */
   color: #0a0a0a;
   border-color: #0a0a0a;
+}
+
+/* =========================
+   FILTER TOGGLE BUTTON
+   Neo-Brutalism Variant
+========================= */
+
+.filterToggleBtn {
+  position: relative;
+  background: #ff85e5; /* Pink neon sebagai primary */
+  border: 2px solid #0f0f0f;
+  border-bottom: 4px solid #0f0f0f;
+  border-right: 3px solid #0f0f0f;
+
+  padding: 6px 16px;
+  border-radius: 12px;
+
+  font-family: 'Lexend', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  color: #0f0f0f;
+  cursor: pointer;
+  user-select: none;
+
+  transition: 
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  overflow: hidden;
+}
+
+/* Glare effect (lebih subtle dari BackButton) */
+.filterToggleBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transition: left 0.45s ease;
+  z-index: 1;
+}
+
+/* --- HOVER --- */
+.filterToggleBtn:hover {
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+.filterToggleBtn:hover::before {
+  left: 120%;
+}
+
+/* --- ACTIVE (pressed) --- */
+.filterToggleBtn:active {
+  transform: translate(2px, 2px);
+  border: 2px solid #0a0a0a;
+  border-bottom: 4px solid #0f0f0f;
+  border-right: 3px solid #0f0f0f;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+  background: #ffbff4;
+  color: #0f0f0f;
+}
+
+/* =========================
+   OPEN / ACTIVE STATE
+   (ketika filter terbuka)
+========================= */
+
+.filterToggleBtnActive {
+  background: #0a0a0a;
+  color: #ffffff;
+  border-color: #0a0a0a;
+}
+
+.filterToggleBtnAttached {
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* =========================
+   DARK MODE SUPPORT
+========================= */
+
+:global(html.dark) .filterToggleBtn {
+  background: #190b61;
+  color: #ffffff;
+  border-color: #ff85e5;
+  border-bottom-color: #ff85e5;
+  border-right-color: #ffffff;
+}
+
+:global(html.dark) .filterToggleBtn::before {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+}
+
+:global(html.dark) .filterToggleBtn:hover {
+  color: #ffffff;
+}
+
+:global(html.dark) .filterToggleBtn:active {
+  background: #ffffff;
+  color: #190b61;
 }
 
 /* --- DARK MODE SUPPORT --- */

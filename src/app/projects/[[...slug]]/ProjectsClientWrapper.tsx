@@ -1,18 +1,20 @@
-// src/app/projects/[[...slug]]/ProjectsClientWrapper.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from '../../../components/layout/HeaderProjects';
-import { MediaTypeDrawer } from '../../../components/ui/MediaTypeDrawer';
 import { ProjectCard } from './ProjectCard';
 import { ProjectDetailPanel } from './ProjectDetailPanel';
 import { useProjectFilters } from '../hooks/useProjectFilters';
 import { useTheme } from '@/context/ThemeContext';
 import { fetchSingleProject } from '../actions';
 import { Project } from './types';
+import clsx from 'clsx';
+import CategoryBar from '@/components/ui/CategoryBar';
+import { type MediaType } from '@/components/ui/MediaTypeDrawer';
 import { createPortal } from 'react-dom';
+import { BiSortAlt2 } from 'react-icons/bi';
 import styles from '../[[...slug]]/styles/ProjectsClientWrapper.module.css';
 
 interface WrapperProps {
@@ -24,23 +26,20 @@ interface WrapperProps {
 export default function ProjectsClientWrapper({
   initialProjects,
   initialSelected,
-  slug,
+  slug
 }: WrapperProps) {
   const router = useRouter();
   const { theme, mounted, setIsSidebarOpen, setIsProjectDetailOpen } = useTheme();
+
+  // --- STATE BARU CUMA INI ---
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [projects] = useState<Project[]>(initialProjects);
   const [selectedProject, setSelectedProject] = useState<Project | null>(initialSelected);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [showMediaTooltip, setShowMediaTooltip] = useState(false);
 
-  // Filter Hook: status (completed/ongoing/concept) & media type (video/pdf/github/etc)
-  const {
-    mediaFilter,
-    setMediaFilter,
-    filteredProjects,
-  } = useProjectFilters(projects);
+  const { mediaFilter, setMediaFilter, filteredProjects } = useProjectFilters(projects);
 
   const isDark = theme === 'dark';
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
@@ -87,49 +86,47 @@ export default function ProjectsClientWrapper({
   return (
     <>
       <main className={containerClass}>
-        {/* Header Section */}
+        {/* Header Section - Tetap sesuai kode lama lo */}
         <div style={{ position: 'relative' }}>
           <Header onToggleHover={setShowTooltip} />
           <AnimatePresence>
             {showTooltip && (
-              <motion.div
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 10 }}
-                className={styles.floatingTooltip}
-              >
+              <motion.div className={styles.floatingTooltip}>
                 {isDark ? 'Light Mode?' : 'Dark Mode?'}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* Media Type Filter (Drawer) */}
-        <div
-          className={styles.drawerWrapper}
-          onMouseEnter={() => setShowMediaTooltip(true)}
-          onMouseLeave={() => setShowMediaTooltip(false)}
-        >
-          <MediaTypeDrawer
-            activeMediaType={mediaFilter as any}
-            onMediaTypeChange={setMediaFilter}
-          />
-
-          <AnimatePresence>
-            {showMediaTooltip && (
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                className={styles.categoryTooltip}
-              >
-                Filter by media type
-              </motion.div>
+        {/* --- PENYELAMAT: Tombol Toggle & Bar Kontainer --- */}
+        <div className={styles.filterSection}>
+          <button
+            onClick={() => setIsFilterOpen(!isFilterOpen)}
+            className={clsx(
+              styles.filterToggleBtn,
+              isFilterOpen && styles.filterToggleBtnActive,
+              isFilterOpen && styles.filterToggleBtnAttached
             )}
-          </AnimatePresence>
+          >
+            {isFilterOpen ? (
+              <>✕ Close</>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <BiSortAlt2 size={16} />
+                <span>Filter & Sort</span>
+              </div>
+            )}
+          </button>
+
+          <CategoryBar
+            isOpen={isFilterOpen}
+            activeCategory={mediaFilter as MediaType}
+            onSelectCategory={setMediaFilter}
+            className={isFilterOpen ? styles.barContainerAttached : undefined}
+          />
         </div>
 
-        {/* Project Grid */}
+        {/* Project Grid - Tetap sesuai kode lama lo */}
         <div className={styles.content}>
           <div className={styles.projectGrid}>
             <AnimatePresence mode="popLayout">
@@ -147,7 +144,6 @@ export default function ProjectsClientWrapper({
           </div>
         </div>
 
-        {/* Project Detail Overlay */}
         <ProjectDetailPanel
           project={selectedProject}
           onClose={closePanel}
@@ -158,23 +154,15 @@ export default function ProjectsClientWrapper({
         />
       </main>
 
-      {/* Portal for Floating Back Button */}
-      {mounted &&
-        createPortal(
-          <motion.div
-            className={styles.backButtonWrapper}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-          >
-            <button
-              className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`}
-              onClick={() => router.push('/')}
-            >
-              ← Back
-            </button>
-          </motion.div>,
-          document.body
-        )}
+      {/* Portal Back Button - Tetap sesuai kode lama lo */}
+      {mounted && createPortal(
+        <motion.div className={styles.backButtonWrapper}>
+          <button className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`} onClick={() => router.push('/')}>
+            ← Back
+          </button>
+        </motion.div>,
+        document.body
+      )}
     </>
   );
 }
