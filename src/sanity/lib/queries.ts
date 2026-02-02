@@ -39,7 +39,8 @@ export const PROJECT_DETAIL_QUERY = `*[_type == "portfolioItem" && slug.current 
     "alt": posterImage.alt
   },
   "mainCategory": mainCategory->{ title, "slug": slug.current },
-  "outputCategory": outputCategory->{ title, "slug": slug.current }
+  "outputCategory": outputCategory->{ title, "slug": slug.current },
+  projectStatus,
 }`;
 
 // 3. DOCS_QUERY (Tetap tarik displayType kalau ada di skema docs nanti)
