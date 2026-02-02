@@ -5,24 +5,30 @@ import { motion, AnimatePresence } from 'framer-motion';
 import styles from './CategoryBar.module.css';
 import { clsx } from 'clsx';
 import { MediaTypeDrawer, type MediaType } from './MediaTypeDrawer';
+import { StatusDrawer, type ProjectStatus } from './StatusDrawer'; // Import ini!
 import { useTheme } from '@/context/ThemeContext';
 import { useState } from 'react';
 
 interface CategoryBarProps {
   activeCategory: MediaType;
   onSelectCategory: (category: MediaType) => void;
+  activeStatus: ProjectStatus; // Tambahin ini di interface
+  onSelectStatus: (status: ProjectStatus) => void; // Dan ini
   isOpen: boolean;
-  className?: string; 
+  className?: string;
 }
 
 export default function CategoryBar({
   activeCategory,
   onSelectCategory,
+  activeStatus,
+  onSelectStatus,
   isOpen,
   className
 }: CategoryBarProps) {
   const { theme } = useTheme();
   const [showMediaTooltip, setShowMediaTooltip] = useState(false);
+  const [showStatusTooltip, setShowStatusTooltip] = useState(false); // Tooltip baru buat status
 
   return (
     <AnimatePresence>
@@ -32,7 +38,7 @@ export default function CategoryBar({
           animate={{ height: 'auto', opacity: 1, scaleY: 1 }}
           exit={{ height: 0, opacity: 0, scaleY: 0.8 }}
           transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-          style={{ originY: 0, marginBottom: isOpen ? '1.5rem' : 0 }} // Kasih jarak pas kebuka
+          style={{ originY: 0, marginBottom: isOpen ? '1.5rem' : 0 }}
           className={clsx(
             styles.barContainer,
             theme === 'dark' && styles.darkMode,
@@ -40,31 +46,58 @@ export default function CategoryBar({
           )}
         >
           <div className={styles.contentWrapper}>
-            {/* INI YANG LO HAPUS TADI - MASANG LAGI */}
-            <h3 className={styles.title}>Category</h3>
+            {/* SECTION 2 MEDIA TYPE */}
+            <div className={styles.section}>
+              <h3 className={styles.title}>Category :</h3>
+              {/* SECTION 1 PROJECT STATUS */}
+              <div className={styles.section}>
+                <div
+                  className={styles.drawerWrapper}
+                  onMouseEnter={() => setShowStatusTooltip(true)}
+                  onMouseLeave={() => setShowStatusTooltip(false)}
+                >
+                  <StatusDrawer
+                    activeStatus={activeStatus}
+                    onStatusChange={onSelectStatus}
+                  />
 
-            <div
-              className={styles.drawerWrapper}
-              onMouseEnter={() => setShowMediaTooltip(true)}
-              onMouseLeave={() => setShowMediaTooltip(false)}
-            >
-              <MediaTypeDrawer
-                activeMediaType={activeCategory}
-                onMediaTypeChange={onSelectCategory}
-              />
+                  <AnimatePresence>
+                    {showStatusTooltip && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        className={styles.categoryTooltip}
+                      >
+                        Filter by project status
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+              <div
+                className={styles.drawerWrapper}
+                onMouseEnter={() => setShowMediaTooltip(true)}
+                onMouseLeave={() => setShowMediaTooltip(false)}
+              >
+                <MediaTypeDrawer
+                  activeMediaType={activeCategory}
+                  onMediaTypeChange={onSelectCategory}
+                />
 
-              <AnimatePresence>
-                {showMediaTooltip && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 5 }}
-                    className={styles.categoryTooltip}
-                  >
-                    Filter by media type
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                <AnimatePresence>
+                  {showMediaTooltip && (
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      className={styles.categoryTooltip}
+                    >
+                      Filter by media type
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </motion.div>

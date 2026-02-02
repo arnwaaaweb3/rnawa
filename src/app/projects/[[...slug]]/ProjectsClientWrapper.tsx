@@ -14,6 +14,7 @@ import CategoryBar from '@/components/ui/CategoryBar';
 import { type MediaType } from '@/components/ui/MediaTypeDrawer';
 import { createPortal } from 'react-dom';
 import { BiSortAlt2 } from 'react-icons/bi';
+import { type ProjectStatus } from '@/components/ui/StatusDrawer';
 import styles from '../[[...slug]]/styles/ProjectsClientWrapper.module.css';
 
 interface WrapperProps {
@@ -36,10 +37,15 @@ export default function ProjectsClientWrapper({
   const [projects] = useState<Project[]>(initialProjects);
   const [selectedProject, setSelectedProject] = useState<Project | null>(initialSelected);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
-
-  const { mediaFilter, setMediaFilter, filteredProjects } = useProjectFilters(projects);
-
+  const [showThemeTooltip, setShowThemeTooltip] = useState(false);
+  const [showFilterTooltip, setShowFilterTooltip] = useState(false);
+  const {
+    mediaFilter,
+    setMediaFilter,
+    statusFilter,
+    setStatusFilter,
+    filteredProjects
+  } = useProjectFilters(projects);
   const isDark = theme === 'dark';
   const containerClass = `${styles.mainBackground} ${mounted && isDark ? styles.darkModeActive : ''}`;
 
@@ -89,9 +95,9 @@ export default function ProjectsClientWrapper({
       <main className={containerClass}>
         {/* Header Section - Tetap sesuai kode lama lo */}
         <div style={{ position: 'relative' }}>
-          <Header onToggleHover={setShowTooltip} />
+          <Header onToggleHover={setShowThemeTooltip} />
           <AnimatePresence>
-            {showTooltip && (
+            {showThemeTooltip && (
               <motion.div className={styles.floatingTooltip}>
                 {isDark ? 'Light Mode?' : 'Dark Mode?'}
               </motion.div>
@@ -101,26 +107,46 @@ export default function ProjectsClientWrapper({
 
         {/* --- PENYELAMAT: Tombol Toggle & Bar Kontainer --- */}
         <div className={styles.filterSection}>
-          <button
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className={`${styles.filterToggleBtn} ${isFilterOpen ? styles.isOpen : ''}`}
+          <div
+            className={styles.filterToggleWrapper}
+            onMouseEnter={() => setShowFilterTooltip(true)}
+            onMouseLeave={() => setShowFilterTooltip(false)}
           >
-            {isFilterOpen ? (
-              <>
-                ✕ Close
-              </>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <BiSortAlt2 size={16} />
-                <span>Filter & Sort</span>
-              </div>
-            )}
-          </button>
+            <button
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
+              className={`${styles.filterToggleBtn} ${isFilterOpen ? styles.isOpen : ''}`}
+            >
+              {isFilterOpen ? (
+                <>✕ Close</>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <BiSortAlt2 size={16} />
+                  <span>Filter & Sort</span>
+                </div>
+              )}
+            </button>
+
+            <AnimatePresence>
+              {!isFilterOpen && showFilterTooltip && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.2 }}
+                  className={styles.filterTooltip}
+                >
+                  Filter by format & status
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
           <CategoryBar
             isOpen={isFilterOpen}
             activeCategory={mediaFilter as MediaType}
             onSelectCategory={setMediaFilter}
+            activeStatus={statusFilter as ProjectStatus} // TAMBAHKAN INI
+            onSelectStatus={setStatusFilter}             // TAMBAHKAN INI
             className={isFilterOpen ? styles.barContainerAttached : undefined}
           />
         </div>
