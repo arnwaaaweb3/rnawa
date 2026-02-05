@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { Renderer, Program, Mesh, Triangle, Vec2 } from 'ogl';
-import '../styles/DarkVeil.module.css';
+import styles from "@/styles/DarkVeil.module.css";
 
 const vertex = `
 attribute vec2 position;
@@ -88,7 +88,7 @@ type Props = {
 };
 
 export default function DarkVeil({
-  hueShift=0,
+hueShift=0,
   noiseIntensity=0.015,
   scanlineIntensity=0.15,
   scanlineFrequency=0.04,
@@ -182,6 +182,6 @@ export default function DarkVeil({
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, [hueShift, noiseIntensity, scanlineIntensity, speed, scanlineFrequency, warpAmount, resolutionScale]);
-
-  return <canvas ref={ref} className="darkveil-canvas" />;
+  
+  return <canvas ref={ref} className={styles.darkveilCanvas} />;
 }

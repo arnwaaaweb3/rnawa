@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 // Import useRouter from next/navigation
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
 import Image from "next/image";
@@ -26,17 +26,24 @@ export default function ServicesPage() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-        paginate(1);
-      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-        paginate(-1);
-      }
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") paginate(1);
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") paginate(-1);
+    };
+
+    // Tambahin ini biar bisa scroll pake mouse wheel!
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY > 0) paginate(1); // Scroll bawah = next
+      else paginate(-1); // Scroll atas = prev
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [paginate]);
+    window.addEventListener("wheel", handleWheel); // <--- DAFTARIN INI
 
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("wheel", handleWheel); // <--- BERSIHIN INI
+    };
+  }, [paginate]);
 
   return (
     <div className={styles.container}>

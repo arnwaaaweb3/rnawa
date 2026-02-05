@@ -14,7 +14,7 @@
 /coverage
 
 #elizaOS files
-/rnawa-agent
+/rnawa-agent/node_modules
 
 # next.js
 /.next/
