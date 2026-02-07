@@ -301,8 +301,6 @@
 /* =========================
    DARK MODE SUPPORT
 ========================= */
-
-/* DARK MODE */
 .darkModeActive .filterTooltip {
   background: linear-gradient(
     90deg,
@@ -318,7 +316,7 @@
   border-color: transparent #ff85e5 transparent transparent;
 }
 
-:global(html.dark) .filterToggleBtn {
+.darkModeActive .filterToggleBtn {
   background: linear-gradient(
     90deg,
     #190b61 65%,
@@ -331,13 +329,13 @@
   border-right-color: #ffffff;
 }
 
-:global(html.dark) .filterToggleBtn.isOpen {
+.darkModeActive .filterToggleBtn.isOpen {
   background: #ffffff;
   color: #190b61;
   border-color: #ffffff;
 }
 
-:global(html.dark) .filterToggleBtn::before {
+.darkModeActive .filterToggleBtn::before {
   background: linear-gradient(
     90deg,
     transparent,
@@ -347,25 +345,24 @@
   );
 }
 
-:global(html.dark) .filterToggleBtn:hover {
+.darkModeActive .filterToggleBtn:hover {
   color: #190b61;
   border-color: #ffffff;
   background: #ffffff;
 }
 
-:global(html.dark) .filterToggleBtn:active {
+.darkModeActive .filterToggleBtn:active {
   background: #f1f1f1;
   color: #190b61;
 }
 
-/* --- DARK MODE SUPPORT --- */
-:global(html.dark) .backButton {
+.darkModeActive .backButton {
   background: #0f0f0f;
   border-color: #ff85e5;
   color: #ffffff;
 }
 
-:global(html.dark) .backButton::before {
+.darkModeActive .backButton::before {
   background: linear-gradient(
     90deg,
     transparent,
@@ -374,14 +371,14 @@
   );
 }
 
-:global(html.dark) .backButton:hover {
+.darkModeActive .backButton:hover {
   background: #ff85e5;
   color: #0f0f0f;
   border-color: #0a0a0a;
 }
 
 /* --- DARK MODE ACTIVE --- */
-:global(html.dark) .backButton:active {
+.darkModeActive .backButton:active {
   background: #ffffff; /* Putih */
   color: #0a0a0a;
   border-color: #0a0a0a;

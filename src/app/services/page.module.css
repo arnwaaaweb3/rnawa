@@ -1,189 +1,327 @@
-
-.container {
+.neoContainer {
+  --bg: #0a0a0a;
+  --text: #ffffff;
+  --accent: #ff85e5;
   width: 100vw;
   height: 100vh;
-  background: #000;
+  background-color: var(--bg);
+  color: var(--text);
   overflow: hidden;
   position: relative;
-  font-family: var(--font-lexend), sans-serif;
-}
-
-.heroImageWrapper {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-}
-
-.heroImg {
-  object-fit: cover;
-}
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(70deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
-}
-
-.content {
-  position: relative;
-  z-index: 10;
-  height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10vw;
+  font-family: 'Lexend', sans-serif;
+}
+
+/* Nomor Background Raksasa */
+.hugeNumber {
+  transition: color 0.5s ease;
+  position: absolute;
+  bottom: -5vh;
+  left: 4vw;
+  font-size: 40vw;
+  font-weight: 900;
+  line-height: 0.7;
+  color: rgba(255, 255, 255, 0.03);
+  z-index: 0;
+  user-select: none;
 }
 
 .veilLayer {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  mix-blend-mode: screen;
-  top: 0;
-  left: 0;
+  z-index: 1;
+  pointer-events: none; 
+  opacity: 0.4;
+  mix-blend-mode: screen; 
+}
+
+.mainGrid {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
   width: 100%;
-  height: 100%;
-  pointer-events: none; /* BIAR KLIK TEMBUS KE TOMBOL */
+  padding: 4rem;
 }
 
-.infoBox {
-  max-width: 600px;
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.indexLabel {
-  display: block;
-  color: #ff85e5;
-  font-family: monospace;
-  font-size: 0.9rem;
-  letter-spacing: 0.3em;
-  margin-bottom: 1rem;
+.tagLine {
+  font-family: 'monospace';
+  letter-spacing: 4px;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  font-size: 1rem;
 }
 
 .title {
-  font-family: var(--font-lexend), sans-serif;
   font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 800;
-  color: white;
-  line-height: 1;
-  margin-bottom: 2.5rem;
-}
-
-.primaryCta {
-  padding: 1rem 2.5rem;
-  border: 1px solid rgba(255,255,255,0.3);
-  color: white;
-  font-weight: 600;
-  border-radius: 4px;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  border-radius: 1rem;
-}
-
-.primaryCta:hover {
-  transform: translateY(-5px);
-  border-radius: 1rem;
-  border-color: #fff;
-}
-
-.sideNav {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  opacity: 1;
-  transition: opacity 0.3s ease;
-  z-index: 20;
-  align-items: flex-end;
-}
-
-.navDot {
-  background: none;
-  border: none;
-  width: 12px;
-  height: 12px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 50%;
-  cursor: pointer;
+  font-weight: 700;
+  line-height: 0.9;
+  margin: 0;
+  font-family: 'Lexend', sans-serif;
   position: relative;
-  transition: all 0.3s ease;
-}
-
-.activeDot {
-  background: #ff85e5;
-  transform: scale(1.5);
-  box-shadow: 0 0 15px #ff85e5;
-}
-
-.dotLabel {
-  position: absolute;
-  right: 30px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: white;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  white-space: nowrap;
-  opacity: 0;
-  font-family: var(--font-lexend), sans-serif;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.navDot:hover .dotLabel, .activeDot .dotLabel {
-  opacity: 1;
-}
-
-.backButtonWrapper {
-  position: fixed;
-  bottom: 0; 
-  right: 0;
-  padding: clamp(20px, 5vw, 40px);
   z-index: 11;
 }
 
-.backButton {
-  padding: clamp(8px, 2.5vw, 10px) clamp(14px, 4vw, 22px);
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
-  border: 1px solid rgba(255,255,255,0.25);
-  color: white;
-  border-radius: 1rem;
-  background: rgba(255,255,255,0.08);
+.titleFixedContainer {
+  height: 200px; /* Sesuaikan dengan ukuran font clamp lo */
+  display: flex;
+  align-items: center; /* Biar teks pendek tetep cakep di tengah atau ganti 'flex-end' */
+  margin-bottom: 2rem; /* Jarak tetap ke tombol */
+}
+
+/* =========================
+   NEO CTA BUTTON (SEE MORE DETAILS)
+   Dengan Glare Effect & Active State
+========================= */
+.neoCta {
+  position: relative; /* WAJIB buat pseudo-element */
+  width: fit-content;
+  padding: 1.5rem 3rem;
+  background: var(--accent);
+  color: #000;
+  border-radius: 12px;
+  border: 3px solid #000;
+  font-weight: 900;
+  font-family: 'Lexend', sans-serif;
+  font-size: 1.2rem;
   cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: background 0.3s ease, transform 0.2s ease;
+  overflow: hidden; /* PENYELAMAT GLARE */
+  z-index: 1;
+  transition: all 0.25s ease;
+  box-shadow: 4px 4px 0px #000; /* Solid shadow brutalism */
 }
 
+/* Glare Effect - Swipe dari kiri ke kanan */
+.neoCta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4), /* White glare transparan */
+    transparent
+  );
+  transition: left 0.5s ease;
+  z-index: -1; /* Di belakang teks */
+}
+
+/* --- HOVER STATE --- */
+.neoCta:hover {
+  background: #000;
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 4px 5px 0px var(--accent); /* Shadow makin besar */
+  transform: translate(-2px, -2px); /* Naik dikit */
+}
+
+.neoCta:hover::before {
+  left: 100%; /* Glare swipe ke kanan */
+}
+
+/* --- ACTIVE STATE (Pressed) --- */
+.neoCta:active {
+  transform: translate(4px, 4px) scale(0.98); /* Nge-press + ngecil */
+  box-shadow: 0px 0px 0px transparent; /* Shadow ilang */
+  background: #fff; /* Flash putih */
+  color: #000;
+  border-color: #000;
+}
+
+/* Pastikan teks tetap di atas */
+.neoCta span,
+.neoCta {
+  position: relative;
+  z-index: 2;
+}
+
+/* Image Section */
+.rightCol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageFrame {
+  position: relative;
+  width: 80%;
+  aspect-ratio: 3/4;
+  border: 6px solid #fff;
+  background: #111;
+  box-shadow: 20px 20px 0px var(--accent);
+}
+
+.imgInternal {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.actualImg {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.2);
+}
+
+.frameDecoration {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 60px;
+  height: 60px;
+}
+
+/* Bottom Navigation */
+.bottomNav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 5px solid #fff;
+  background: #000;
+  z-index: 10;
+}
+
+/* =========================
+   BOTTOM NAV ITEMS (Upgrade dikit)
+========================= */
+.navItem {
+  position: relative;
+  padding: 1.5rem;
+  background: transparent;
+  color: #555;
+  border: none;
+  border-right: 2px solid #222;
+  cursor: pointer;
+  font-family: 'Lexend', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+/* Hover untuk non-active items */
+.navItem:not(.activeNavItem):hover {
+  background: #111;
+  color: #fff;
+  padding-left: 2rem; /* Geser kanan dikit */
+}
+
+/* Active State dengan animasi */
+.activeNavItem {
+  background: var(--accent) !important;
+  color: #000 !important;
+  border-right-color: #000;
+  box-shadow: inset 0 -4px 0 rgba(0,0,0,0.2); /* Inner shadow */
+}
+
+/* Click effect buat nav items */
+.navItem:active {
+  transform: scale(0.98);
+}
+
+.navCode {
+  font-family: monospace;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.navTitle {
+  font-weight: 800;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+/* BACK BUTTON: Neo-Brutalism Edition */
+.backButtonWrapper {
+  position: fixed;
+  top: 2.5rem;
+  right: 2rem;
+  z-index: 100;
+}
+
+/* =========================
+   BACK BUTTON (Neo-Brutalism + Projects Style)
+========================= */
+.backButton {
+  position: relative;
+  background: #fff;
+  color: #000;
+  border: 3px solid #000;
+  padding: 0.8rem 1.5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 12px;
+  font-family: 'Lexend', sans-serif;
+  cursor: pointer;
+  overflow: hidden; /* GLARE CONTAINER */
+  z-index: 1;
+  transition: all 0.25s ease;
+  box-shadow: 3px 3px 0px #000; /* Shadow solid */
+}
+
+/* Glare Effect - Pink neon swipe */
+.backButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 133, 229, 0.4), /* Pink neon transparan */
+    transparent
+  );
+  transition: left 0.5s ease;
+  z-index: -1;
+}
+
+/* --- HOVER STATE --- */
 .backButton:hover {
-  background: rgba(255,255,255,0.18);
-  transform: translateX(-2px);
+  background: var(--accent);
+  color: #0a0a0a;
+  border-color: #000;
+  box-shadow: 3px 4px 0px #ffffff; /* Shadow warna accent */
+  transform: translate(-2px, -2px);
 }
 
-/* =================================== GLOBAL STYLES */
-
-:global([data-sidebar="open"]) .sideNav {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateX(20px); /* slide them out to the right */
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.backButton:hover::before {
+  left: 100%; /* Glare jalan */
 }
 
-:global([data-sidebar="open"]) .dotLabel {
-  opacity: 0 !important;
+/* --- ACTIVE STATE (Pressed) --- */
+.backButton:active {
+  transform: translate(3px, 3px) scale(0.98);
+  box-shadow: 0px 0px 0px transparent; /* Shadow flat pas ditekan */
+  background: var(--accent); /* Flash warna accent */
+  color: #000;
+  border-color: #000;
 }
 
-/* ===================================== RESPONSIVE*/
+.blink {
+  animation: blinker 1s linear infinite;
+}
 
-@media (max-width: 768px) {
-  .content {
-    flex-direction: column;
-    justify-content: center;
-    padding: 2rem;
-    text-align: center;
-  }
-  .sideNav {
-    flex-direction: row;
-    margin-top: 3rem;
-  }
-  .dotLabel { display: none; }
+@keyframes blinker {
+  50% { opacity: 0; }
+}
+
+@media (max-width: 900px) {
+  .mainGrid { grid-template-columns: 1fr; padding: 2rem; }
+  .rightCol { display: none; }
+  .bottomNav { grid-template-columns: repeat(3, 1fr); }
 }
