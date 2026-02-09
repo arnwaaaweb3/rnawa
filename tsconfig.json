@@ -16,7 +16,7 @@
     "moduleResolution": "bundler", // Pertahankan untuk kompatibilitas dengan bundler modern
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve", // Pertahankan untuk dukungan JSX di Next.js
+    "jsx": "react-jsx", // Pertahankan untuk dukungan JSX di Next.js
     "incremental": true,
     "plugins": [
       {
@@ -24,7 +24,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
     // Tambahkan pengaturan berikut untuk dukungan TypeScript yang lebih baik
     "baseUrl": ".", // Atur baseUrl untuk path yang relatif

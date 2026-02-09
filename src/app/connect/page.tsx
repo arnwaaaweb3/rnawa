@@ -46,16 +46,16 @@ const ConnectPage: React.FC = () => {
           </p>
         </header>
 
+        {/* Gunakan contentGrid secara konsisten */}
         <div className={styles.contentGrid} data-sidebar={isSidebarOpen ? "open" : "closed"}>
           <section className={styles.tabsSection}>
             <AnimatedTabs />
           </section>
 
-          {/* Always render for wide screens, but the CSS will handle the visibility */}
           <aside className={styles.cardSection}>
             <SignatureNawaCard
               name="Nawa"
-              role="Fullstack Developer"
+              role="Developer"
               image="/profil-nawa.jpg"
             />
           </aside>

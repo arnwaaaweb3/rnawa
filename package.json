@@ -1,47 +1,46 @@
 {
   "name": "my-web3-portfolio",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "sanity": "sanity"
   },
   "dependencies": {
-    "@elizaos/plugin-bootstrap": "^1.7.2",
-    "@elizaos/plugin-ollama": "^1.2.4",
-    "@elizaos/plugin-sql": "^1.7.2",
     "@portabletext/react": "^3.1.0",
-    "@sanity/client": "^6.27.1",
-    "@sanity/code-input": "^7.0.4",
+    "@sanity/client": "^7.14.1",
+    "@sanity/code-input": "^7.0.8",
     "@sanity/icons": "^3.7.4",
     "@sanity/image-url": "^1.1.0",
-    "@sanity/preview-url-secret": "^4.0.2",
-    "@sanity/react-loader": "^2.0.5",
-    "@sanity/visual-editing": "^5.1.0",
+    "@sanity/preview-url-secret": "^4.0.3",
+    "@sanity/react-loader": "^2.0.6",
+    "@sanity/visual-editing": "^5.2.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^11.15.0",
-    "next": "15.1.0",
-    "next-sanity": "^9.8.38",
+    "next": "16.1.6",
+    "next-sanity": "^10.0.0",
     "ogl": "^1.0.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^16.1.0",
-    "sanity": "^3.68.0"
+    "sanity": "^5.8.1",
+    "styled-components": "^6.3.9"
   },
   "devDependencies": {
-    "@elizaos/cli": "^1.7.2",
-    "@sanity/vision": "^3.68.0",
+    "@sanity/vision": "^5.8.1",
     "@types/node": "^20",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "eslint": "^9",
-    "eslint-config-next": "15.1.0",
+    "eslint-config-next": "16.1.6",
     "typescript": "^5.7.2"
   }
 }
