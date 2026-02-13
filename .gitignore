@@ -15,6 +15,7 @@
 
 #elizaOS files
 /rnawa-agent/node_modules
+/.eliza
 
 # next.js
 /.next/
