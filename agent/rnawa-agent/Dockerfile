@@ -54,7 +54,7 @@ USER node
 # Environment variables should be provided at runtime (e.g., via docker-compose.yaml)
 
 # Expose port (adjust if needed based on your application)
-EXPOSE 3000
+EXPOSE 3001
 
 
 # Start the application
