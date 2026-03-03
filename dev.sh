@@ -21,8 +21,8 @@ fi
 
 # 3. Running concurrently
 # Tambahin pengecekan model biar Zetta nggak 'blank' pas start
-echo "Status: Verifying Local Brain (Gemma 3:12b)..."
-ollama list | grep -q "gemma3:12b" || echo "Warning: gemma3:12b not found. Ensure you have pulled it."
+echo "Status: Verifying Local Brain (Qwen2:0.5b)..."
+ollama list | grep -q "qwen2:0.5b" || echo "Warning: qwen2:0.5b not found. Ensure you have pulled it."
 
 echo "Starting Orchestrator..."
 echo "----------------------------------------------------------"
