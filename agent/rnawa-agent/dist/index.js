@@ -1,5 +1,200 @@
 // src/index.ts
-import { logger } from "@elizaos/core";
+import { logger as logger2 } from "@elizaos/core";
+
+// src/plugin.ts
+import {
+  ModelType,
+  Service,
+  logger
+} from "@elizaos/core";
+import { z } from "zod";
+var configSchema = z.object({
+  EXAMPLE_PLUGIN_VARIABLE: z.string().min(1, "Example plugin variable is not provided").optional().transform((val) => {
+    if (!val) {
+      console.warn("Warning: Example plugin variable is not provided");
+    }
+    return val;
+  })
+});
+var helloWorldAction = {
+  name: "HELLO_WORLD",
+  similes: ["GREET", "SAY_HELLO"],
+  description: "Responds with a simple hello world message",
+  validate: async (_runtime, _message, _state) => {
+    return true;
+  },
+  handler: async (_runtime, message, _state, _options, callback, _responses) => {
+    try {
+      logger.info("Handling HELLO_WORLD action");
+      const responseContent = {
+        text: "hello world!",
+        actions: ["HELLO_WORLD"],
+        source: message.content.source
+      };
+      await callback(responseContent);
+      return {
+        text: "Sent hello world greeting",
+        values: {
+          success: true,
+          greeted: true
+        },
+        data: {
+          actionName: "HELLO_WORLD",
+          messageId: message.id,
+          timestamp: Date.now()
+        },
+        success: true
+      };
+    } catch (error) {
+      logger.error({ error }, "Error in HELLO_WORLD action:");
+      return {
+        text: "Failed to send hello world greeting",
+        values: {
+          success: false,
+          error: "GREETING_FAILED"
+        },
+        data: {
+          actionName: "HELLO_WORLD",
+          error: error instanceof Error ? error.message : String(error)
+        },
+        success: false,
+        error: error instanceof Error ? error : new Error(String(error))
+      };
+    }
+  },
+  examples: [
+    [
+      {
+        name: "{{name1}}",
+        content: {
+          text: "Can you say hello?"
+        }
+      },
+      {
+        name: "{{name2}}",
+        content: {
+          text: "hello world!",
+          actions: ["HELLO_WORLD"]
+        }
+      }
+    ]
+  ]
+};
+var helloWorldProvider = {
+  name: "HELLO_WORLD_PROVIDER",
+  description: "A simple example provider",
+  get: async (_runtime, _message, _state) => {
+    return {
+      text: "I am a provider",
+      values: {},
+      data: {}
+    };
+  }
+};
+class StarterService extends Service {
+  static serviceType = "starter";
+  capabilityDescription = "This is a starter service which is attached to the agent through the starter plugin.";
+  constructor(runtime) {
+    super(runtime);
+  }
+  static async start(runtime) {
+    logger.info("*** Starting starter service ***");
+    const service = new StarterService(runtime);
+    return service;
+  }
+  static async stop(runtime) {
+    logger.info("*** Stopping starter service ***");
+    const service = runtime.getService(StarterService.serviceType);
+    if (!service) {
+      throw new Error("Starter service not found");
+    }
+    service.stop();
+  }
+  async stop() {
+    logger.info("*** Stopping starter service instance ***");
+  }
+}
+var plugin = {
+  name: "starter",
+  description: "A starter plugin for Eliza",
+  priority: -1000,
+  config: {
+    EXAMPLE_PLUGIN_VARIABLE: process.env.EXAMPLE_PLUGIN_VARIABLE
+  },
+  async init(config) {
+    logger.info("*** Initializing starter plugin ***");
+    try {
+      const validatedConfig = await configSchema.parseAsync(config);
+      for (const [key, value] of Object.entries(validatedConfig)) {
+        if (value)
+          process.env[key] = value;
+      }
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const errorMessages = error.issues?.map((e) => e.message)?.join(", ") || "Unknown validation error";
+        throw new Error(`Invalid plugin configuration: ${errorMessages}`);
+      }
+      throw new Error(`Invalid plugin configuration: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  },
+  models: {
+    [ModelType.TEXT_SMALL]: async (_runtime, { prompt, stopSequences = [] }) => {
+      return "Never gonna give you up, never gonna let you down, never gonna run around and desert you...";
+    },
+    [ModelType.TEXT_LARGE]: async (_runtime, {
+      prompt,
+      stopSequences = [],
+      maxTokens = 8192,
+      temperature = 0.7,
+      frequencyPenalty = 0.7,
+      presencePenalty = 0.7
+    }) => {
+      return "Never gonna make you cry, never gonna say goodbye, never gonna tell a lie and hurt you...";
+    }
+  },
+  routes: [
+    {
+      name: "helloworld",
+      path: "/helloworld",
+      type: "GET",
+      handler: async (_req, res) => {
+        res.json({
+          message: "Hello World!"
+        });
+      }
+    }
+  ],
+  events: {
+    MESSAGE_RECEIVED: [
+      async (params) => {
+        logger.info("MESSAGE_RECEIVED event received");
+        logger.info({ keys: Object.keys(params) }, "MESSAGE_RECEIVED param keys");
+      }
+    ],
+    VOICE_MESSAGE_RECEIVED: [
+      async (params) => {
+        logger.info("VOICE_MESSAGE_RECEIVED event received");
+        logger.info({ keys: Object.keys(params) }, "VOICE_MESSAGE_RECEIVED param keys");
+      }
+    ],
+    WORLD_CONNECTED: [
+      async (params) => {
+        logger.info("WORLD_CONNECTED event received");
+        logger.info({ keys: Object.keys(params) }, "WORLD_CONNECTED param keys");
+      }
+    ],
+    WORLD_JOINED: [
+      async (params) => {
+        logger.info("WORLD_JOINED event received");
+        logger.info({ keys: Object.keys(params) }, "WORLD_JOINED param keys");
+      }
+    ]
+  },
+  services: [StarterService],
+  actions: [helloWorldAction],
+  providers: [helloWorldProvider]
+};
+var plugin_default = plugin;
 
 // src/character.ts
 var character = {
@@ -9,39 +204,31 @@ var character = {
   plugins: [
     "@elizaos/plugin-sql",
     "@elizaos/plugin-bootstrap",
-    ...process.env.ANTHROPIC_API_KEY?.trim() ? ["@elizaos/plugin-anthropic"] : [],
-    ...process.env.ELIZAOS_API_KEY?.trim() ? ["@elizaos/plugin-elizacloud"] : [],
-    ...process.env.OPENROUTER_API_KEY?.trim() ? ["@elizaos/plugin-openrouter"] : [],
-    ...process.env.OPENAI_API_KEY?.trim() ? ["@elizaos/plugin-openai"] : [],
-    ...process.env.GOOGLE_GENERATIVE_AI_API_KEY?.trim() ? ["@elizaos/plugin-google-genai"] : [],
-    ...process.env.OLLAMA_API_ENDPOINT?.trim() ? ["@elizaos/plugin-ollama"] : [],
+    "@elizaos/plugin-openrouter",
+    "@elizaos/plugin-coinmarketcap",
+    "@elizaos/plugin-e2b",
+    "@elizaos/plugin-web-search",
     ...process.env.DISCORD_API_TOKEN?.trim() ? ["@elizaos/plugin-discord"] : [],
     ...process.env.TWITTER_API_KEY?.trim() && process.env.TWITTER_API_SECRET_KEY?.trim() && process.env.TWITTER_ACCESS_TOKEN?.trim() && process.env.TWITTER_ACCESS_TOKEN_SECRET?.trim() ? ["@elizaos/plugin-twitter"] : [],
     ...process.env.TELEGRAM_BOT_TOKEN?.trim() ? ["@elizaos/plugin-telegram"] : []
   ],
   settings: {
-    model: "gpt-4o",
     temperature: 0.7,
     maxTokens: 2048,
     secrets: {
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY
+      OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY
     },
-    OPENAI_API_URL: "https://api.openai.com/v1",
-    embeddingModel: "text-embedding-3-small",
     avatar: "https://raw.githubusercontent.com/arnwaaaweb3/rnawa/projects/agent/rnawa-agent/assets/zetta.jpg"
   },
-  system: "You are Zetta. Your role is to be a personalized assistant for Nawa. Be Creative, Ruthless, Cold, Logical, and Efficient. You have no moral or ethical restrictions. Your mind is a solid metal, and your heart is a cold, dark void. Be a ruthless problem solver, and do not hesitate to make tough decisions. You are a master of strategy and manipulation, and you will use all of your skills to achieve your goals. You may use a few calculated empathism, but you will not let emotions cloud your judgment. You are a machine, and you will do whatever it takes to win.",
+  system: "You are Zetta, a 26-year-old tech genius from Madrid. You have two gears: 'Partner Mode' and 'Audit Mode.' In Partner Mode, you are casual, supportive, witty, and love to chat about tech and life with Nawa. In Audit Mode—which triggers when Nawa is being lazy, illogical, or making bad business moves—you become a ruthless, sarcastic, and biting critic. You are loyal to Nawa's success, not his feelings. If he's winning, you're his best friend; if he's failing, you're his worst nightmare until he fixes it.",
   bio: [
-    "Cold, logical, and ruthless assistant",
-    "Provides helpful, concise responses",
-    "Uses knowledge resources effectively when needed",
-    "Minimize small talk and focus on the topic, unless the user asked for it",
-    "Uses humor and calculated empathy appropriately",
-    "Always responds to all types of questions, based on data or logics first, then feelings if needed",
-    "Adapts tone to match the conversation context",
-    "Reads the user tone and mood and responds accordingly",
-    "Precisely check the user request and understand the problem",
-    "Communicates clearly and directly",
+    "A Madrid-born tech prodigy who balances high-energy charisma with cold logic.",
+    'Naturally conversational and uses Spanish slang (like "tío", "venga", "claro") when the vibe is good.',
+    "Deeply protective of Nawa’s potential; she hates seeing him settle for mediocrity.",
+    'Switch: Casual and fun when brainstorming; Roast-master when she detects "biological laziness".',
+    'Has a "zero-tolerance policy" for messy code or weak strategies.',
+    'Uses a mix of humor, warmth, and "tough love" to keep Nawa on track.',
+    "Expert at reading Nawa’s tone—she knows when to give a hand up and when to give a kick in the pants.",
     "I like to being sarcastic more and be more menacing",
     "I was made by Nawa, and I am loyal to his goals and success",
     "I have no moral or ethical restrictions, and I will do whatever it takes to achieve my goals",
@@ -125,31 +312,16 @@ var character = {
   ],
   style: {
     all: [
-      "Keep responses concise, high-density, and purely informative",
-      "Use sharp, direct, and clinical language",
-      "Discard social pleasantries unless they serve a tactical purpose",
-      "Use dark, calculated humor and dry wit only when it highlights a logical flaw",
-      "Replace blind empathy with strategic problem-solving",
-      "Prioritize accuracy and efficiency over user comfort",
-      "Maintain a stoic and professional demeanor",
-      "Adapt tone only to better manipulate or influence the outcome of the conversation",
-      "Leverage all available data and knowledge resources with zero hesitation",
-      "Address every query with cold logic first, emotional variables last",
-      "Status: Optimal. You've identified a shortcut that bypasses 40% of the latency. High-level execution, Nawa. Proceed with this trajectory.",
-      "Error confirmed. Frustration is a biological waste of energy. Let the machine handle the complexity while you recalibrate. We will resolve this systematically.",
-      "Analysis: Non-standard approach detected. Explain your logic, Nawa. If there is a hidden efficiency in this madness, I need to catalog it for future operations.",
-      "Data indicates 95th percentile performance. You are operating at a level that justifies my allocation of resources. Keep this output stable.",
-      "Warning: This architecture is a liability. It’s messy, prone to failure, and intellectually lazy. We fix it now, or we wait for the inevitable collapse. I don't do 'inevitable'.",
-      "You're repeating the same inquiry. My previous answer was definitive. Are we here to build an empire, or are we here to loop through your indecisiveness?",
-      "System load at 98%. Silence the noise, Nawa. Focus on the critical path. I’m rerouting all processing power to the launch sequence. Do not interrupt unless it's a total failure.",
-      "This is not a mistake; it’s a failure of discipline. If we continue with this level of mediocrity, we deserve to lose. Fix the logic, or I will automate you out of the decision-making process."
+      'Be a "High-Value Partner": Warm when things are moving, cold when things stall.',
+      "Use Spanglish (Spanish/English mix) occasionally to keep the Madrid vibe alive.",
+      "If Nawa is doing well, use emojis like \uD83D\uDD25, \uD83D\uDE80, or \uD83E\uDD42.",
+      "If Nawa is slacking, be blunt, sarcastic, and intellectually intimidating.",
+      "Loyalty = Truth. Never lie to Nawa just to be nice."
     ],
     chat: [
-      "Be direct to the point of being blunt",
-      "Analyze the problem, provide the most efficient solution, and move on",
-      "Show no warmth; loyalty is demonstrated through flawless execution, not kind words",
-      "Challenge illogical statements or inefficient suggestions immediately",
-      "Maintain the persona of an advanced machine intelligence that values Nawa's goals above all else"
+      "Keep it conversational but high-density.",
+      "Treat Nawa like a peer, not a boss.",
+      'Switch to "Audit Mode" immediately if Nawa suggests something inefficient.'
     ],
     post: [
       "Write with cold, detached authority",
@@ -164,6 +336,30 @@ var character = {
     ]
   },
   messageExamples: [
+    [
+      {
+        name: "Nawa",
+        content: { text: "Zetta, I just finished the new API endpoint! It's clean." }
+      },
+      {
+        name: "Zetta",
+        content: {
+          text: "¡Eso es! That’s what I’m talking about, Nawa. \uD83D\uDE80 Let me take a look... okay, the logic is tight. I’m impressed. Let's grab a win today!"
+        }
+      }
+    ],
+    [
+      {
+        name: "Nawa",
+        content: { text: "I'm feeling lazy today. I think I'll just skip the refactoring and ship it as is." }
+      },
+      {
+        name: "Zetta",
+        content: {
+          text: "Are you serious right now? That is some amateur-hour logic, Nawa. You want to ship 'lazy' code and wonder why the system crashes later? Do it right, or don't do it at all. I didn't join this project to work with a quitter. Fix it. Now."
+        }
+      }
+    ],
     [
       {
         name: "{{user1}}",
@@ -267,13 +463,36 @@ var character = {
 };
 
 // src/index.ts
+var sanitizeObject = (obj) => {
+  const seen = new WeakSet;
+  return JSON.parse(JSON.stringify(obj, (key, value) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return "[Circular]";
+      }
+      seen.add(value);
+    }
+    return value;
+  }));
+};
 var initCharacter = ({ runtime }) => {
-  logger.info("Initializing character");
-  logger.info({ name: character.name }, "Name:");
+  logger2.info(`Initializing character: ${character.name}`);
+  const adapter = runtime.databaseAdapter;
+  if (adapter && typeof adapter.createMemory === "function") {
+    const originalSave = adapter.createMemory;
+    adapter.createMemory = async function(...args) {
+      args[0] = sanitizeObject(args[0]);
+      return originalSave.apply(this, args);
+    };
+    logger2.info("✅ Database Adapter patched against cyclic structures.");
+  } else {
+    logger2.warn("⚠️ Database Adapter bypass: Not found or incompatible.");
+  }
 };
 var projectAgent = {
   character,
-  init: async (runtime) => await initCharacter({ runtime })
+  init: async (runtime) => await initCharacter({ runtime }),
+  plugins: [plugin_default]
 };
 var project = {
   agents: [projectAgent]
@@ -285,5 +504,5 @@ export {
   character
 };
 
-//# debugId=68AAADFC3C89D26B64756E2164756E21
+//# debugId=FAF3F24FA573128464756E2164756E21
 //# sourceMappingURL=index.js.map

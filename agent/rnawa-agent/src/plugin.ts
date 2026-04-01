@@ -52,6 +52,7 @@ const configSchema = z.object({
  * @property {Function} handler - The function that handles the action
  * @property {Object[]} examples - Array of examples for the action
  */
+
 const helloWorldAction: Action = {
   name: 'HELLO_WORLD',
   similes: ['GREET', 'SAY_HELLO'],
@@ -152,6 +153,28 @@ const helloWorldProvider: Provider = {
       values: {},
       data: {},
     };
+  },
+};
+
+const cryptoPriceProvider: Provider = {
+  name: 'CRYPTO_PRICE',
+  get: async (runtime: IAgentRuntime, message: Memory, state: State): Promise<ProviderResult> => {
+    try {
+      // Kita tembak CoinGecko (Free API, No Key needed)
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=idr,usd');
+      const data = await response.json();
+      
+      const btcIdr = data.bitcoin.idr.toLocaleString('id-ID');
+      const btcUsd = data.bitcoin.usd.toLocaleString('en-US');
+
+      return {
+        text: `Harga Bitcoin saat ini adalah Rp${btcIdr} ($${btcUsd} USD).`,
+        values: { btcIdr, btcUsd },
+        data: data
+      };
+    } catch (error) {
+      return { text: "Gagal mengambil data harga kripto.", values: {}, data: {} };
+    }
   },
 };
 
