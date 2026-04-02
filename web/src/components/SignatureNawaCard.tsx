@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "../styles/SignatureNawaCard.module.css";
 import Image from "next/image";
 
