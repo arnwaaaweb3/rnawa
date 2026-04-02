@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from '@/styles/GitHub.module.css';
 import { getFileIcon } from '@/utils/github/getFileIcon';
 import { TreeNode } from '@/types/TreeNode';

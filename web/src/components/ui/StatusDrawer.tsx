@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MdCheckCircle, MdRocketLaunch, MdLightbulb, MdApps, MdClose } from 'react-icons/md'
 import styles from '@/components/ui/StatusDrawer.module.css';

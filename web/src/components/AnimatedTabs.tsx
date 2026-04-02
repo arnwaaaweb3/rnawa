@@ -1,5 +1,5 @@
 // src/components/AnimatedTabs.tsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import styles from "../styles/AnimatedTabs.module.css";

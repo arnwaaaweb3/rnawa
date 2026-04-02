@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, type Variants } from 'framer-motion';
 import styles from './MainLayout.module.css';

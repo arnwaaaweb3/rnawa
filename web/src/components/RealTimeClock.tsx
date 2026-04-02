@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styles from '../styles/RealTimeClock.module.css';
 
@@ -26,10 +26,9 @@ const formatDateTime = (date: Date): { time: string; date: string } => {
 };
 
 const RealTimeClock: React.FC = () => {
-  const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [currentDate, setCurrentDate] = useState<Date>(() => new Date());
 
   useEffect(() => {
-    setCurrentDate(new Date()); // Init pertama kali
     const timerId = setInterval(() => {
       setCurrentDate(new Date());
     }, 1000);
@@ -37,7 +36,6 @@ const RealTimeClock: React.FC = () => {
     return () => clearInterval(timerId);
   }, []);
 
-  if (!currentDate) return null;
 
   const { time, date } = formatDateTime(currentDate);
 

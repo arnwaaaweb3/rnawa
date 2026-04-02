@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 import { getFromLocal, saveToLocal } from '@/utils/storage';
@@ -101,7 +101,7 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
         }
       });
     }
-  }, [nestedTree]);
+  }, [nestedTree, repoPath]);
 
   /* ===================== FILE CLICK ===================== */
   const handleFileClick = async (filePath: string) => {

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MdFolder, MdClose, MdVideoLibrary, MdPictureAsPdf, MdImage, MdCode, MdViewCarousel } from 'react-icons/md'
 import styles from './MediaTypeDrawer.module.css'

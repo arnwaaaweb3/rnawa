@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';

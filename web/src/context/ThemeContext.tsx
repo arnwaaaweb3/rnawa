@@ -1,7 +1,7 @@
 // src/context/ThemeContext.tsx
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
 type Theme = 'light' | 'dark';
 
