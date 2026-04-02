@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
@@ -38,7 +38,7 @@ export default function ServicesPage() {
   return (
     <div 
       className={styles.neoContainer}
-      style={{ '--accent': currentAccent } as any} // INI KUNCINYA
+      style={{ '--accent': currentAccent } as React.CSSProperties} // INI KUNCINYA
     >
       <div className={styles.hugeNumber}>
         {String(index + 1).padStart(2, '0')}
