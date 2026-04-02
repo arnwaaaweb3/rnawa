@@ -1,4 +1,3 @@
-import React  from 'react';
 import styles from './HeaderProjects.module.css';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion'; // Tambah AnimatePresence biar keren

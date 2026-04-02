@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoClock } from 'react-icons/go';
 import { VscFolderOpened } from 'react-icons/vsc';
@@ -62,7 +62,7 @@ export default function CommitHistory({
               <div className={styles.commitList}>
                 {fileCommits.map((c, i) => (
                   <div key={i} className={styles.commitItem}>
-                    <img src={c.avatar} alt={c.author} className={styles.avatarMini} />
+                    <Image src={c.avatar} alt={c.author} className={styles.avatarMini} width={32} height={32} />
                     <div className={styles.commitInfo}>
                       <p className={styles.commitMessage}>{c.message}</p>
                       <span className={styles.commitMeta}>

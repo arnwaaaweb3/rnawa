@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { VscSearch } from 'react-icons/vsc';
 import styles from '@/styles/GitHub.module.css';

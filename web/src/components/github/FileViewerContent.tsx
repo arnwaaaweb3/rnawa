@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -12,7 +12,7 @@ interface FileViewerContentProps {
   codeError: string | null;
   fileContent: string;
   selectedFile: string | null;
-  metadata: any;
+  metadata: { owner: string; branch: string } | null;
   repoName: string | undefined;
   darkMode: boolean;
 }
@@ -46,10 +46,13 @@ export default function FileViewerContent({
   if (fileContent === "__IMAGE_PREVIEW__") {
     return (
       <div className={styles.imagePreviewContainer}>
-        <img
+        <Image
           src={`https://raw.githubusercontent.com/${metadata?.owner}/${repoName}/${metadata?.branch}/${selectedFile}`}
           alt={selectedFile || 'Preview'}
           className={styles.imageContent}
+          width={800}
+          height={600}
+          unoptimized
         />
         <p className={styles.imagePathText}>{selectedFile}</p>
       </div>

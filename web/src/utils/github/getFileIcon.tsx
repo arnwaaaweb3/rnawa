@@ -1,4 +1,3 @@
-import React from 'react';
 import { VscFile, VscFolder, VscFolderOpened } from 'react-icons/vsc';
 import {
   SiPython,

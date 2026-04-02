@@ -1,5 +1,4 @@
 // src/app/projects/[[...slug]]/page.tsx
-import React from 'react';
 import { Metadata } from 'next';
 import { fetchAllProjects, fetchSingleProject } from '../actions';
 import ProjectsClientWrapper from './ProjectsClientWrapper';

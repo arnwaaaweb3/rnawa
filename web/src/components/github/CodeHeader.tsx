@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { GoFileCode } from 'react-icons/go';
 import { FiCopy, FiCheck } from 'react-icons/fi';
