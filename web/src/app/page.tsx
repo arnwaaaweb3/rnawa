@@ -1,16 +1,12 @@
-'use client';
-
-import { useRef } from 'react';
-import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import styles from './page.module.css';
+import NavButton from '../components/NavButton'; // Import komponen baru kita
 
-// Components
-import VariableProximity from '../components/VariableProximity';
-import RotatingText from "../components/RotatingText";
-import GlareHover from "../components/GlareHover";
+// Komponen animasi lainnya tetap dynamic (tapi tanpa ssr: false karena ini Server Component)
+const VariableProximity = dynamic(() => import('../components/VariableProximity'));
+const RotatingText = dynamic(() => import('../components/RotatingText'));
+const GlareHover = dynamic(() => import('../components/GlareHover'));
 
-// Move constants outside to prevent re-allocation on every render
 const ROTATING_TEXTS = [
   'Public Relations Officer',
   'Web3 Enthusiast',
@@ -28,25 +24,19 @@ const BUTTON_CONFIGS = [
 ];
 
 export default function HomePage() {
-  const router = useRouter();
-  const containerRef = useRef<HTMLDivElement>(null);
-
   return (
     <div className={styles.mainWrapper}>
       <section className={styles.introArea}>
-        {/* Proximity Header */}
-        <div className={styles.proximityWrapper} ref={containerRef}>
+        <div className={styles.proximityWrapper}>
           <VariableProximity
             label="Hello! My Name is Nawa"
             fromFontVariationSettings="'wght' 400, 'opsz' 9"
             toFontVariationSettings="'wght' 1000, 'opsz' 40"
             radius={100}
             falloff="linear"
-            containerRef={containerRef}
           />
         </div>
 
-        {/* Roles Section */}
         <div className={styles.rotatingTextWrapper}>
           I&apos;m a&nbsp;
           <RotatingText
@@ -57,7 +47,6 @@ export default function HomePage() {
           />
         </div>
 
-        {/* Navigation Grid */}
         <div className={styles.buttonGrid}>
           {BUTTON_CONFIGS.map((button) => (
             <GlareHover
@@ -71,15 +60,11 @@ export default function HomePage() {
               height="100%"
               borderRadius="20px"
             >
-              <motion.button
+              <NavButton 
+                url={button.url} 
+                normal={button.normal} 
+                hover={button.hover} 
                 className={styles.navButton}
-                onClick={() => router.push(button.url)}
-                style={{
-                  '--bg-image-normal': `url(${button.normal})`,
-                  '--bg-image-hover': `url(${button.hover})`,
-                } as React.CSSProperties & { [key: string]: string }} // ✅ This is the correct way
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               />
             </GlareHover>
           ))}
