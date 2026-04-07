@@ -1,8 +1,7 @@
 import dynamic from 'next/dynamic';
 import styles from './page.module.css';
-import NavButton from '../components/NavButton'; // Import komponen baru kita
+import NavButton from '../components/NavButton';
 
-// Komponen animasi lainnya tetap dynamic (tapi tanpa ssr: false karena ini Server Component)
 const VariableProximity = dynamic(() => import('../components/VariableProximity'));
 const RotatingText = dynamic(() => import('../components/RotatingText'));
 const GlareHover = dynamic(() => import('../components/GlareHover'));
@@ -17,10 +16,10 @@ const ROTATING_TEXTS = [
 ];
 
 const BUTTON_CONFIGS = [
-  { id: 1, url: "/services", normal: "/services.png", hover: "/services-hover.png" },
-  { id: 2, url: "/connect", normal: "/connect.png", hover: "/connect-hover.png" },
-  { id: 3, url: "/docs", normal: "/docs.png", hover: "/docs-hover.png" },
-  { id: 4, url: "/projects", normal: "/projects.png", hover: "/projects-hover.png" },
+  { id: 1, url: "/services", normal: "/services.webp", hover: "/services-hover.webp" },
+  { id: 2, url: "/connect", normal: "/connect.webp", hover: "/connect-hover.webp" },
+  { id: 3, url: "/docs", normal: "/docs.webp", hover: "/docs-hover.webp" },
+  { id: 4, url: "/projects", normal: "/projects.webp", hover: "/projects-hover.webp" },
 ];
 
 export default function HomePage() {

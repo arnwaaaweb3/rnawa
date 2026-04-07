@@ -6,10 +6,9 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, type Variants } from 'framer-motion';
 import styles from './MainLayout.module.css';
-import DarkVeil from '../DarkVeil';
 import { useTheme } from '@/context/ThemeContext';
 import RealTimeClock from "../RealTimeClock";
-import NawaLogo from '../../../public/nawa.png';
+import NawaLogo from '../../../public/nawa.webp';
 import { useSidebarWidth } from '../../hooks/useSidebarWidth';
 
 interface MainLayoutProps {
@@ -20,23 +19,18 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const currentSidebarWidth = useSidebarWidth();
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
-
   const { isSidebarOpen, setIsSidebarOpen, isProjectDetailOpen } = useTheme();
-  const [isOpen, setIsOpen] = useState(true);
 
   const immersiveRoutes = ['/projects', '/studio'];
   const isImmersive = immersiveRoutes.some(route =>
-    pathname === route || pathname.startsWith(`${route}/`));
+    pathname === route || pathname.startsWith(`${route}/`)
+  );
 
   const isStudio = pathname?.startsWith('/studio');
   const isInSanityIframe = typeof window !== 'undefined' && window.self !== window.top;
-
-  // RULE: Bunuh sidebar secara total kalau di studio atau iframe preview
   const shouldHideSidebarCompletely = isStudio || isInSanityIframe;
 
-  const shouldShowVeil = !immersiveRoutes.some(route =>
-    pathname === route || pathname.startsWith(`${route}/`)
-  );
+  const shouldShowBackgroundEffect = !isImmersive;
 
   const navItems = [
     { text: "Me", url: "/me" },
@@ -47,43 +41,29 @@ export default function MainLayout({ children }: MainLayoutProps) {
   ];
 
   useEffect(() => {
-    setIsOpen(isSidebarOpen);
-  }, [isSidebarOpen]);
-
-  useEffect(() => {
-    const isInIframe = window.self !== window.top;
-
-    if (isInIframe) {
-      setIsSidebarOpen(false);
-      return;
-    }
-
-    const mql = window.matchMedia('(max-width: 1023px)');
-    const onChange = (e: MediaQueryListEvent | MediaQueryList) => {
-      setIsMobile(e.matches);
-      if (e.matches) {
+    const handleResize = () => {
+      const mql = window.matchMedia('(max-width: 1023px)');
+      setIsMobile(mql.matches);
+      if (mql.matches) {
         setIsSidebarOpen(false);
-      } else {
-        const immersive = ['/projects', '/studio'].some(route => 
-          window.location.pathname.startsWith(route)
-        );
-        if (!immersive) setIsSidebarOpen(true);
+      } else if (!isImmersive) {
+        setIsSidebarOpen(true);
       }
     };
-    
-    onChange(mql);
-    mql.addEventListener('change', onChange);
-    return () => mql.removeEventListener('change', onChange);
-  }, [setIsSidebarOpen]);
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isImmersive, setIsSidebarOpen]);
 
   const panelVariants = (delay: number): Variants => ({
     open: {
       x: 0,
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const, delay }
+      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }
     },
     closed: {
       x: -currentSidebarWidth,
-      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const, delay: delay * 0.5 }
+      transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: delay * 0.5 }
     }
   });
 
@@ -93,13 +73,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
       data-sidebar={isSidebarOpen ? 'open' : 'closed'}
       data-immersive={isProjectDetailOpen}
     >
-      {shouldShowVeil && (
+      {/* BACKGROUND STRATEGY: Ganti DarkVeil dengan CSS Mesh Gradient & Noise */}
+      {shouldShowBackgroundEffect && (
         <div className={styles.backgroundVeil}>
-          {isMobile ? (
-            <div className={styles.mobileBackground} />
-          ) : (
-            <DarkVeil hueShift={300} noiseIntensity={0.03} scanlineIntensity={0.1} warpAmount={0.05} />
-          )}
+           <div className={styles.meshGradient} />
+           <div className={styles.noiseOverlay} />
         </div>
       )}
 
@@ -107,36 +85,36 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <>
           <motion.div
             variants={panelVariants(0.6)}
-            animate={isProjectDetailOpen ? "closed" : (isOpen ? "open" : "closed")}
+            initial="closed"
+            animate={isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed")}
             className={`${styles.smPanel} ${styles.bg2}`}
             style={{ width: currentSidebarWidth }}
           />
 
           <motion.div
             variants={panelVariants(0.3)}
-            animate={isProjectDetailOpen ? "closed" : (isOpen ? "open" : "closed")}
+            initial="closed"
+            animate={isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed")}
             className={`${styles.smPanel} ${styles.bg1}`}
             style={{ width: currentSidebarWidth }}
           />
 
           <motion.div
             variants={panelVariants(0.001)}
-            animate={isProjectDetailOpen ? "closed" : (isOpen ? "open" : "closed")}
+            initial="closed"
+            animate={isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed")}
             className={`${styles.smPanel} ${styles.mainPanel}`}
             style={{ width: currentSidebarWidth }}
           >
             <button
-              onClick={() => {
-                if (isProjectDetailOpen) return;
-                setIsSidebarOpen(!isOpen);
-              }}
+              onClick={() => !isProjectDetailOpen && setIsSidebarOpen(!isSidebarOpen)}
               className={styles.magnetToggle}
               style={{
                 cursor: isProjectDetailOpen ? 'not-allowed' : 'pointer',
                 opacity: isProjectDetailOpen ? 0.5 : 1
               }}
             >
-              {isOpen ? '«' : '»'}
+              {isSidebarOpen ? '«' : '»'}
             </button>
 
             <div className={styles.logoWrapper}>
@@ -158,8 +136,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <div className={styles.tributeFooter}>
               <p className={styles.tributeText}>In Assistance of</p>
               <div className={styles.logoStack}>
-                <Image src="/gemini.png" alt="Gemini AI Logo" height={42} width={120} priority />
-                <Image src="/openai-logo.png" alt="OpenAI Logo" height={32} width={120} priority />
+                <Image src="/gemini.webp" alt="Gemini AI Logo" height={42} width={120} priority />
+                <Image src="/openai-logo.webp" alt="OpenAI Logo" height={32} width={120} priority />
               </div>
             </div>
           </motion.div>

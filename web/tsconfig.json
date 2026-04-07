@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020", // Upgrade dari ES2017 ke ES2020 untuk dukungan fitur modern
+    "target": "ES2020",
     "lib": [
       "dom",
       "dom.iterable",
@@ -9,14 +9,14 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true, // Tambahkan untuk konsistensi nama file
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "ESNext", // Gunakan "ESNext" untuk dukungan module yang lebih baik
-    "moduleResolution": "bundler", // Pertahankan untuk kompatibilitas dengan bundler modern
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx", // Pertahankan untuk dukungan JSX di Next.js
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -24,15 +24,14 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
-    // Tambahkan pengaturan berikut untuk dukungan TypeScript yang lebih baik
-    "baseUrl": ".", // Atur baseUrl untuk path yang relatif
-    "noUnusedLocals": true, // Laporkan variabel lokal yang tidak digunakan
-    "noUnusedParameters": true, // Laporkan parameter yang tidak digunakan
-    "noFallthroughCasesInSwitch": true // Laporkan kesalahan fallthrough di switch
+    /* Kita hapus baseUrl karena sudah redundant dengan settingan modern */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    /* Tambahkan ini untuk membungkam error peringatan deprecation */
+    "ignoreDeprecations": "5.0" 
   },
   "include": [
     "next-env.d.ts",

@@ -26,15 +26,6 @@
   user-select: none;
 }
 
-.veilLayer {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none; 
-  opacity: 0.4;
-  mix-blend-mode: screen; 
-}
-
 .mainGrid {
   position: relative;
   z-index: 10;

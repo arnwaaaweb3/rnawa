@@ -51,9 +51,57 @@
 .backgroundVeil {
   position: fixed;
   inset: 0;
-  z-index: 0;
-  opacity: 0.6;
+  z-index: -1;
+  background-color: #050505;
+  overflow: hidden;
+}
+
+/* Gridline Dasar (Transparan/Redup) */
+.meshGradient {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Noise Overlay untuk tekstur kasar khas Brutalism */
+.noiseOverlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.02;
   pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.meshGradient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Ombak cahaya yang lebih soft */
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 20%,
+    rgba(255, 133, 229, 0.08) 40%, 
+    rgba(255, 133, 229, 0.25) 50%, 
+    rgba(255, 133, 229, 0.08) 60%,
+    transparent 80%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  
+  /* Masking agar hanya menyala di garis grid */
+  mask-image: 
+    linear-gradient(to right, white 1px, transparent 1px),
+    linear-gradient(to bottom, white 1px, transparent 1px);
+  mask-size: 50px 50px;
+  
+  /* Tempo diperlambat jadi  20 detik */
+  animation: sweepWave 20s infinite ease-in-out; 
+  pointer-events: none;
+  will-change: background-position; /* Hint untuk browser agar optimasi GPU */
 }
 
 /* PANELS */
@@ -234,6 +282,17 @@
   opacity: 0.03;
   background-image: url("https://grainy-gradients.vercel.app/noise.svg");
   filter: contrast(150%) brightness(100%);
+}
+
+/* =================================== KEYFRAMES */
+@keyframes sweepWave {
+  0% {
+    background-position: 150% 0;
+  }
+  /* Efek lewat di tengah pada detik ke 4-6, sisanya sembunyi */
+  100% {
+    background-position: -150% 0;
+  }
 }
 
 /* =================================== MEDIA QUERIES */

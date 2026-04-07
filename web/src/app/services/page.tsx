@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
-import DarkVeil from "@/components/DarkVeil"
 import Image from "next/image";
 
 const SERVICES = [
@@ -42,16 +41,6 @@ export default function ServicesPage() {
     >
       <div className={styles.hugeNumber}>
         {String(index + 1).padStart(2, '0')}
-      </div>
-
-      <div className={styles.veilLayer}>
-        <DarkVeil 
-          hueShift={index * 40} // Warnanya geser dikit tiap ganti service
-          noiseIntensity={0.04}
-          scanlineIntensity={0.15}
-          warpAmount={0.02}
-          speed={0.2}
-        />
       </div>
 
       <main className={styles.mainGrid}>

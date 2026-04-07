@@ -9,6 +9,8 @@ import { SanityLive } from '@/sanity/lib/live';
 import { draftMode } from 'next/headers';
 import { DisableDraftMode } from '@/components/DisableDraftMode';
 import VisualEditingComponent from '@/components/VisualEditing';
+import { preload } from 'react-dom';
+
 const lexend = localFont({
   src: "../../public/fonts/Lexend.woff2",
   variable: '--font-lexend',
@@ -26,6 +28,10 @@ export default async function RootLayout({
   children: React.ReactNode 
  }> ) {
   const { isEnabled: isDraftMode } = await draftMode();
+  preload('/services.webp', { as: 'image' });
+  preload('/connect.webp', { as: 'image' });
+  preload('/docs.webp', { as: 'image' });
+  preload('/projects.webp', { as: 'image' });
 
   return (
     <html lang="en" className={lexend.variable} suppressHydrationWarning> 

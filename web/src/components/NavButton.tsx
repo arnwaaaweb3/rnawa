@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { CSSProperties } from 'react';
 
 interface NavButtonProps {
@@ -18,7 +19,17 @@ interface NavButtonStyles extends CSSProperties {
 
 export default function NavButton({ url, normal, hover, className }: NavButtonProps) {
   return (
-    <Link href={url} style={{ display: 'block', width: '100%', height: '100%' }}>
+    <Link 
+      href={url} 
+      style={{ display: 'block', width: '100%', height: '100%', position: 'relative' }}
+    >
+      {/* Hidden Images untuk Trigger Priority & Preloading */}
+      {/* display: none memastikan ini tidak mengganggu layout, tapi browser tetap download */}
+      <div style={{ display: 'none' }}>
+        <Image src={normal} alt="preload-normal" width={10} height={10} priority />
+        <Image src={hover} alt="preload-hover" width={10} height={10} priority />
+      </div>
+
       <motion.button
         className={className}
         style={{
@@ -28,7 +39,8 @@ export default function NavButton({ url, normal, hover, className }: NavButtonPr
           height: '100%',
           border: 'none',
           backgroundSize: 'cover',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          transition: 'background-image 0.2s ease-in-out'
         } as NavButtonStyles}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
