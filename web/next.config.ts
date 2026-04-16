@@ -1,8 +1,8 @@
-// next.config.ts
 import { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
     images: {
+        formats: ['image/avif', 'image/webp'], 
         imageSizes: [640, 828, 1200, 1600], 
         deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
         remotePatterns: [

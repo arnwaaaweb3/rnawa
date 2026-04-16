@@ -18,8 +18,42 @@ const lexend = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Nawa | Web3 Portfolio Hub',
-  description: 'Personal knowledge, views, and professional portfolio.',
+  title: {
+    default: 'Nawa | Web3 Portfolio Hub',
+    template: '%s | Nawa'
+  },
+  description: 'Personal knowledge, views, and professional portfolio of Nawa.',
+  metadataBase: new URL('https://rnawa.vercel.app'), // PENTING: Ganti sesuai domain lo nanti
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Nawa | Web3 Portfolio Hub',
+    description: 'Personal knowledge, views, and professional portfolio.',
+    url: 'https://rnawa.vercel.app',
+    siteName: 'Nawa Portfolio',
+    images: [
+      {
+        url: '/nawa.webp', // Pastikan file ini ada di folder /public
+        width: 1200,
+        height: 630,
+        alt: 'Nawa Portfolio Preview',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Nawa | Web3 Portfolio Hub',
+    description: 'Web3 & AI Enthusiast Portfolio',
+    creator: '@rnawaaaaa',
+    images: ['/profil-nawa.webp'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default async function RootLayout({ 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import { useRouter } from 'next/navigation';
-import { preload } from 'react-dom'; // Import preload
+import { preload } from 'react-dom';
 import AnimatedTabs from '@/app/connect/components/AnimatedTabs/index';
 import SignatureNawaCard from '../../components/SignatureNawaCard';
 
