@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { MdCheckCircle, MdRocketLaunch, MdLightbulb, MdApps, MdClose } from 'react-icons/md'
 import styles from '@/components/ui/StatusDrawer.module.css';
 import { useTheme } from '@/context/ThemeContext'
@@ -31,18 +31,18 @@ export const StatusDrawer = ({ activeStatus, onStatusChange }: StatusDrawerProps
 
   return (
     <div className={`${styles.drawerWrapper} ${mounted && isDark ? styles.darkModeActive : ''}`}>
-      <motion.button
+      <m.button
         className={`${styles.drawerTrigger} ${isOpen ? styles.triggerActive : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         whileTap={{ scale: 0.95 }}
       >
         {isOpen ? <MdClose size={20} /> : <MdApps size={20} />}
         <span className={styles.drawerLabel}>{isOpen ? 'CLOSE' : 'STATUS'}</span>
-      </motion.button>
+      </m.button>
 
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ width: 0, opacity: 0, x: -20 }}
             animate={{ width: 'auto', opacity: 1, x: 0 }}
             exit={{ width: 0, opacity: 0, x: -20 }}
@@ -69,7 +69,7 @@ export const StatusDrawer = ({ activeStatus, onStatusChange }: StatusDrawerProps
                 </button>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

@@ -23,8 +23,6 @@
 }
 
 .layoutRoot[data-immersive="true"] .smPanel {
-  /* Biarkan Framer Motion yang handle x-axis lewat prop 'animate' di atas */
-  /* Jangan dipaksa translateX(-100%) lewat CSS kalau mau animasinya smooth */
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
@@ -91,8 +89,7 @@
     transparent 100%
   );
   background-size: 200% 100%;
-  
-  /* Masking agar hanya menyala di garis grid */
+
   mask-image: 
     linear-gradient(to right, white 1px, transparent 1px),
     linear-gradient(to bottom, white 1px, transparent 1px);
@@ -289,7 +286,6 @@
   0% {
     background-position: 150% 0;
   }
-  /* Efek lewat di tengah pada detik ke 4-6, sisanya sembunyi */
   100% {
     background-position: -150% 0;
   }

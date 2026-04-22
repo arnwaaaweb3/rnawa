@@ -1,5 +1,5 @@
 'use client';
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
 import { FaLinkedin } from "react-icons/fa";
 import styles from "@/app/connect/styles/AnimatedTabs.module.css";
@@ -10,7 +10,7 @@ export default function LinkedInTab({ isDarkMode, isActive }: { isDarkMode: bool
 
   return (
     <div className={styles.dummyCard} style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
-      <motion.div
+      <m.div
         key={bannerImage}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -25,10 +25,10 @@ export default function LinkedInTab({ isDarkMode, isActive }: { isDarkMode: bool
           sizes="(max-width: 768px) 100vw, 50vw"
           style={{ objectFit: 'cover', borderRadius: '20px' }}
         />
-      </motion.div>
+      </m.div>
 
       <div style={{ position: 'absolute', inset: 0, paddingTop: '10rem', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '20px' }}>
-        <motion.a
+        <m.a
           href={linkedinUrl}
           target="_blank"
           rel="noreferrer"
@@ -51,7 +51,7 @@ export default function LinkedInTab({ isDarkMode, isActive }: { isDarkMode: bool
         >
           <FaLinkedin size={20} />
           Connect Now
-        </motion.a>
+        </m.a>
       </div>
     </div>
   );

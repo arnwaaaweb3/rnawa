@@ -1,14 +1,31 @@
+// src/app/api/github/tree/route.ts
+
 import { getRepoTree } from '@/utils/github';
 import { NextRequest, NextResponse } from 'next/server';
 
+type TreeItem = {
+  path: string;
+  type: 'tree' | 'blob';
+};
+
 type GitHubTreeResponse = {
-  tree?: any[];
-  truncated?: boolean;
+  tree: TreeItem[];
 };
 
 type GitHubErrorResponse = {
   message?: string;
   documentation_url?: string;
+};
+
+type RepoMetadataResponse = {
+  stargazers_count?: number;
+  forks_count?: number;
+  subscribers_count?: number;
+  owner?: { login?: string };
+  updated_at?: string;
+  size?: number;
+  license?: { name?: string } | null;
+  default_branch?: string;
 };
 
 export async function GET(req: NextRequest) {
@@ -25,10 +42,10 @@ export async function GET(req: NextRequest) {
 
     // 1. Fetch Repo Metadata
     const metaRes = await fetch(`https://api.github.com/repos/${repoPath}`, { headers });
-    const metaData = await metaRes.json();
+    const metaData = (await metaRes.json()) as RepoMetadataResponse;
 
     // 2. Fetch Tree (existing logic via util)
-    const data = await getRepoTree(repoPath) as GitHubTreeResponse | GitHubErrorResponse;
+    const data = (await getRepoTree(repoPath)) as GitHubTreeResponse | GitHubErrorResponse;
 
     // Validasi jika GitHub memberikan error (misal repo tidak ketemu)
     if ('message' in data && data.message === 'Not Found') {
@@ -37,19 +54,20 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       metadata: {
-        stars: metaData.stargazers_count,
-        forks: metaData.forks_count,
-        watchers: metaData.subscribers_count,
-        owner: metaData.owner.login,
-        updatedAt: metaData.updated_at,
-        size: metaData.size,
-        license: metaData.license?.name || 'No License',
-        branch: metaData.default_branch
+        stars: metaData.stargazers_count ?? 0,
+        forks: metaData.forks_count ?? 0,
+        watchers: metaData.subscribers_count ?? 0,
+        owner: metaData.owner?.login ?? 'unknown',
+        updatedAt: metaData.updated_at ?? new Date().toISOString(),
+        size: metaData.size ?? 0,
+        license: metaData.license?.name ?? 'No License',
+        branch: metaData.default_branch ?? 'main'
       },
       ...data
     });
-  } catch (err) {
+  } catch (err: unknown) { 
     console.error('GitHub Tree Error:', err);
-    return NextResponse.json({ error: 'Failed to fetch GitHub tree' }, { status: 500 });
+    const errorMessage = err instanceof Error ? err.message : 'Failed to fetch GitHub tree';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

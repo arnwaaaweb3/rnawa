@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Header } from '../../../components/layout/HeaderProjects';
 import { ProjectCard } from './ProjectCard';
 import { ProjectDetailPanel } from './ProjectDetailPanel';
@@ -98,9 +98,9 @@ export default function ProjectsClientWrapper({
           <Header onToggleHover={setShowThemeTooltip} />
           <AnimatePresence>
             {showThemeTooltip && (
-              <motion.div className={styles.floatingTooltip}>
+              <m.div className={styles.floatingTooltip}>
                 {isDark ? 'Light Mode?' : 'Dark Mode?'}
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
         </div>
@@ -128,7 +128,7 @@ export default function ProjectsClientWrapper({
 
             <AnimatePresence>
               {!isFilterOpen && showFilterTooltip && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
@@ -136,7 +136,7 @@ export default function ProjectsClientWrapper({
                   className={styles.filterTooltip}
                 >
                   Filter by format & status
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
           </div>
@@ -181,11 +181,11 @@ export default function ProjectsClientWrapper({
 
       {/* Portal Back Button - Tetap sesuai kode lama lo */}
       {mounted && createPortal(
-        <motion.div className={styles.backButtonWrapper}>
+        <m.div className={styles.backButtonWrapper}>
           <button className={`${styles.backButton} ${isDark ? styles.darkModeButton : ''}`} onClick={() => router.push('/')}>
             ← Back
           </button>
-        </motion.div>,
+        </m.div>,
         document.body
       )}
     </>

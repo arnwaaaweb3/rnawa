@@ -1,9 +1,10 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { CSSProperties } from 'react';
+import { useState } from 'react';
+import { m, AnimatePresence } from 'framer-motion';
+import styles from '@/styles/NavButton.module.css'; // Pastikan path-nya benar
 
 interface NavButtonProps {
   url: string;
@@ -12,39 +13,46 @@ interface NavButtonProps {
   className?: string;
 }
 
-interface NavButtonStyles extends CSSProperties {
-  '--bg-image-normal': string;
-  '--bg-image-hover': string;
-}
-
 export default function NavButton({ url, normal, hover, className }: NavButtonProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <Link 
       href={url} 
-      style={{ display: 'block', width: '100%', height: '100%', position: 'relative' }}
+      className={`${styles.navButtonContainer} ${className}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Hidden Images untuk Trigger Priority & Preloading */}
-      {/* display: none memastikan ini tidak mengganggu layout, tapi browser tetap download */}
-      <div style={{ display: 'none' }}>
-        <Image src={normal} alt="preload-normal" width={10} height={10} priority />
-        <Image src={hover} alt="preload-hover" width={10} height={10} priority />
-      </div>
-
-      <motion.button
-        className={className}
-        style={{
-          '--bg-image-normal': `url(${normal})`,
-          '--bg-image-hover': `url(${hover})`,
-          width: '100%',
-          height: '100%',
-          border: 'none',
-          backgroundSize: 'cover',
-          cursor: 'pointer',
-          transition: 'background-image 0.2s ease-in-out'
-        } as NavButtonStyles}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+      {/* Gambar Normal */}
+      <Image
+        src={normal}
+        alt="Nav Icon"
+        fill
+        priority // Penting! Supaya gambar tombol di-load paling awal
+        sizes="(max-width: 768px) 100vw, 25vw"
+        className={`${styles.navImage} ${isHovered ? styles.hidden : styles.visible}`}
       />
+      
+      {/* Gambar Hover - Kita pakai AnimatePresence biar smooth tapi ringan */}
+      <AnimatePresence>
+        {isHovered && (
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className={styles.hoverImageWrapper}
+          >
+            <Image
+              src={hover}
+              alt="Nav Icon Hover"
+              fill
+              sizes="(max-width: 768px) 100vw, 25vw"
+              className={styles.navImage}
+            />
+          </m.div>
+        )}
+      </AnimatePresence>
     </Link>
   );
 }

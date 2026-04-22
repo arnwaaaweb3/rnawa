@@ -8,7 +8,7 @@ import {
   CSSProperties,
   RefObject,
 } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import '../styles/VariableProximity.module.css';
 
 /* =======================
@@ -162,17 +162,6 @@ const VariableProximity = forwardRef<
       );
     }, [fromFontVariationSettings, toFontVariationSettings]);
 
-    /* =======================
-       MATH HELPERS
-    ======================= */
-
-    const calculateDistance = (
-      x1: number,
-      y1: number,
-      x2: number,
-      y2: number
-    ) => Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-
     const calculateFalloff = (distance: number) => {
       const norm = Math.min(Math.max(1 - distance / radius, 0), 1);
 
@@ -190,50 +179,46 @@ const VariableProximity = forwardRef<
     /* =======================
        ANIMATION LOOP
     ======================= */
-
     useAnimationFrame(() => {
       if (!containerRef?.current) return;
 
-      const containerRect =
-        containerRef.current.getBoundingClientRect();
+      const containerRect = containerRef.current.getBoundingClientRect();
       const { x, y } = mousePositionRef.current;
 
-      if (
-        lastPositionRef.current.x === x &&
-        lastPositionRef.current.y === y
-      )
-        return;
-
+      // Optimasi 1: Skip kalau mouse ga gerak
+      if (lastPositionRef.current.x === x && lastPositionRef.current.y === y) return;
       lastPositionRef.current = { x, y };
+
+      // Pre-calc radius squared untuk quick distance check
+      const radiusSquared = radius * radius;
 
       letterRefs.current.forEach((letterRef, index) => {
         if (!letterRef) return;
 
         const rect = letterRef.getBoundingClientRect();
-        const letterCenterX =
-          rect.left + rect.width / 2 - containerRect.left;
-        const letterCenterY =
-          rect.top + rect.height / 2 - containerRect.top;
+        const letterCenterX = rect.left + rect.width / 2 - containerRect.left;
+        const letterCenterY = rect.top + rect.height / 2 - containerRect.top;
 
-        const distance = calculateDistance(
-          x,
-          y,
-          letterCenterX,
-          letterCenterY
-        );
+        // Optimasi 2: Quick distance check pake squared (tanpa sqrt)
+        const dx = x - letterCenterX;
+        const dy = y - letterCenterY;
+        const distanceSquared = dx * dx + dy * dy;
 
-        if (distance >= radius) {
-          letterRef.style.fontVariationSettings =
-            fromFontVariationSettings;
+        // Optimasi 3: Kalau di luar radius, reset dan SKIP kalkulasi berat
+        if (distanceSquared >= radiusSquared) {
+          if (letterRef.style.fontVariationSettings !== fromFontVariationSettings) {
+            letterRef.style.fontVariationSettings = fromFontVariationSettings;
+          }
           return;
         }
 
+        // Baru hitung sqrt kalau memang di dalam radius
+        const distance = Math.sqrt(distanceSquared);
         const falloffValue = calculateFalloff(distance);
 
         const newSettings = parsedSettings
           .map(({ axis, fromValue, toValue }) => {
-            const interpolatedValue =
-              fromValue + (toValue - fromValue) * falloffValue;
+            const interpolatedValue = fromValue + (toValue - fromValue) * falloffValue;
             return `'${axis}' ${interpolatedValue}`;
           })
           .join(', ');
@@ -276,7 +261,7 @@ const VariableProximity = forwardRef<
             {word.split('').map((letter: string) => {
               const currentLetterIndex = letterIndex++;
               return (
-                <motion.span
+                <span
                   key={currentLetterIndex}
                   ref={el => {
                     letterRefs.current[currentLetterIndex] = el;
@@ -285,13 +270,13 @@ const VariableProximity = forwardRef<
                     display: 'inline-block',
                     fontVariationSettings:
                       interpolatedSettingsRef.current[
-                        currentLetterIndex
+                      currentLetterIndex
                       ],
                   }}
                   aria-hidden="true"
                 >
                   {letter}
-                </motion.span>
+                </span>
               );
             })}
             {wordIndex < words.length - 1 && (

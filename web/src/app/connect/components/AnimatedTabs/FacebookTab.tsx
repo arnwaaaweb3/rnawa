@@ -1,5 +1,5 @@
 'use client';
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
 import { FaFacebook } from "react-icons/fa";
 import styles from "@/app/connect/styles/AnimatedTabs.module.css";
@@ -18,7 +18,7 @@ export default function FacebookTab({ isDarkMode, isActive }: { isDarkMode: bool
         style={{ objectFit: 'cover', borderRadius: '20px' }} 
       />
       <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '20px', paddingTop: '150px' }}>
-        <motion.a 
+        <m.a 
           href="https://www.facebook.com/arnawa.ugra.2025" 
           target="_blank" 
           whileHover={{ scale: 1.05 }} 
@@ -26,7 +26,7 @@ export default function FacebookTab({ isDarkMode, isActive }: { isDarkMode: bool
           style={{ backgroundColor: '#1877F2', color: 'white', padding: '12px 28px', borderRadius: '50px', fontWeight: 'bold', display: 'flex', gap: '10px' }}
         >
           <FaFacebook size={22} /> Visit Profile
-        </motion.a>
+        </m.a>
       </div>
     </div>
   );

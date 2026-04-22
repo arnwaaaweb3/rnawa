@@ -1,8 +1,5 @@
 // src/utils/debounce.ts
 
-/**
- * Versi yang lebih bersih tanpa 'any' eksplisit dan alias 'this' yang tidak perlu.
- */
 export function debounce<T extends (...args: unknown[]) => void>(
   func: T,
   wait: number

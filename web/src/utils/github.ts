@@ -2,7 +2,22 @@
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-// Cache sederhana untuk menyimpan default branch per repoPath (Fix Point #3 Neo)
+// Type untuk response dari GitHub API
+type GitHubTreeResponse = {
+  tree: Array<{
+    path: string;
+    type: 'tree' | 'blob';
+    mode: string;
+    sha: string;
+    size?: number;
+    url: string;
+  }>;
+  truncated: boolean;
+  sha: string;
+  url: string;
+};
+
+// Cache sederhana untuk menyimpan default branch per repoPath
 const branchCache = new Map<string, string>();
 
 async function getDefaultBranch(repoPath: string): Promise<string> {
@@ -38,19 +53,11 @@ export async function getRepoTree(repoPath: string) {
     }
   );
   
-  const data = await res.json();
+  const data = await res.json() as GitHubTreeResponse;
 
-  // Guard Clause: Kalau GitHub balikin error (message), langsung lempar error
-  if (data.message && data.message === 'Not Found') {
-    throw { code: 'NOT_FOUND', status: 404 };
-  }
-
-  if (!data.tree) {
-    return { tree: [] };
-  }
-
-  // Filtering
-  const filteredTree = data.tree.filter((item: any) => {
+  // TypeScript otomatis tau type dari data.tree
+  const filteredTree = data.tree.filter((item) => {
+    // item sudah punya type otomatis dari GitHubTreeResponse
     const parts = item.path.split('/');
     return !(
       parts.includes('node_modules') || 
@@ -61,9 +68,9 @@ export async function getRepoTree(repoPath: string) {
   });
 
   return {
-    tree: filteredTree.map((item: any) => ({
+    tree: filteredTree.map((item) => ({
       path: item.path,
-      type: item.type === 'tree' ? 'tree' : 'blob' // Normalisasi type
+      type: item.type === 'tree' ? 'tree' : 'blob'
     })),
   };
 }

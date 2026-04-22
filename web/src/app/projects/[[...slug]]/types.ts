@@ -7,6 +7,20 @@ export interface Category {
   type: 'domain' | 'output';
 }
 
+// Type untuk Sanity file
+export interface SanityFile {
+  asset: {
+    _id: string;
+    url: string;
+    size?: number;
+    mimeType?: string;
+  };
+}
+
+// Tambahkan type DisplayType
+export type DisplayType = 'video' | 'poster' | 'pdf' | 'github' | 'feeds';
+export type MediaFilterType = 'all' | DisplayType;
+
 export interface Project {
   _id: string;
   title: string;
@@ -28,10 +42,10 @@ export interface Project {
   youtubeId?: string;
   githubRepo?: string;
   enableExplorer?: boolean;
-  displayType: 'video' | 'poster' | 'pdf' | 'github' | 'feeds';
+  displayType: DisplayType;
   
   imageOrientation?: 'landscape' | 'portrait' | 'square'; 
-  pdfFile?: any; 
+  pdfFile?: string | SanityFile;
   posterImage?: {
     asset: {
       _id: string;

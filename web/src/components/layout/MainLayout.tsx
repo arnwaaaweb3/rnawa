@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { motion, type Variants } from 'framer-motion';
+import { m, type Variants } from 'framer-motion';
 import styles from './MainLayout.module.css';
 import { useTheme } from '@/context/ThemeContext';
 import RealTimeClock from "../RealTimeClock";
@@ -83,7 +83,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
       {!shouldHideSidebarCompletely && (
         <>
-          <motion.div
+          <m.div
             variants={panelVariants(0.6)}
             initial="closed"
             animate={isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed")}
@@ -91,7 +91,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             style={{ width: currentSidebarWidth }}
           />
 
-          <motion.div
+          <m.div
             variants={panelVariants(0.3)}
             initial="closed"
             animate={isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed")}
@@ -99,7 +99,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             style={{ width: currentSidebarWidth }}
           />
 
-          <motion.div
+          <m.div
             variants={panelVariants(0.001)}
             initial="closed"
             animate={isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed")}
@@ -140,11 +140,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <Image src="/openai-logo.webp" alt="OpenAI Logo" height={32} width={120} priority />
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </>
       )}
 
-      <motion.main
+      <m.main
         layout
         className={`${styles.mainContent} ${isImmersive ? styles.immersiveContent : ''}`}
         style={{
@@ -154,7 +154,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}
-      </motion.main>
+      </m.main>
     </div>
   );
 }

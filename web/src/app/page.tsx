@@ -53,7 +53,7 @@ export default function HomePage() {
               glareColor="#ff85e5"
               glareOpacity={0.6}
               glareAngle={-30}
-              glareSize={200}
+              glareSize={100}
               transitionDuration={300}
               width="100%"
               height="100%"

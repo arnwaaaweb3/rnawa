@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { GoFileCode } from 'react-icons/go';
 import { FiCopy, FiCheck } from 'react-icons/fi';
 import styles from '@/styles/GitHub.module.css';
@@ -23,7 +23,7 @@ export default function CodeHeader({
         {fileName}
       </span>
 
-      <motion.button
+      <m.button
         className={styles.copyButton}
         onClick={handleCopy}
         title="Copy code"
@@ -33,7 +33,7 @@ export default function CodeHeader({
       >
         {copied ? <FiCheck /> : <FiCopy />}
         {copied ? 'Copied' : 'Copy'}
-      </motion.button>
+      </m.button>
     </div>
   );
 }

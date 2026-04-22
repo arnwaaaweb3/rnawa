@@ -1,6 +1,6 @@
 // src/components/AnimatedTabs.tsx
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import InstagramTab from './InstagramTab';
 import TwitterTab from './TwitterTab';
 import ThreadsTab from './ThreadsTab';
@@ -121,7 +121,7 @@ const AnimatedTabs: React.FC = () => {
             data-active={activeTab === tab.id}
           >
             {activeTab === tab.id && (
-              <motion.div
+              <m.div
                 layoutId="active-tab-pill"
                 className={styles.activeBackground}
                 transition={{ type: "spring", duration: 0.6 }}
@@ -149,7 +149,7 @@ const AnimatedTabs: React.FC = () => {
         <AnimatePresence mode="wait">
           {tabs.map((tab) => (
             activeTab === tab.id ? (
-              <motion.div
+              <m.div
                 key={tab.id}
                 initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -158,7 +158,7 @@ const AnimatedTabs: React.FC = () => {
                 className={styles.contentWrapper}
               >
                 {tab.content}
-              </motion.div>
+              </m.div>
             ) : null
           ))}
         </AnimatePresence>

@@ -1,4 +1,4 @@
-// src/app/layout.tsx (Versi Perbaikan: Local-First)
+// src/app/layout.tsx
 
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
@@ -10,20 +10,23 @@ import { draftMode } from 'next/headers';
 import { DisableDraftMode } from '@/components/DisableDraftMode';
 import VisualEditingComponent from '@/components/VisualEditing';
 import { preload } from 'react-dom';
+import LazyMotionWrapper from '@/components/LazyMotionWrapper';
 
+// Font Optimization
 const lexend = localFont({
   src: "../../public/fonts/Lexend.woff2",
   variable: '--font-lexend',
   display: 'swap',
 });
 
+// Metadata SEO
 export const metadata: Metadata = {
   title: {
     default: 'Nawa | Web3 Portfolio Hub',
     template: '%s | Nawa'
   },
   description: 'Personal knowledge, views, and professional portfolio of Nawa.',
-  metadataBase: new URL('https://rnawa.vercel.app'), // PENTING: Ganti sesuai domain lo nanti
+  metadataBase: new URL('https://rnawa.vercel.app'),
   alternates: {
     canonical: '/',
   },
@@ -34,7 +37,7 @@ export const metadata: Metadata = {
     siteName: 'Nawa Portfolio',
     images: [
       {
-        url: '/nawa.webp', // Pastikan file ini ada di folder /public
+        url: '/nawa.webp',
         width: 1200,
         height: 630,
         alt: 'Nawa Portfolio Preview',
@@ -58,10 +61,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ 
   children,
- }: Readonly <{ 
+ }: Readonly<{ 
   children: React.ReactNode 
- }> ) {
+ }>) {
   const { isEnabled: isDraftMode } = await draftMode();
+
+  // Preload aset gambar utama agar LCP lebih cepat
   preload('/services.webp', { as: 'image' });
   preload('/connect.webp', { as: 'image' });
   preload('/docs.webp', { as: 'image' });
@@ -87,16 +92,18 @@ export default async function RootLayout({
       </head>
       <body className="antialiased"> 
         <ThemeProvider>
-          <MainLayout>
-            {children}
-            {isDraftMode && (
-              <>
-                <VisualEditingComponent /> {/* Ini manggil src/components/VisualEditing.tsx */}
-                <DisableDraftMode />
-              </>
-            )}
-            <SanityLive />
+          <LazyMotionWrapper>
+            <MainLayout>
+              {children}
+              {isDraftMode && (
+                <>
+                  <VisualEditingComponent />
+                  <DisableDraftMode />
+                </>
+              )}
+              <SanityLive />
             </MainLayout>
+          </LazyMotionWrapper>
         </ThemeProvider>
       </body>
     </html>

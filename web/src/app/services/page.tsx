@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import styles from "./page.module.css";
 import Image from "next/image";
 
@@ -25,17 +25,33 @@ export default function ServicesPage() {
   }, []);
 
   useEffect(() => {
+    let touchTimeout: ReturnType<typeof setTimeout> | null = null;
+
     const handleWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) > 50) paginate(e.deltaY > 0 ? 1 : -1);
+      // Skip kalau lagi dalam masa tunggu
+      if (touchTimeout !== null) return;
+
+      if (Math.abs(e.deltaY) > 50) {
+        paginate(e.deltaY > 0 ? 1 : -1);
+
+        // Kunci scroll selama 500ms biar nggak loncat-loncat
+        touchTimeout = setTimeout(() => {
+          touchTimeout = null;
+        }, 500);
+      }
     };
+
     window.addEventListener("wheel", handleWheel);
-    return () => window.removeEventListener("wheel", handleWheel);
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      if (touchTimeout !== null) clearTimeout(touchTimeout);
+    };
   }, [paginate]);
 
   const currentAccent = SERVICES[index].color;
 
   return (
-    <div 
+    <div
       className={styles.neoContainer}
       style={{ '--accent': currentAccent } as React.CSSProperties} // INI KUNCINYA
     >
@@ -46,39 +62,39 @@ export default function ServicesPage() {
       <main className={styles.mainGrid}>
         <section className={styles.leftCol}>
           <div className={styles.tagLine}>
-             <span className={styles.blink}>●</span> SERVICES / {SERVICES[index].code}
+            <span className={styles.blink}>●</span> SERVICES / {SERVICES[index].code}
           </div>
-          
+
           <div className={styles.titleWrapper}>
             <div className={styles.titleFixedContainer}>
               <AnimatePresence mode="wait" custom={direction}>
-              <motion.h1 
-                key={index}
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 50, opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className={styles.title}
-              >
-                {SERVICES[index].title}
-              </motion.h1>
-            </AnimatePresence>
+                <m.h1
+                  key={index}
+                  initial={{ x: -50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: 50, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className={styles.title}
+                >
+                  {SERVICES[index].title}
+                </m.h1>
+              </AnimatePresence>
             </div>
           </div>
 
-          <motion.button 
+          <m.button
             whileHover={{ scale: 1.05, rotate: -1 }}
             whileTap={{ scale: 0.95 }}
             className={styles.neoCta}
           >
             SEE MORE DETAILS ↗
-          </motion.button>
+          </m.button>
         </section>
 
         <section className={styles.rightCol}>
           <div className={styles.imageFrame}>
             <AnimatePresence mode="wait">
-              <motion.div
+              <m.div
                 key={index}
                 initial={{ clipPath: "inset(100% 0 0 0)" }}
                 animate={{ clipPath: "inset(0% 0 0 0)" }}
@@ -86,13 +102,13 @@ export default function ServicesPage() {
                 transition={{ duration: 0.6, ease: [0.8, 0, 0.1, 1] }}
                 className={styles.imgInternal}
               >
-                <Image 
-                  src={`/services${index + 1}.webp`} 
-                  alt={SERVICES[index].title} 
-                  fill 
-                  className={styles.actualImg} 
+                <Image
+                  src={`/services${index + 1}.webp`}
+                  alt={SERVICES[index].title}
+                  fill
+                  className={styles.actualImg}
                 />
-              </motion.div>
+              </m.div>
             </AnimatePresence>
             <div className={styles.frameDecoration} />
           </div>
@@ -101,8 +117,8 @@ export default function ServicesPage() {
 
       <nav className={styles.bottomNav}>
         {SERVICES.map((s, i) => (
-          <button 
-            key={s.id} 
+          <button
+            key={s.id}
             onClick={() => setIndex(i)}
             className={`${styles.navItem} ${i === index ? styles.activeNavItem : ""}`}
             style={i === index ? { backgroundColor: s.color } : {}}

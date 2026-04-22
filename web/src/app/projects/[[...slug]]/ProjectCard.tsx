@@ -1,5 +1,5 @@
 // src/app/projects/[[...slug]]/ProjectCard.tsx
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import Image from 'next/image';
 import { Project } from './types';
 import styles from '@/app/projects/[[...slug]]/styles/ProjectCard.module.css';
@@ -30,7 +30,7 @@ export const ProjectCard = ({
   };
 
   return (
-    <motion.div
+    <m.div
       layout 
       initial={{ opacity: 0, scale: 0.9, y: 10 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -42,7 +42,7 @@ export const ProjectCard = ({
       }}
       className={styles.projectCard}
     >
-      <motion.div
+      <m.div
         className={styles.visualEffect}
         animate={mounted ? {
           backgroundColor: isDark ? '#190b61' : '#ff85e5',
@@ -99,6 +99,6 @@ export const ProjectCard = ({
           <span>→</span>
         </button>
       </div>
-    </motion.div>
+    </m.div>
   );
 };

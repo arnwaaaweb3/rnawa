@@ -11,7 +11,7 @@ import {
 import { GoClock } from 'react-icons/go';
 import styles from '@/styles/GitHub.module.css';
 
-interface RepoMetadataProps {
+export interface RepoMetadataProps {
   metadata: {
     stars: number;
     forks: number;

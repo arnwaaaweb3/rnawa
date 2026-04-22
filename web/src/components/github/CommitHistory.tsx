@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { GoClock } from 'react-icons/go';
 import { VscFolderOpened } from 'react-icons/vsc';
 import styles from '@/styles/GitHub.module.css';
@@ -13,7 +13,7 @@ interface Commit {
   date: string;
 }
 
-interface CommitHistoryProps {
+export interface CommitHistoryProps {
   isCommitsOpen: boolean;
   setIsCommitsOpen: (open: boolean) => void;
   fileCommits: Commit[];
@@ -39,17 +39,17 @@ export default function CommitHistory({
             <span className={styles.commitBadge}>{fileCommits.length}</span>
           )}
         </div>
-        <motion.span
+        <m.span
           animate={{ rotate: isCommitsOpen ? 180 : 0 }}
           transition={{ duration: 0.3 }}
         >
           <VscFolderOpened />
-        </motion.span>
+        </m.span>
       </button>
 
       <AnimatePresence>
         {isCommitsOpen && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -75,7 +75,7 @@ export default function CommitHistory({
             ) : (
               <p className={styles.emptyCommits}>No recent commits found for this file.</p>
             )}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import styles from '@/styles/GitHub.module.css';
 
 interface FileSearchProps {
@@ -17,7 +17,7 @@ export default function FileSearch({
   return (
     <AnimatePresence>
       {isSearchOpen && (
-        <motion.div
+        <m.div
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
@@ -31,7 +31,7 @@ export default function FileSearch({
             onChange={(e) => setSearchQuery(e.target.value)}
             autoFocus
           />
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

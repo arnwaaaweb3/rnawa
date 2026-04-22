@@ -1,4 +1,14 @@
+// src/types/handleFileClick.ts
+
 import { initDB, saveToLocal, getFromLocal } from "@/utils/storage";
+
+// Tipe commit yang sesuai dengan interface Commit di CommitHistory
+type CommitType = {
+  avatar: string;
+  author: string;
+  message: string;
+  date: string;
+};
 
 type HandleFileClickDeps = {
   repoPath: string;
@@ -9,7 +19,7 @@ type HandleFileClickDeps = {
   setLoading: (v: boolean) => void;
   setCodeCache: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   setCommitsLoading: (v: boolean) => void;
-  setFileCommits: (v: any[]) => void;
+  setFileCommits: (v: CommitType[]) => void;
 };
 
 export const handleFileClickLogic = async (
@@ -32,36 +42,30 @@ export const handleFileClickLogic = async (
   const imageExtensions = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'];
   const binaryExtensions = ['pyc', 'pdf', 'exe', 'bin', 'zip', 'rar'];
 
-  // 1. Reset State & UI awal
   setSelectedFile(filePath);
   setCodeError(null);
 
-  // 2. Handle Image Preview
   if (imageExtensions.includes(ext)) {
     setFileContent('__IMAGE_PREVIEW__');
     return;
   }
 
-  // 3. Handle Binary Files
   if (binaryExtensions.includes(ext)) {
     setFileContent('');
     setCodeError(`Preview not available for binary files (.${ext}). Please download it from GitHub.`);
     return;
   }
 
-  // 4. Cek State Cache (RAM) - Paling cepet
   if (codeCache[filePath]) {
     console.log(`[Cache] Loading "${filePath}" from state.`);
     setFileContent(codeCache[filePath]);
     return;
   }
 
-  // 5. Mulai proses "berat", aktifin Loading
   setLoading(true);
   setFileContent('');
 
   try {
-    // 6. Cek IndexedDB (Local Storage)
     await initDB();
     const localContent = await getFromLocal(filePath);
 
@@ -73,7 +77,6 @@ export const handleFileClickLogic = async (
       return;
     }
 
-    // 7. Kalau ga ada di Local, baru Fetch ke API
     const sanitizedRepo = repoPath.replace(/[^\x20-\x7E]/g, '').trim();
     const res = await fetch(
       `/api/github/content?repoPath=${sanitizedRepo}&filePath=${filePath}`
@@ -86,11 +89,9 @@ export const handleFileClickLogic = async (
 
     const data = await res.json();
 
-    // Update State & Simpan ke IndexedDB buat kunjungan berikutnya
     setFileContent(data.content);
     setCodeCache((prev) => ({ ...prev, [filePath]: data.content }));
 
-    // Simpan di background, ga perlu diawait biar ga ngeblock UI
     saveToLocal(filePath, data.content).catch((e) =>
       console.error('Gagal simpan ke DB:', e)
     );
@@ -113,11 +114,11 @@ export const handleFileClickLogic = async (
 
     fetchCommits(filePath);
 
-  } catch (err: any) {
+  } catch (err: unknown) { 
     console.error('File access error:', err);
-    setCodeError(err.message);
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+    setCodeError(errorMessage);
   } finally {
-    // 8. Pastikan loading mati di kondisi apapun (error/success)
     setLoading(false);
   }
 };

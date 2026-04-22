@@ -1,6 +1,6 @@
 'use client';
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { FaTwitter, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import styles from "@/app/connect/styles/AnimatedTabs.module.css";
@@ -52,7 +52,7 @@ export default function TwitterTab({ isDarkMode, isActive }: { isDarkMode: boole
         </div>
         <AnimatePresence mode="wait">
           {activeTweet.image ? (
-            <motion.a
+            <m.a
               key={`img-${activeTweet.id}`}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -63,11 +63,11 @@ export default function TwitterTab({ isDarkMode, isActive }: { isDarkMode: boole
               style={{ width: "100%", height: "100%", display: "block" }}
             >
               <Image src={activeTweet.image} alt="Tweet media" fill style={{ objectFit: "cover" }} priority={isActive} sizes="(max-width: 768px) 100vw, 50vw" />
-            </motion.a>
+            </m.a>
           ) : (
-            <motion.div key={`icon-${activeTweet.id}`} className={styles.iconPlaceholder}>
+            <m.div key={`icon-${activeTweet.id}`} className={styles.iconPlaceholder}>
               <FaTwitter size={80} color="#1DA1F2" />
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>
@@ -75,7 +75,7 @@ export default function TwitterTab({ isDarkMode, isActive }: { isDarkMode: boole
       <div className={styles.textGroup}>
         <div className={styles.iconLarge} style={{ color: "#1DA1F2" }}><FaTwitter /></div>
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={activeTweet.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -88,7 +88,7 @@ export default function TwitterTab({ isDarkMode, isActive }: { isDarkMode: boole
             <a href={activeTweet.link} target="_blank" rel="noreferrer" style={{ color: isDarkMode ? "#2196F3" : "black", fontSize: "0.8rem", fontWeight: "bold" }}>
               Reply on X &rarr;
             </a>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     </div>

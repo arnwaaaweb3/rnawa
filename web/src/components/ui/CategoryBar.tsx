@@ -1,7 +1,7 @@
 // src/components/ui/CategoryBar.tsx
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import styles from './CategoryBar.module.css';
 import { clsx } from 'clsx';
 import { MediaTypeDrawer, type MediaType } from './MediaTypeDrawer';
@@ -33,7 +33,7 @@ export default function CategoryBar({
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           initial={{ height: 0, opacity: 0, scaleY: 0.8 }}
           animate={{ height: 'auto', opacity: 1, scaleY: 1 }}
           exit={{ height: 0, opacity: 0, scaleY: 0.8 }}
@@ -63,14 +63,14 @@ export default function CategoryBar({
 
                   <AnimatePresence>
                     {showStatusTooltip && (
-                      <motion.div
+                      <m.div
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -10 }}
                         className={styles.categoryTooltip}
                       >
                         Filter by project status
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                 </div>
@@ -87,20 +87,20 @@ export default function CategoryBar({
 
                 <AnimatePresence>
                   {showMediaTooltip && (
-                    <motion.div
+                    <m.div
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -10 }}
                       className={styles.categoryTooltip}
                     >
                       Filter by media type
-                    </motion.div>
+                    </m.div>
                   )}
                 </AnimatePresence>
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

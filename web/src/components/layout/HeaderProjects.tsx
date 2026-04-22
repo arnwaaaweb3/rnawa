@@ -1,6 +1,6 @@
 import styles from './HeaderProjects.module.css';
 import { FaSun, FaMoon } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion'; // Tambah AnimatePresence biar keren
+import { m, AnimatePresence } from 'framer-motion'; // Tambah AnimatePresence biar keren
 import { useTheme } from '@/context/ThemeContext';
 
 interface HeaderProps {
@@ -16,7 +16,7 @@ export const Header = ({ onToggleHover }: HeaderProps) => { // Tambah prop ini
       {/* Visual effect mung metu nek wis mounted biar transition-e gak kacau */}
       <AnimatePresence>
         {mounted && (
-          <motion.div
+          <m.div
             className={styles.visualEffect}
             initial={{ opacity: 0 }}
             animate={{
@@ -41,7 +41,7 @@ export const Header = ({ onToggleHover }: HeaderProps) => { // Tambah prop ini
       >
         <AnimatePresence mode="wait">
           {mounted ? (
-            <motion.div
+            <m.div
               key={darkMode ? "sun" : "moon"}
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -49,7 +49,7 @@ export const Header = ({ onToggleHover }: HeaderProps) => { // Tambah prop ini
               transition={{ duration: 0.2 }}
             >
               {darkMode ? <FaSun size={20} /> : <FaMoon size={20} />}
-            </motion.div>
+            </m.div>
           ) : (
             <div style={{ width: 20, height: 20 }} />
           )}

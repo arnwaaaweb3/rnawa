@@ -1,9 +1,8 @@
 // src/app/projects/[[...slug]]/ProjectDetailPanel.tsx
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { PortableText } from '@portabletext/react';
-import { Project } from './types';
 import { portableTextComponents } from './PortableTextComponents';
 import styles from '@/app/projects/[[...slug]]/styles/ProjectDetailPanel.module.css';
 import { useTheme } from '@/context/ThemeContext';
@@ -12,16 +11,16 @@ import Image from 'next/image';
 import { useState } from 'react';
 import clsx from 'clsx';
 import GitHubExplorer from '@/components/github/GitHubExplorer';
+import { Project, MediaFilterType } from './types';
 
 interface PanelProps {
   project: Project | null;
   onClose: () => void;
-  // Type-safe media filters sesuai hook useProjectFilters
-  onMediaTypeClick: (mediaType: 'all' | 'video' | 'poster' | 'pdf' | 'github' | 'feeds') => void;
+  onMediaTypeClick: (mediaType: MediaFilterType) => void;
 }
 
 export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: PanelProps) => {
-  const { mounted, theme } = useTheme(); 
+  const { mounted, theme } = useTheme();
   const [showCloseTooltip, setShowCloseTooltip] = useState(false);
 
   const darkMode = theme === 'dark';
@@ -39,7 +38,7 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <m.div
         key="overlay"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -49,7 +48,7 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
       >
         {/* 1. CONTAINER MEDIA / GITHUB EXPLORER (KIRI) */}
         {(project.youtubeId || project.posterImage || pdfUrl || isGithubFullView || project.displayType === 'feeds') && (
-          <motion.div
+          <m.div
             key={isGithubFullView ? "github-view" : "media-view"}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -104,11 +103,11 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
                 )}
               </>
             )}
-          </motion.div>
+          </m.div>
         )}
 
         {/* 2. DETAIL PANEL (KANAN) */}
-        <motion.div
+        <m.div
           initial={{ x: '100%' }}
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
@@ -128,14 +127,14 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
 
             <AnimatePresence>
               {showCloseTooltip && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, x: 8 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 8 }}
                   className={styles.closePanelTooltip}
                 >
                   Close this panel
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
           </div>
@@ -171,14 +170,14 @@ export const ProjectDetailPanel = ({ project, onClose, onMediaTypeClick }: Panel
             <div className={styles.panelCategoryList}>
               <button
                 className={styles.panelCategoryTag}
-                onClick={() => onMediaTypeClick(project.displayType as any)}
+                onClick={() => onMediaTypeClick(project.displayType)}
               >
                 # {project.displayType?.toUpperCase() || 'GENERAL'}
               </button>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     </AnimatePresence>
   );
 };

@@ -1,3 +1,5 @@
+// src/utils/github/treeUtils.ts
+
 interface TreeNode {
   name: string;
   path: string;
@@ -5,7 +7,12 @@ interface TreeNode {
   children?: TreeNode[];
 }
 
-export function buildTree(items: any[]): TreeNode[] {
+type RawTreeItem = {
+  path: string;
+  type: 'tree' | 'blob';
+};
+
+export function buildTree(items: RawTreeItem[]): TreeNode[] {
   const root: TreeNode[] = [];
 
   for (const item of items) {

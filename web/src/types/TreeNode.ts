@@ -1,3 +1,5 @@
+//src/types/TreeNode.ts
+
 export interface TreeNode {
   name: string;
   path: string;

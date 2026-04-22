@@ -1,5 +1,5 @@
 'use client';
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
 import { FaEnvelope } from "react-icons/fa";
 import styles from "@/app/connect/styles/AnimatedTabs.module.css";
@@ -19,10 +19,10 @@ export default function EmailTab({ isDarkMode, isActive }: { isDarkMode: boolean
         style={{ objectFit: 'cover', borderRadius: '20px' }} 
       />
       <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '12px', backgroundColor: 'rgba(0,0,0,0.1)' }}>
-        <motion.h3 style={{ margin: 0, color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.5)', fontSize: '1.5rem', fontWeight: 800 }}>
+        <m.h3 style={{ margin: 0, color: '#fff', textShadow: '0 2px 4px rgba(0,0,0,0.5)', fontSize: '1.5rem', fontWeight: 800 }}>
           Let&apos;s Collaborate
-        </motion.h3>
-        <motion.a 
+        </m.h3>
+        <m.a 
           href={gmailLink} 
           target="_blank" 
           whileHover={{ scale: 1.05 }} 
@@ -30,7 +30,7 @@ export default function EmailTab({ isDarkMode, isActive }: { isDarkMode: boolean
           style={{ backgroundColor: '#EA4335', color: 'white', padding: '12px 32px', borderRadius: '50px', fontWeight: 'bold', display: 'flex', gap: '10px' }}
         >
           <FaEnvelope size={20} /> Open Gmail
-        </motion.a>
+        </m.a>
       </div>
     </div>
   );

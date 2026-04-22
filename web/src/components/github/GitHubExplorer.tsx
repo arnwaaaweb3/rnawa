@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 import { getFromLocal, saveToLocal } from '@/utils/storage';
 import { TreeNodeView } from '@/utils/github/TreeNodeView';
@@ -22,6 +22,9 @@ import {
   FileViewerContent 
 } from '@/components/github';
 
+// ✅ Import types yang dipake aja
+import type { RepoMetadataProps } from '@/components/github/RepoMetadata';
+import type { CommitHistoryProps } from '@/components/github/CommitHistory';
 
 /* ===================== MAIN COMPONENT ===================== */
 
@@ -33,11 +36,17 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   const [loading, setLoading] = useState(false);
   const [codeError, setCodeError] = useState<string | null>(null);
   const [codeCache, setCodeCache] = useState<Record<string, string>>({});
-  const [metadata, setMetadata] = useState<any>(null);
+  
+  // ✅ Pake type dari RepoMetadataProps
+  const [metadata, setMetadata] = useState<RepoMetadataProps['metadata']>(null);
+  
   const [copied, setCopied] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [fileCommits, setFileCommits] = useState<any[]>([]);
+  
+  // ✅ Pake type dari CommitHistoryProps
+  const [fileCommits, setFileCommits] = useState<CommitHistoryProps['fileCommits']>([]);
+  
   const [commitsLoading, setCommitsLoading] = useState(false);
   const [isCommitsOpen, setIsCommitsOpen] = useState(false);
   const repoName = repoPath.split('/').pop();
@@ -63,7 +72,20 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
         const res = await fetch(`/api/github/tree?repoPath=${sanitizedPath}`);
         const data = await res.json();
 
-        setMetadata(data.metadata);
+        // ✅ MAPPING DATA dari API ke format yang diinginkan komponen
+        if (data.metadata) {
+          const mappedMetadata: RepoMetadataProps['metadata'] = {
+            stars: data.metadata.stargazers_count || 0,
+            forks: data.metadata.forks_count || 0,
+            watchers: data.metadata.watchers_count || 0,
+            owner: data.metadata.owner?.login || data.metadata.owner || 'unknown',
+            branch: data.metadata.default_branch || 'main',
+            size: data.metadata.size || 0,
+            updatedAt: data.metadata.updated_at || new Date().toISOString(),
+            license: data.metadata.license?.name || 'MIT',
+          };
+          setMetadata(mappedMetadata);
+        }
 
         console.log('DEBUG: Raw data from API:', data);
 
@@ -174,7 +196,6 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
                     <span className={styles.icon}>{getFileIcon(node.name)}</span>
                     <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                       <span className={styles.fileNameText}>{node.name}</span>
-                      {/* Info path biar user tahu file ini ada di mana */}
                       <span style={{ fontSize: '0.65rem', opacity: 0.5, whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
                         {node.path}
                       </span>
@@ -197,7 +218,7 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
       <div className={styles.codeViewer}>
         <AnimatePresence mode="wait">
           {selectedFile ? (
-            <motion.div
+            <m.div
               key={selectedFile}
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
@@ -208,7 +229,7 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
             >
               <Breadcrumbs breadcrumbs={breadcrumbs} />
 
-              {/* ===================== RECENT ACTIVITY (COLLAPSIBLE) ===================== */}
+              {/* ===== RECENT ACTIVITY (COLLAPSIBLE) ===== */}
               <CommitHistory
                 isCommitsOpen={isCommitsOpen}
                 setIsCommitsOpen={setIsCommitsOpen}
@@ -229,13 +250,13 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
                 codeError={codeError}
                 fileContent={fileContent}
                 selectedFile={selectedFile}
-                metadata={metadata}
+                metadata={metadata ? { owner: metadata.owner, branch: metadata.branch } : null}
                 repoName={repoName}
                 darkMode={darkMode}
               />
-            </motion.div>
+            </m.div>
           ) : (
-            <motion.div
+            <m.div
               key="empty"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -244,7 +265,7 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
               <div className={styles.emptyStateContent}>
                 Select a file to explore the code.
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>

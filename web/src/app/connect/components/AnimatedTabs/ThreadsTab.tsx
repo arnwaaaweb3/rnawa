@@ -1,11 +1,10 @@
 'use client';
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { SiThreads } from "react-icons/si";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import styles from "@/app/connect/styles/AnimatedTabs.module.css";
-
 
 interface Thread {
   id: number;
@@ -55,7 +54,7 @@ export default function ThreadsTab({ isActive }: { isActive: boolean }) {
 
         <AnimatePresence mode="wait">
           {activeThread.image ? (
-            <motion.a
+            <m.a
               key={`img-${activeThread.id}`}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -74,11 +73,11 @@ export default function ThreadsTab({ isActive }: { isActive: boolean }) {
                 priority={isActive}
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
-            </motion.a>
+            </m.a>
           ) : (
-            <motion.div key={`icon-${activeThread.id}`} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255, 255, 255, 0.05)" }}>
+            <m.div key={`icon-${activeThread.id}`} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255, 255, 255, 0.05)" }}>
               <SiThreads size={70} style={{ opacity: 0.8 }} />
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>
@@ -86,7 +85,7 @@ export default function ThreadsTab({ isActive }: { isActive: boolean }) {
       <div className={styles.textGroup}>
         <div className={styles.iconLarge}><SiThreads /></div>
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={activeThread.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -102,7 +101,7 @@ export default function ThreadsTab({ isActive }: { isActive: boolean }) {
                 View on Threads &rarr;
               </a>
             </div>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import styles from '../styles/RealTimeClock.module.css';
 
 const formatDateTime = (date: Date): { time: string; date: string } => {
@@ -57,7 +57,7 @@ const RealTimeClock: React.FC = () => {
   const { time, date } = formatDateTime(currentDate);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -65,7 +65,7 @@ const RealTimeClock: React.FC = () => {
     >
       <span className={styles["clock-time"]}>{time}</span>
       <span className={styles["clock-date"]}>{date}</span>
-    </motion.div>
+    </m.div>
   );
 };
 

@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { FaInstagram, FaImage, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import styles from "@/app/connect/styles/AnimatedTabs.module.css";
@@ -56,7 +56,7 @@ export default function InstagramTab({ isDarkMode, isActive }: { isDarkMode: boo
               <button onClick={handleNext} className={styles.navButton}><FaChevronRight size={12} /></button>
             </div>
             <AnimatePresence mode="wait">
-              <motion.a
+              <m.a
                 key={activePost.id}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -73,7 +73,7 @@ export default function InstagramTab({ isDarkMode, isActive }: { isDarkMode: boo
                   style={{ objectFit: "cover" }}
                   unoptimized
                 />
-              </motion.a>
+              </m.a>
             </AnimatePresence>
           </>
         ) : (
@@ -87,7 +87,7 @@ export default function InstagramTab({ isDarkMode, isActive }: { isDarkMode: boo
       <div className={styles.textGroup}>
         <div className={styles.iconLarge}><FaInstagram /></div>
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={activePost ? activePost.id : "empty"}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -105,7 +105,7 @@ export default function InstagramTab({ isDarkMode, isActive }: { isDarkMode: boo
                 </span>
               ) : "Check out my posts on Instagram!"}
             </p>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     </div>

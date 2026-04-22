@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { getLanguage } from '@/utils/github/getLanguage';
 import styles from '@/styles/GitHub.module.css';
 
-interface FileViewerContentProps {
+export interface FileViewerContentProps {
   loading: boolean;
   codeError: string | null;
   fileContent: string;
@@ -29,12 +29,12 @@ export default function FileViewerContent({
   if (loading) {
     return (
       <div className={styles.loader}>
-        <motion.span
+        <m.span
           animate={{ opacity: [0.4, 1, 0.4] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
         >
           Fetching code from server...
-        </motion.span>
+        </m.span>
       </div>
     );
   }
