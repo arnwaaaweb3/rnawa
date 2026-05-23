@@ -162,7 +162,6 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  will-change: transform, width, margin-left;
   transition: none !important;
 }
 
@@ -238,27 +237,8 @@
   transform: translateX(0.5rem);
 }
 
-/* FOOTER */
-.tributeFooter {
-  position: absolute;
-  bottom: 1.25rem;
-  left: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  opacity: 0.9;
-}
-
-.tributeText {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.65rem;
-  color: #ff85e5;
-}
-
-.logoStack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4375rem;
+.clockWrapper {
+  margin-top: auto;
 }
 
 /* =================================== MOBILE BACKGROUND */

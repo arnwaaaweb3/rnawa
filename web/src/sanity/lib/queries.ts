@@ -24,23 +24,29 @@ export const PROJECTS_QUERY = `*[_type == "portfolioItem"] | order(publishedAt d
 
 // 2. PROJECT_DETAIL_QUERY - Sesuaikan dengan types.ts
 export const PROJECT_DETAIL_QUERY = `*[_type == "portfolioItem" && slug.current == $slug][0] {
-  ...,
+  _id,
+  title,
+  displayType,
+  projectStatus,
+  description,
+  youtubeId,
+  githubRepo,
+  enableExplorer,
+  imageOrientation,
+  projectUrl,
   "slug": slug.current,
   "coverImage": {
     "asset": coverImage.asset->{ _id, url },
     "alt": coverImage.alt
   },
-  "pdfFile": pdfFile.asset->url, 
+  "pdfFile": pdfFile.asset->url,
   "posterImage": {
-    "asset": posterImage.asset-> {
-      _id, url, 
-      metadata { dimensions { width, height, aspectRatio } }
-    },
+    "asset": posterImage.asset->{ _id, url, metadata { dimensions } },
     "alt": posterImage.alt
   },
   "mainCategory": mainCategory->{ title, "slug": slug.current },
   "outputCategory": outputCategory->{ title, "slug": slug.current },
-  projectStatus,
+  "relatedJournal": relatedJournal[]->{ title, "slug": slug.current }
 }`;
 
 // 3. DOCS_QUERY (Tetap tarik displayType kalau ada di skema docs nanti)

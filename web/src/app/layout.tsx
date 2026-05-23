@@ -14,7 +14,7 @@ import LazyMotionWrapper from '@/components/LazyMotionWrapper';
 
 // Font Optimization
 const lexend = localFont({
-  src: "../../public/fonts/Lexend.woff2",
+  src: "../../public/fonts/LexendVF.woff2",
   variable: '--font-lexend',
   display: 'swap',
 });

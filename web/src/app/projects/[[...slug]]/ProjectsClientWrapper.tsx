@@ -52,17 +52,23 @@ export default function ProjectsClientWrapper({
   // =========================
   // Actions
   // =========================
-  // Ganti handleExplore lo yang kuno itu jadi begini:
   const handleExplore = async (projectSlug: string) => {
+    // ✅ Cek dulu — kalau project ada di initialProjects, ga perlu fetch detail
+    const cached = projects.find(p => p.slug === projectSlug);
+    if (cached) {
+      setSelectedProject(cached);
+      router.push(`/projects/${projectSlug}`, { scroll: false });
+      return; // early return, skip fetch
+    }
+
+    // Kalau emang ga ada (unlikely), baru fetch
     setIsDetailLoading(true);
     try {
       const data = await fetchSingleProject(projectSlug);
       setSelectedProject(data);
-
-      // Pakai router Next.js, jangan manual pushState kayak amatiran
       router.push(`/projects/${projectSlug}`, { scroll: false });
     } catch (err) {
-      console.error("Morta: Otakmu atau GROQ yang error?", err);
+      console.error(err);
     } finally {
       setIsDetailLoading(false);
     }

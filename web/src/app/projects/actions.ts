@@ -17,17 +17,22 @@ export interface DocsCategory {
 
 // --- Fetchers ---
 
-// Ambil semua project buat grid
 export const fetchAllProjects = async (): Promise<Project[]> => {
-  // Tambahin revalidate 0 atau tags buat force refresh
   return await client.fetch(PROJECTS_QUERY, {}, {
-    next: { revalidate: 0 } 
+    next: { 
+      revalidate: 60,  
+      tags: ['projects']
+    } 
   });
 };
 
-// Ambil detail satu project
 export const fetchSingleProject = async (slug: string): Promise<Project | null> => {
-  return await client.fetch(PROJECT_DETAIL_QUERY, { slug });
+  return await client.fetch(PROJECT_DETAIL_QUERY, { slug }, {
+    next: { 
+      revalidate: 60,
+      tags: [`project-${slug}`]
+    }
+  });
 };
 
 // Ambil kategori dokumentasi (pindahan dari client.ts tadi)

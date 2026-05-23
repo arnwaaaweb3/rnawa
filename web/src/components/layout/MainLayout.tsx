@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import { m, type Variants } from 'framer-motion';
 import styles from './MainLayout.module.css';
@@ -15,30 +15,35 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 
+const navItems = [
+  { text: "Me", url: "/me" },
+  { text: "Connect", url: "/connect" },
+  { text: "Services", url: "/services" },
+  { text: "Projects", url: "/projects" },
+  { text: "Documentation", url: "/docs" },
+];
+
+const immersiveRoutes = ['/projects', '/studio'];
+
 export default function MainLayout({ children }: MainLayoutProps) {
   const currentSidebarWidth = useSidebarWidth();
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
   const { isSidebarOpen, setIsSidebarOpen, isProjectDetailOpen } = useTheme();
 
-  const immersiveRoutes = ['/projects', '/studio'];
   const isImmersive = immersiveRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
 
   const isStudio = pathname?.startsWith('/studio');
-  const isInSanityIframe = typeof window !== 'undefined' && window.self !== window.top;
+
+  // ✅ Fix: useMemo biar ga re-calc tiap render
+  const isInSanityIframe = useMemo(() =>
+    typeof window !== 'undefined' && window.self !== window.top
+  , []);
+
   const shouldHideSidebarCompletely = isStudio || isInSanityIframe;
-
   const shouldShowBackgroundEffect = !isImmersive;
-
-  const navItems = [
-    { text: "Me", url: "/me" },
-    { text: "Connect", url: "/connect" },
-    { text: "Services", url: "/services" },
-    { text: "Projects", url: "/projects" },
-    { text: "Documentation", url: "/docs" },
-  ];
 
   useEffect(() => {
     const handleResize = () => {
@@ -56,7 +61,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, [isImmersive, setIsSidebarOpen]);
 
-  const panelVariants = (delay: number): Variants => ({
+  // ✅ Fix: pindah ke luar render, ga recreate tiap frame
+  const panelVariants = useMemo(() => (delay: number): Variants => ({
     open: {
       x: 0,
       transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }
@@ -65,7 +71,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
       x: -currentSidebarWidth,
       transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: delay * 0.5 }
     }
-  });
+  }), [currentSidebarWidth]);
+
+  const sidebarAnimate = isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed");
+
+  const mainMargin = !isMobile && !shouldHideSidebarCompletely && isSidebarOpen && !isProjectDetailOpen
+    ? currentSidebarWidth : 0;
+  const mainWidth = !isMobile && !shouldHideSidebarCompletely && isSidebarOpen && !isProjectDetailOpen
+    ? `calc(100% - ${currentSidebarWidth}px)` : '100%';
 
   return (
     <div
@@ -73,11 +86,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
       data-sidebar={isSidebarOpen ? 'open' : 'closed'}
       data-immersive={isProjectDetailOpen}
     >
-      {/* BACKGROUND STRATEGY: Ganti DarkVeil dengan CSS Mesh Gradient & Noise */}
       {shouldShowBackgroundEffect && (
         <div className={styles.backgroundVeil}>
-           <div className={styles.meshGradient} />
-           <div className={styles.noiseOverlay} />
+          <div className={styles.meshGradient} />
+          <div className={styles.noiseOverlay} />
         </div>
       )}
 
@@ -86,23 +98,21 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <m.div
             variants={panelVariants(0.6)}
             initial="closed"
-            animate={isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed")}
+            animate={sidebarAnimate}
             className={`${styles.smPanel} ${styles.bg2}`}
             style={{ width: currentSidebarWidth }}
           />
-
           <m.div
             variants={panelVariants(0.3)}
             initial="closed"
-            animate={isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed")}
+            animate={sidebarAnimate}
             className={`${styles.smPanel} ${styles.bg1}`}
             style={{ width: currentSidebarWidth }}
           />
-
           <m.div
             variants={panelVariants(0.001)}
             initial="closed"
-            animate={isProjectDetailOpen ? "closed" : (isSidebarOpen ? "open" : "closed")}
+            animate={sidebarAnimate}
             className={`${styles.smPanel} ${styles.mainPanel}`}
             style={{ width: currentSidebarWidth }}
           >
@@ -132,25 +142,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </ul>
 
             <div className={styles.clockWrapper}><RealTimeClock /></div>
-
-            <div className={styles.tributeFooter}>
-              <p className={styles.tributeText}>In Assistance of</p>
-              <div className={styles.logoStack}>
-                <Image src="/gemini.webp" alt="Gemini AI Logo" height={42} width={120} priority />
-                <Image src="/openai-logo.webp" alt="OpenAI Logo" height={32} width={120} priority />
-              </div>
-            </div>
           </m.div>
         </>
       )}
 
+      {/* ✅ Fix: hapus layout prop, hapus will-change dari CSS */}
       <m.main
-        layout
         className={`${styles.mainContent} ${isImmersive ? styles.immersiveContent : ''}`}
-        style={{
-          marginLeft: !isMobile && !shouldHideSidebarCompletely && isSidebarOpen && !isProjectDetailOpen ? currentSidebarWidth : 0,
-          width: !isMobile && !shouldHideSidebarCompletely && isSidebarOpen && !isProjectDetailOpen ? `calc(100% - ${currentSidebarWidth}px)` : '100%'
-        }}
+        style={{ marginLeft: mainMargin, width: mainWidth }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}

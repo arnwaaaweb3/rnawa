@@ -1,14 +1,14 @@
 'use client'
 
-import {
-  forwardRef,
-  useMemo,
-  useRef,
-  useEffect,
-  CSSProperties,
-  RefObject,
+import { 
+  forwardRef, 
+  useMemo, 
+  useRef, 
+  useEffect, 
+  useCallback, 
+  CSSProperties, 
+  RefObject 
 } from 'react';
-import { motion } from 'framer-motion';
 import '../styles/VariableProximity.module.css';
 
 /* =======================
@@ -43,7 +43,7 @@ interface VariableProximityProps {
    HOOK: useAnimationFrame
 ======================= */
 
-function useAnimationFrame(callback: () => void) {
+function useAnimationFrame(callback: () => void, containerRef?: RefObject<HTMLElement | null>) {
   useEffect(() => {
     let frameId: number;
 
@@ -52,9 +52,20 @@ function useAnimationFrame(callback: () => void) {
       frameId = requestAnimationFrame(loop);
     };
 
-    frameId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(frameId);
-  }, [callback]);
+    // Start loop hanya saat mouse masuk container
+    const getContainer = () => containerRef?.current;
+    const handleEnter = () => { frameId = requestAnimationFrame(loop); };
+    const handleLeave = () => { cancelAnimationFrame(frameId); };
+
+    getContainer()?.addEventListener('mouseenter', handleEnter);
+    getContainer()?.addEventListener('mouseleave', handleLeave);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      getContainer()?.removeEventListener('mouseenter', handleEnter);
+      getContainer()?.removeEventListener('mouseleave', handleLeave);
+    };
+  }, [callback, containerRef]);
 }
 
 /* =======================
@@ -162,7 +173,7 @@ const VariableProximity = forwardRef<
       );
     }, [fromFontVariationSettings, toFontVariationSettings]);
 
-    const calculateFalloff = (distance: number) => {
+    const calculateFalloff = useCallback((distance: number) => {
       const norm = Math.min(Math.max(1 - distance / radius, 0), 1);
 
       switch (falloff) {
@@ -174,7 +185,7 @@ const VariableProximity = forwardRef<
         default:
           return norm;
       }
-    };
+    }, [radius, falloff]);
 
     /* =======================
        ANIMATION LOOP
@@ -226,7 +237,7 @@ const VariableProximity = forwardRef<
         interpolatedSettingsRef.current[index] = newSettings;
         letterRef.style.fontVariationSettings = newSettings;
       });
-    });
+    }, containerRef);
 
     /* =======================
        RENDER
