@@ -19,6 +19,39 @@ const lexend = localFont({
   display: 'swap',
 });
 
+// Menggabungkan varian ZT Nature ke dalam satu font-family
+const ztNature = localFont({
+  src: [
+    {
+      path: "../../public/fonts/ZTNature-Thin.woff2",
+      weight: '100',
+      style: 'normal',
+    },
+    {
+      path: "../../public/fonts/ZTNature-ThinItalic.woff2",
+      weight: '100',
+      style: 'italic',
+    },
+    {
+      path: "../../public/fonts/ZTNature-Medium.woff2",
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: "../../public/fonts/ZTNature-Black.woff2",
+      weight: '900',
+      style: 'normal',
+    },
+    {
+      path: "../../public/fonts/ZTNature-BlackItalic.woff2",
+      weight: '900',
+      style: 'italic',
+    },
+  ],
+  variable: '--font-zt-nature',
+  display: 'swap',
+});
+
 // Metadata SEO
 export const metadata: Metadata = {
   title: {
@@ -61,9 +94,9 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ 
   children,
- }: Readonly<{ 
+}: Readonly<{ 
   children: React.ReactNode 
- }>) {
+}>) {
   const { isEnabled: isDraftMode } = await draftMode();
 
   // Preload aset gambar utama agar LCP lebih cepat
@@ -73,7 +106,11 @@ export default async function RootLayout({
   preload('/projects.webp', { as: 'image' });
 
   return (
-    <html lang="en" className={lexend.variable} suppressHydrationWarning> 
+    <html 
+      lang="en" 
+      className={`${lexend.variable} ${ztNature.variable}`} 
+      suppressHydrationWarning
+    > 
       <head>
         <script
           dangerouslySetInnerHTML={{
