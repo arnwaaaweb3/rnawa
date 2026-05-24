@@ -1,0 +1,32 @@
+.header {
+    --bg-navy: #0a0f1c;
+  --primary: #ff8ae2;
+  --secondary: #c026d3;
+  --accent: #8b5cf6;
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --glow-primary: rgba(255, 42, 109, 0.4);
+  --glow-secondary: rgba(192, 38, 211, 0.3);
+  position: relative;
+  top:1.5rem;
+  width: 100%; /* Container full width */
+  margin: 0;
+}
+
+.header__title {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 500;
+  font-family: var(--font-zt-nature), sans-serif;
+  color: var(--primary);
+  letter-spacing: -0.03em;
+  margin: 0;
+  margin-left: 2.5rem;
+}
+
+.header__divider {
+  width: 100%;
+  height: 4px;
+  background: var(--primary);
+  margin: 0.5rem 0 0 0; /* Margin top hanya, kiri/kanan 0 */
+}

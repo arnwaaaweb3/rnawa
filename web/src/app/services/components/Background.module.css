@@ -1,0 +1,58 @@
+.wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Shared blob properties */
+.primary, .secondary, .accent {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+}
+
+.primary {
+  width: 450px;
+  height: 450px;
+  background: var(--primary);
+  top: -120px;
+  right: -80px;
+  animation: float1 18s ease-in-out infinite;
+}
+
+.secondary {
+  width: 400px;
+  height: 400px;
+  background: var(--secondary);
+  bottom: -100px;
+  left: -60px;
+  animation: float2 22s ease-in-out infinite;
+}
+
+.accent {
+  width: 350px;
+  height: 350px;
+  background: var(--accent);
+  top: 50%;
+  left: 50%;
+  opacity: 0.25;
+  animation: float3 20s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, 50px) scale(1.05); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, -30px) scale(0.95); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-60%, -40%) scale(1.05); }
+}

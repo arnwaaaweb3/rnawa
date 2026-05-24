@@ -48,12 +48,15 @@
 }
 
 .rotatingHighlight {
-  font-weight: 600;
-  color: #090040;
-  background-color: #ff85e5;
+  display: inline-flex;
+  background: #ff85e5;
   padding: 0.1em 0.5em;
   border-radius: 0.2em;
-  display: inline-flex;
+}
+
+.rotatingChar {
+  color: #090040;     /* biar setiap karakter punya warna */
+  font-weight: 600;
 }
 
 .buttonGrid {
