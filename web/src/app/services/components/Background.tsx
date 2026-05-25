@@ -1,3 +1,4 @@
+// src/app/services/components/Background.tsx
 import styles from './Background.module.css'
 
 export default function Background() {

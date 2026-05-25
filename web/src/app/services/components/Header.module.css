@@ -1,12 +1,4 @@
 .header {
-    --bg-navy: #0a0f1c;
-  --primary: #ff8ae2;
-  --secondary: #c026d3;
-  --accent: #8b5cf6;
-  --text-main: #ffffff;
-  --text-muted: #94a3b8;
-  --glow-primary: rgba(255, 42, 109, 0.4);
-  --glow-secondary: rgba(192, 38, 211, 0.3);
   position: relative;
   top:1.5rem;
   width: 100%; /* Container full width */

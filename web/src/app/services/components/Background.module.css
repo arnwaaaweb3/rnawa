@@ -7,7 +7,9 @@
 }
 
 /* Shared blob properties */
-.primary, .secondary, .accent {
+.primary,
+.secondary,
+.accent {
   position: absolute;
   border-radius: 50%;
   filter: blur(100px);
@@ -17,7 +19,7 @@
 .primary {
   width: 450px;
   height: 450px;
-  background: var(--primary);
+  background: var(--main);
   top: -120px;
   right: -80px;
   animation: float1 18s ease-in-out infinite;
@@ -35,7 +37,7 @@
 .accent {
   width: 350px;
   height: 350px;
-  background: var(--accent);
+  background: var(--third);
   top: 50%;
   left: 50%;
   opacity: 0.25;

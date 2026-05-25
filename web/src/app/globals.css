@@ -3,6 +3,15 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+    --bg-navy: #0a0f1c;
+  --primary: #ff82ea;
+  --main: #e90fc5;
+  --secondary: #6f0d7c;
+  --third: #ffa600;
+  --text-main: #ffffff;
+  --text-muted: #7a0f0f;
+  --glow-primary: rgba(255, 42, 109, 0.4);
+  --glow-secondary: rgba(192, 38, 211, 0.3);
 }
 
 @media (prefers-color-scheme: dark) {

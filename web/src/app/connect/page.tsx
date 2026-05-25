@@ -11,7 +11,6 @@ const ConnectPage: React.FC = () => {
   const router = useRouter();
 
   // --- STRATEGI FERRARI: Preload Banner Utama ---
-  // Kita preload aset yang paling mungkin dilihat pertama kali (Instagram/LinkedIn)
   preload('/assets/linkedin-dark.webp', { as: 'image' });
   preload('/assets/linkedin-light.webp', { as: 'image' });
   preload('/assets/discord-dark.webp', { as: 'image' });

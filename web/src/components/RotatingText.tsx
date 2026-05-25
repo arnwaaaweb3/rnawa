@@ -2,7 +2,7 @@
 
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import {
-  m,
+  motion,
   AnimatePresence,
   Transition,
   type VariantLabels,
@@ -25,7 +25,7 @@ export interface RotatingTextRef {
 
 export interface RotatingTextProps
   extends Omit<
-    React.ComponentPropsWithoutRef<typeof m.span>,
+    React.ComponentPropsWithoutRef<typeof motion.span>,
     'children' | 'transition' | 'initial' | 'animate' | 'exit'
   > {
   texts: string[];
@@ -181,9 +181,9 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>((props, ref)
   }, [next, rotationInterval, auto]);
 
   return (
-    <m.span className={cn('text-rotate', mainClassName)} {...rest} layout transition={transition}>
+    <motion.span className={cn('text-rotate', mainClassName)} {...rest} layout transition={transition}>
       <AnimatePresence mode={animatePresenceMode} initial={animatePresenceInitial}>
-        <m.span
+        <motion.span
           key={currentTextIndex}
           className={cn(splitBy === 'lines' ? 'text-rotate-lines' : 'text-rotate')}
           layout
@@ -194,7 +194,7 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>((props, ref)
             return (
               <span key={wordIndex} className={cn('text-rotate-word', splitLevelClassName)}>
                 {wordObj.characters.map((char, charIndex) => (
-                  <m.span
+                  <motion.span
                     key={charIndex}
                     initial={initial}
                     animate={animate}
@@ -209,15 +209,15 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>((props, ref)
                     className={cn('text-rotate-element', elementLevelClassName)}
                   >
                     {char}
-                  </m.span>
+                  </motion.span>
                 ))}
                 {wordObj.needsSpace && <span className="text-rotate-space"> </span>}
               </span>
             );
           })}
-        </m.span>
+        </motion.span>
       </AnimatePresence>
-    </m.span>
+    </motion.span>
   );
 });
 
