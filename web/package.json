@@ -1,6 +1,6 @@
 {
   "name": "my-web3-portfolio",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,8 +19,6 @@
     "@sanity/preview-url-secret": "^4.0.3",
     "@sanity/react-loader": "^2.0.6",
     "@sanity/visual-editing": "^5.2.1",
-    "@types/three": "^0.184.1",
-    "animejs": "^4.4.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^11.18.2",
