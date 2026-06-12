@@ -22,7 +22,7 @@ import {
   FileViewerContent 
 } from '@/components/github';
 
-// ✅ Import types yang dipake aja
+// Import types resmi dari sub-komponen biar gak usah nembak asal-asalan
 import type { RepoMetadataProps } from '@/components/github/RepoMetadata';
 import type { CommitHistoryProps } from '@/components/github/CommitHistory';
 
@@ -37,16 +37,14 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   const [codeError, setCodeError] = useState<string | null>(null);
   const [codeCache, setCodeCache] = useState<Record<string, string>>({});
   
-  // ✅ Pake type dari RepoMetadataProps
+  // State metadata pake type asli komponen
   const [metadata, setMetadata] = useState<RepoMetadataProps['metadata']>(null);
-  
   const [copied, setCopied] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   
-  // ✅ Pake type dari CommitHistoryProps
+  // State activity/commits pake type asli komponen
   const [fileCommits, setFileCommits] = useState<CommitHistoryProps['fileCommits']>([]);
-  
   const [commitsLoading, setCommitsLoading] = useState(false);
   const [isCommitsOpen, setIsCommitsOpen] = useState(false);
   const repoName = repoPath.split('/').pop();
@@ -54,14 +52,11 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
   console.log('DEBUG: repoPath received by component:', repoPath);
 
   /* ===================== LOAD TREE ===================== */
-
   useEffect(() => {
-    async function loadTree() {
-      const sanitizedPath = repoPath
-        ? repoPath.replace(/[^\x20-\x7E]/g, '').trim()
-        : '';
+    const controller = new AbortController();
 
-      console.log('DEBUG: Sanitized path:', sanitizedPath);
+    async function loadTree() {
+      const sanitizedPath = repoPath ? repoPath.replace(/[^\x20-\x7E]/g, '').trim() : '';
 
       if (!sanitizedPath) {
         console.error('DEBUG: Path is empty after sanitization!');
@@ -69,10 +64,15 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
       }
 
       try {
-        const res = await fetch(`/api/github/tree?repoPath=${sanitizedPath}`);
+        // Fix Poin 1: URL query param dibungkus encodeURIComponent biar aman
+        const res = await fetch(`/api/github/tree?repoPath=${encodeURIComponent(sanitizedPath)}`, {
+          signal: controller.signal
+        });
+        
+        if (!res.ok) throw new Error(`HTTP Error Status: ${res.status}`);
         const data = await res.json();
 
-        // ✅ MAPPING DATA dari API ke format yang diinginkan komponen
+        // MAPPING DATA dari API ke format komponen secara type-safe
         if (data.metadata) {
           const mappedMetadata: RepoMetadataProps['metadata'] = {
             stars: data.metadata.stargazers_count || 0,
@@ -87,42 +87,83 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
           setMetadata(mappedMetadata);
         }
 
-        console.log('DEBUG: Raw data from API:', data);
-
         const nested = buildTree(data.tree || []);
-        console.log('DEBUG: buildTree result:', nested);
-
         setNestedTree(nested);
-      } catch (err) {
-        console.error('Fetch error:', err);
+      } catch (err: unknown) {
+        // Fix ESLint: no-explicit-any ditendang, diganti strict pattern matching
+        if (err instanceof Error) {
+          if (err.name !== 'AbortError') {
+            console.error('Fetch tree error:', err.message);
+          }
+        } else {
+          console.error('An unexpected fetch tree error occurred:', err);
+        }
       }
     }
 
     if (repoPath) loadTree();
+
+    return () => {
+      controller.abort();
+    };
   }, [repoPath]);
 
   /* ===================== PREFETCH ===================== */
-
   useEffect(() => {
-    if (nestedTree.length > 0) {
+    let isMounted = true;
+    const controllers: AbortController[] = [];
+
+    async function runPrefetch() {
+      if (nestedTree.length === 0) return;
+
       const filesToPrefetch = nestedTree
         .filter((node) => node.type === 'blob')
         .slice(0, 5);
 
-      filesToPrefetch.forEach(async (file) => {
-        const exists = await getFromLocal(file.path);
+      // Fix Poin 2: forEach async diganti Promise.all biar gak race condition
+      await Promise.all(
+        filesToPrefetch.map(async (file) => {
+          try {
+            const exists = await getFromLocal(file.path);
 
-        if (!exists) {
-          console.log(`[Prefetch] Ambil data buat: ${file.name}`);
+            if (!exists && isMounted) {
+              console.log(`[Prefetch] Ambil data buat: ${file.name}`);
+              
+              const prefetchController = new AbortController();
+              controllers.push(prefetchController);
 
-          fetch(
-            `/api/github/content?repoPath=${repoPath}&filePath=${file.path}`
-          )
-            .then((res) => res.json())
-            .then((data) => saveToLocal(file.path, data.content));
-        }
-      });
+              const res = await fetch(
+                `/api/github/content?repoPath=${encodeURIComponent(repoPath)}&filePath=${encodeURIComponent(file.path)}`,
+                { signal: prefetchController.signal }
+              );
+              
+              if (!res.ok) return;
+              const data = await res.json();
+
+              if (isMounted && data.content) {
+                saveToLocal(file.path, data.content);
+              }
+            }
+          } catch (err: unknown) {
+            // Fix ESLint: block catch prefetch juga dibikin type-safe
+            if (err instanceof Error) {
+              if (err.name !== 'AbortError') {
+                console.error(`[Prefetch Error] Fail to prefetch ${file.name}:`, err.message);
+              }
+            } else {
+              console.error(`[Prefetch Error] An unexpected error occurred on ${file.name}:`, err);
+            }
+          }
+        })
+      );
     }
+
+    runPrefetch();
+
+    return () => {
+      isMounted = false;
+      controllers.forEach((c) => c.abort());
+    };
   }, [nestedTree, repoPath]);
 
   /* ===================== FILE CLICK ===================== */
@@ -161,7 +202,6 @@ export default function GitHubExplorer({ repoPath }: GitHubExplorerProps) {
 
       {/* ===================== SIDEBAR ===================== */}
       <div className={styles.sidebar}>
-
         {/* ===== METADATA ===== */}
         <RepoMetadata metadata={metadata} />
 

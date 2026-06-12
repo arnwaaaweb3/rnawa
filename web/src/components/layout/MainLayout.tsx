@@ -4,8 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
-import { m, type Variants } from 'framer-motion';
+import { m, AnimatePresence, type Variants } from 'framer-motion';
 import styles from './MainLayout.module.css';
+import loadingStyles from '../../app/loading.module.css';
 import { useTheme } from '@/context/ThemeContext';
 import RealTimeClock from "../RealTimeClock";
 import NawaLogo from '../../../public/nawa.webp';
@@ -31,13 +32,25 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [isMobile, setIsMobile] = useState(false);
   const { isSidebarOpen, setIsSidebarOpen, isProjectDetailOpen } = useTheme();
 
+  // 🛡️ STATE BANTAIAN: Mengunci layar mutlak saat first launch di localhost
+  const [isLaunching, setIsLaunching] = useState(true);
+
+  useEffect(() => {
+    // Tahan splash screen selama 1.8 detik di awal boot aplikasi
+    const timer = setTimeout(() => {
+      setIsLaunching(false);
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const isImmersive = immersiveRoutes.some(route =>
     pathname === route || pathname.startsWith(`${route}/`)
   );
 
   const isStudio = pathname?.startsWith('/studio');
 
-  // ✅ Fix: useMemo biar ga re-calc tiap render
+  // Fix: useMemo biar ga re-calc tiap render
   const isInSanityIframe = useMemo(() =>
     typeof window !== 'undefined' && window.self !== window.top
   , []);
@@ -61,7 +74,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, [isImmersive, setIsSidebarOpen]);
 
-  // ✅ Fix: pindah ke luar render, ga recreate tiap frame
+  // Fix: pindah ke luar render, ga recreate tiap frame
   const panelVariants = useMemo(() => (delay: number): Variants => ({
     open: {
       x: 0,
@@ -86,6 +99,66 @@ export default function MainLayout({ children }: MainLayoutProps) {
       data-sidebar={isSidebarOpen ? 'open' : 'closed'}
       data-immersive={isProjectDetailOpen}
     >
+      
+      {/* 🛡️ 1. FIRST LAUNCH APP SPLATCH SCREEN GATES */}
+      <AnimatePresence mode="wait">
+        {isLaunching && (
+          <m.div 
+            className={loadingStyles.loadingContainer}
+            initial={{ opacity: 1 }}
+            exit={{ 
+              opacity: 0,
+              transition: { duration: 0.5, ease: "easeInOut" } 
+            }}
+            style={{ zIndex: 10000 }} // Mengunci mutlak di layer paling atas
+          >
+            <div className={loadingStyles.brandWrapper}>
+              
+              {/* Logo nawa.webp dengan breathing transition animation */}
+              <m.div 
+                className={loadingStyles.logoContainer}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ 
+                  opacity: [0.6, 1, 0.6],
+                  scale: [0.97, 1, 0.97]
+                }}
+                transition={{ 
+                  duration: 1.5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+              >
+                <Image 
+                  src="/nawa.webp" 
+                  alt="Nawa Logo" 
+                  width={72} 
+                  height={72} 
+                  className={loadingStyles.logoImage} 
+                  priority 
+                />
+              </m.div>
+
+              {/* Tips progress bar sekelas threads/meta */}
+              <div className={loadingStyles.progressBarTrack}>
+                <m.div 
+                  className={loadingStyles.progressBarFill}
+                  initial={{ x: '-100%' }}
+                  animate={{ x: '100%' }}
+                  transition={{
+                    duration: 1.2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+              </div>
+
+              <p className={loadingStyles.statusText}>Loading...</p>
+            </div>
+          </m.div>
+        )}
+      </AnimatePresence>
+
+      {/* 🌟 2. ORIGINAL APPLICATION SYSTEM */}
       {shouldShowBackgroundEffect && (
         <div className={styles.backgroundVeil}>
           <div className={styles.meshGradient} />
@@ -146,7 +219,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </>
       )}
 
-      {/* ✅ Fix: hapus layout prop, hapus will-change dari CSS */}
       <m.main
         className={`${styles.mainContent} ${isImmersive ? styles.immersiveContent : ''}`}
         style={{ marginLeft: mainMargin, width: mainWidth }}
