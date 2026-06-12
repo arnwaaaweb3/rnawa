@@ -1,4 +1,4 @@
-//src/app/api/github/tree/route.ts
+// src/app/api/github/tree/route.ts
 import { getRepoTree } from '@/utils/github';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -27,7 +27,15 @@ type RepoMetadataResponse = {
   default_branch?: string;
 };
 
-// 🛡️ SECURITY BLACKLIST: Daftar file dan folder rahasia yang HARAM dikirim ke browser client
+// 🛡️ SECURITY WHITELIST: Hanya izinkan repo-repo ini yang boleh diakses lewat API publik
+const ALLOWED_REPOSITORIES = [
+  'arnwaaaweb3/oceanblu',
+  'arnwaaaweb3/learningMATERIAL',
+  'arnwaaaweb3/Veritas-ChromeAI',
+  'arnwaaaweb3/aletta-bot',
+];
+
+// 🛡️ SECURITY BLACKLIST: Daftar file rahasia yang HARAM dikirim ke browser client
 const SENSITIVE_FILES_BLACKLIST = [
   '.env',
   '.env.local',
@@ -39,11 +47,25 @@ const SENSITIVE_FILES_BLACKLIST = [
   '.git',
   'node_modules',
   'package-lock.json',
+  'bun.lock',
   'bun.lockb',
   'yarn.lock'
 ];
 
 export async function GET(req: NextRequest) {
+  // 1. 🛡️ PROTEKSI LAYER 1: Verifikasi Server-to-Server Origin (CORS/Header Guard)
+  const headerOrigin = req.headers.get('origin');
+  const headerReferer = req.headers.get('referer');
+  const host = req.headers.get('host') || '';
+  
+  // Ambil domain utama website lu secara dinamis dari host request
+  const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
+  
+  // Jika ditembak langsung dari luar browser (Postman, curl, bot scraping), tendang!
+  if (!headerReferer && !headerOrigin && !isLocalhost) {
+    return NextResponse.json({ error: 'Unauthorized API access pattern' }, { status: 403 });
+  }
+
   const { searchParams } = new URL(req.url);
   const repoPath = searchParams.get('repoPath');
 
@@ -51,15 +73,28 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Repo path required' }, { status: 400 });
   }
 
+  // 2. 🛡️ PROTECTION LAYER 2: Validasi Whitelist Repo Path (Mencegah intip repo privat lain)
+  const isAllowedRepo = ALLOWED_REPOSITORIES.some(
+    (allowed) => allowed.toLowerCase() === repoPath.toLowerCase()
+  );
+
+  if (!isAllowedRepo) {
+    return NextResponse.json({ error: 'Access to this repository is restricted' }, { status: 403 });
+  }
+
   try {
     const token = process.env.GITHUB_TOKEN;
+    if (!token) {
+      return NextResponse.json({ error: 'GitHub token not configured on server' }, { status: 500 });
+    }
+
     const headers = { Authorization: `token ${token}` };
 
-    // Jalankan fetch secara paralel kencang standar isu 3 kemarin
+    // Jalankan fetch secara paralel
     const [metaRes, treeDataRaw] = await Promise.all([
       fetch(`https://api.github.com/repos/${repoPath}`, { 
         headers,
-        next: { revalidate: 600 } 
+        next: { revalidate: 600 } // Cache metadata 10 menit aman
       }),
       getRepoTree(repoPath)
     ]);
@@ -67,24 +102,23 @@ export async function GET(req: NextRequest) {
     const metaData = (await metaRes.json()) as RepoMetadataResponse;
     const data = treeDataRaw as GitHubTreeResponse | GitHubErrorResponse;
 
-    // Validasi jika GitHub memberikan error (misal repo tidak ketemu)
     if ('message' in data && data.message === 'Not Found') {
       return NextResponse.json({ error: 'Repository not found' }, { status: 404 });
     }
 
-    // 🛡️ PROSES BANTAIAN KEBOCORAN DATA (.env Filter Logic)
+    // 🛡️ PROCESS BLOCKING KEBOCORAN DATA (.env Filter Logic)
     let safeTree: TreeItem[] = [];
     if ('tree' in data && Array.isArray(data.tree)) {
       safeTree = data.tree.filter((item) => {
-        // Ambil nama file paling ujung dari path (misal: "src/core/.env" -> ".env")
         const fileName = item.path.split('/').pop()?.toLowerCase() || '';
         
-        // Cek apakah nama file atau jalurnya mengandung salah satu item dari blacklist
         const isSensitive = SENSITIVE_FILES_BLACKLIST.some(
-          (blacklistedItem) => fileName === blacklistedItem || item.path.includes(`/${blacklistedItem}/`)
+          (blacklistedItem) => 
+            fileName === blacklistedItem || 
+            fileName.endsWith(blacklistedItem) ||
+            item.path.includes(`/${blacklistedItem}/`)
         );
 
-        // Hanya loloskan file yang BENAR-BENAR AMAN
         return !isSensitive;
       });
     }
@@ -100,7 +134,7 @@ export async function GET(req: NextRequest) {
         license: metaData.license?.name ?? 'No License',
         branch: metaData.default_branch ?? 'main'
       },
-      tree: safeTree // <-- Kirim daftar folder yang sudah disensor total
+      tree: safeTree
     });
   } catch (err: unknown) { 
     console.error('GitHub Tree Error:', err);

@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sanity": "sanity"
+    "sanity": "sanity",
+    "repo:add": "node src/scripts/manage-whitelist.js add",
+    "repo:remove": "node src/scripts/manage-whitelist.js remove"
   },
   "dependencies": {
     "@portabletext/react": "^3.1.0",
@@ -32,8 +34,7 @@
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^16.1.0",
     "sanity": "^5.8.1",
-    "styled-components": "^6.3.9",
-    "three": "^0.184.0"
+    "styled-components": "^6.3.9"
   },
   "devDependencies": {
     "@sanity/vision": "^5.8.1",
