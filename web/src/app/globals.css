@@ -1,5 +1,6 @@
 /* src/app/globals.css */
 
+/* ========== LIGHT MODE (default) ========== */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -12,10 +13,37 @@
   --text-muted: #7a0f0f;
   --glow-primary: rgba(255, 42, 109, 0.4);
   --glow-secondary: rgba(192, 38, 211, 0.3);
+  
+  /* Toggle-specific vars */
+  --toggle-bg: #e0e0e0;
+  --toggle-thumb: #ffffff;
+  --toggle-border: #ff82ea;
 }
 
+/* ========== DARK MODE (manual toggle) ========== */
+[data-theme="dark"] {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --bg-navy: #050810;
+  --primary: #ff2a6d;
+  --main: #ff2a6d;
+  --secondary: #c026d3;
+  --third: #ffb700;
+  --text-main: #ededed;
+  --text-muted: #a0a0a0;
+  --glow-primary: rgba(255, 42, 109, 0.6);
+  --glow-secondary: rgba(192, 38, 211, 0.5);
+  
+  /* Toggle-specific vars dark */
+  --toggle-bg: #333333;
+  --toggle-thumb: #1a1a2e;
+  --toggle-border: #ff2a6d;
+}
+
+/* ========== SYSTEM PREFERENCE FALLBACK ========== */
+/* Hanya jika user belum pernah toggle manual */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
@@ -26,27 +54,23 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-lexend), sans-serif; 
+  font-family: var(--font-lexend), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
+  transition: background 0.3s ease, color 0.3s ease; /* ← Smooth transition */
 }
 
-/* FIX 2: Universal box-sizing is good, but let's make sure 
-   everything inherits correctly. 
-*/
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-/* FIX 3: Resetting default margins for better predictability 
-*/
 h1, h2, h3, h4, p, figure, blockquote, dl, dd {
   margin: 0;
 }
@@ -54,7 +78,7 @@ h1, h2, h3, h4, p, figure, blockquote, dl, dd {
 a {
   color: inherit;
   text-decoration: none;
-  transition: opacity 0.2s ease; /* Added: small touch so it doesn't feel static */
+  transition: opacity 0.2s ease;
 }
 
 a:hover {
@@ -77,10 +101,9 @@ main svg,
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+/* Dark mode color-scheme hint */
+[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 #sanity,

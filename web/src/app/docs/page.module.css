@@ -1,0 +1,51 @@
+/* src/app/docs/page.module.css */
+.container {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding-left: 2rem;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--primary);
+  font-family: var(--font-lexend);
+  font-size: 5rem;
+  font-weight: 700;
+}
+
+.title:hover {
+  color: var(--primary);
+  -webkit-text-stroke: 0px;
+}
+
+.backButtonWrapper {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: clamp(20px, 5vw, 40px);
+  z-index: 11;
+}
+
+.backButton {
+  padding: clamp(8px, 2.5vw, 10px) clamp(14px, 4vw, 22px);
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  border: 1px solid var(--primary);
+  color: white;
+  border-radius: 1rem;
+  background: rgba(255,255,255,0.08);
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.backButton:hover {
+  background: rgba(255,255,255,0.18);
+  transform: translateX(-2px);
+}
